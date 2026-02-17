@@ -1,0 +1,3106 @@
+========================================================================
+  N64 ROM External JAL Target Finder
+  Identifies JAL targets outside the main code section
+========================================================================
+
+------------------------------------------------------------------------
+  RAMPAGE WORLD TOUR (U)
+------------------------------------------------------------------------
+
+  ROM file        : D:\rampage\Rampage - World Tour (U) [!].z64
+  Code VRAM range : 0x80000400 - 0x800BE900
+  Code size       : 779,520 bytes (194,880 instructions)
+  ROM offset      : 0x1000
+
+  Total JAL instructions  : 6,568
+  Internal targets        : 6,299
+  External call sites     : 269
+  Unique external targets : 152
+
+  === External JAL Targets Grouped by Address Range ===
+
+  [Before code (0x80000000 - 0x80000400)] (1 unique targets)
+    0x80000000  (called   2 time(s))  from: 0x80086170, 0x800A3134
+
+  [Extended    (0x80100000 - 0x80200000)] (27 unique targets)
+    0x801378DC  (called   1 time(s))  from: 0x80064990
+    0x80137FEC  (called   1 time(s))  from: 0x80064BD8
+    0x8013858C  (called   1 time(s))  from: 0x80064D14
+    0x80138934  (called   2 time(s))  from: 0x800649C4, 0x800649E8
+    0x80138C30  (called   1 time(s))  from: 0x8006499C
+    0x80138EFC  (called   1 time(s))  from: 0x800649BC
+    0x80139D7C  (called   1 time(s))  from: 0x8000164C
+    0x8013A128  (called   1 time(s))  from: 0x80001698
+    0x8013A650  (called   1 time(s))  from: 0x8000150C
+    0x8013A89C  (called   1 time(s))  from: 0x80001534
+    0x8013ABB0  (called   1 time(s))  from: 0x800016CC
+    0x8013AE84  (called   1 time(s))  from: 0x800016EC
+    0x8013B0D4  (called   1 time(s))  from: 0x80001710
+    0x8013B3B4  (called   1 time(s))  from: 0x80001730
+    0x8013B620  (called   2 time(s))  from: 0x80001554, 0x80001580
+    0x8013B668  (called   2 time(s))  from: 0x800015DC, 0x80001624
+    0x8013BD28  (called   1 time(s))  from: 0x8000166C
+    0x8013E750  (called   2 time(s))  from: 0x800014B8, 0x800648C4
+    0x8013E788  (called   1 time(s))  from: 0x80064914
+    0x80142BCC  (called   2 time(s))  from: 0x80064A10, 0x80064A40
+    0x801430E0  (called   1 time(s))  from: 0x800649D4
+    0x801431A4  (called   1 time(s))  from: 0x80064A08
+    0x801436F0  (called   1 time(s))  from: 0x80064A1C
+    0x8014376C  (called   1 time(s))  from: 0x80064A50
+    0x801459C8  (called   1 time(s))  from: 0x8006486C
+    0x8014F280  (called   1 time(s))  from: 0x80061840
+    0x8014F648  (called   1 time(s))  from: 0x80061838
+
+  [High RAM    (0x80200000 - 0x80400000)] (2 unique targets)
+    0x802C1028  (called   1 time(s))  from: 0x800A059C
+    0x80303030  (called   1 time(s))  from: 0x800BDC84
+
+  [Other       (0x80800000+)] (2 unique targets)
+    0x80842084  (called   1 time(s))  from: 0x800A75B8
+    0x80842108  (called   1 time(s))  from: 0x800A72A0
+
+  [Other       (0x80E00000+)] (1 unique targets)
+    0x80E59AB4  (called   1 time(s))  from: 0x800BE700
+
+  [Other       (0x81000000+)] (4 unique targets)
+    0x81002000  (called   1 time(s))  from: 0x800A653C
+    0x81042080  (called   2 time(s))  from: 0x800A4024, 0x800A4204
+    0x81043100  (called   1 time(s))  from: 0x800A5E64
+    0x8109FF80  (called   1 time(s))  from: 0x800A5684
+
+  [Other       (0x81800000+)] (18 unique targets)
+    0x81800030  (called   1 time(s))  from: 0x800A102C
+    0x81880200  (called   1 time(s))  from: 0x800A4B44
+    0x818C0000  (called   2 time(s))  from: 0x800A08F4, 0x800A2EDC
+    0x818C1084  (called   5 time(s))  from: 0x800A1BCC, 0x800A1BF4, 0x800A2964, 0x800A49BC, 0x800A769C
+    0x818C1180  (called   1 time(s))  from: 0x800A3274
+    0x818C2108  (called   6 time(s))  from: 0x800A14C4, 0x800A1F64, 0x800A3DA0, 0x800A4990, 0x800A51BC ... (+1 more)
+    0x818C4184  (called   1 time(s))  from: 0x800A7294
+    0x818C5000  (called   1 time(s))  from: 0x800A55B8
+    0x818C5294  (called   1 time(s))  from: 0x800A0B98
+    0x818C5328  (called   1 time(s))  from: 0x800A6950
+    0x818C7000  (called   1 time(s))  from: 0x800A0EA0
+    0x818C8420  (called   1 time(s))  from: 0x800A1A80
+    0x818C9000  (called   1 time(s))  from: 0x800A0160
+    0x818C9398  (called   1 time(s))  from: 0x800A308C
+    0x818C94A4  (called   1 time(s))  from: 0x800A290C
+    0x818CA41C  (called   1 time(s))  from: 0x800A1C60
+    0x818CF7BC  (called   1 time(s))  from: 0x800A22C8
+    0x818D394C  (called   1 time(s))  from: 0x800A2FB8
+
+  [Other       (0x81900000+)] (7 unique targets)
+    0x81900280  (called   1 time(s))  from: 0x800A6FD0
+    0x819010A0  (called   1 time(s))  from: 0x800A04BC
+    0x81902108  (called   1 time(s))  from: 0x800A345C
+    0x81906108  (called   1 time(s))  from: 0x800A75A0
+    0x8194210C  (called   1 time(s))  from: 0x800A4230
+    0x81945108  (called   1 time(s))  from: 0x800A523C
+    0x8198C000  (called   1 time(s))  from: 0x800A015C
+
+  [Other       (0x81A00000+)] (2 unique targets)
+    0x81A82124  (called   1 time(s))  from: 0x800A4AC4
+    0x81AC2124  (called   3 time(s))  from: 0x800A3C4C, 0x800A4CC4, 0x800A6754
+
+  [Other       (0x81B00000+)] (1 unique targets)
+    0x81BC31B4  (called  15 time(s))  from: 0x80086228, 0x80086278, 0x800862C8, 0x80086318, 0x80086368 ... (+10 more)
+
+  [Other       (0x82000000+)] (8 unique targets)
+    0x82003104  (called   1 time(s))  from: 0x800A6FD4
+    0x8204C730  (called   1 time(s))  from: 0x800A1EB8
+    0x82082184  (called   2 time(s))  from: 0x800A3FF0, 0x800A41D0
+    0x82090944  (called   1 time(s))  from: 0x800A370C
+    0x820C2108  (called   1 time(s))  from: 0x800A1834
+    0x820C2188  (called   3 time(s))  from: 0x800A5434, 0x800A590C, 0x800A639C
+    0x820CF7BC  (called   1 time(s))  from: 0x800A184C
+    0x820D5DFC  (called   1 time(s))  from: 0x800A6DB8
+
+  [Other       (0x82100000+)] (4 unique targets)
+    0x82101084  (called   1 time(s))  from: 0x800A158C
+    0x821C01A8  (called   1 time(s))  from: 0x800A5E8C
+    0x821C3198  (called   1 time(s))  from: 0x800A7708
+    0x821C3218  (called   2 time(s))  from: 0x800A598C, 0x800A6AFC
+
+  [Other       (0x82300000+)] (1 unique targets)
+    0x823C32BC  (called   1 time(s))  from: 0x800A504C
+
+  [Other       (0x82800000+)] (2 unique targets)
+    0x82845410  (called   1 time(s))  from: 0x800A2200
+    0x82881084  (called   1 time(s))  from: 0x800A2C34
+
+  [Other       (0x82900000+)] (5 unique targets)
+    0x829C0084  (called   1 time(s))  from: 0x800A13D4
+    0x829C2218  (called   1 time(s))  from: 0x800A3E80
+    0x829C85B8  (called   1 time(s))  from: 0x800A20E8
+    0x829D0944  (called   1 time(s))  from: 0x800A4EF8
+    0x829D8940  (called   1 time(s))  from: 0x800A4090
+
+  [Other       (0x82A00000+)] (5 unique targets)
+    0x82A03204  (called   1 time(s))  from: 0x800A1794
+    0x82A04210  (called   3 time(s))  from: 0x800A1E9C, 0x800A1F3C, 0x800A20A4
+    0x82A0520C  (called   1 time(s))  from: 0x800A13A4
+    0x82A4528C  (called   1 time(s))  from: 0x800A225C
+    0x82AC31A4  (called   5 time(s))  from: 0x800A3740, 0x800A4550, 0x800A4748, 0x800A7748, 0x800A7940
+
+  [Other       (0x82B00000+)] (2 unique targets)
+    0x82BC21B4  (called   2 time(s))  from: 0x800A4A9C, 0x800A5A98
+    0x82BC2238  (called   2 time(s))  from: 0x800A65C8, 0x800A6DE4
+
+  [Other       (0x82C00000+)] (2 unique targets)
+    0x82C03340  (called   1 time(s))  from: 0x800A5050
+    0x82C10024  (called   1 time(s))  from: 0x800A0590
+
+  [Other       (0x83100000+)] (1 unique targets)
+    0x831C2208  (called   1 time(s))  from: 0x800A22FC
+
+  [Other       (0x83200000+)] (1 unique targets)
+    0x8328329C  (called   1 time(s))  from: 0x800A211C
+
+  [Other       (0x83400000+)] (1 unique targets)
+    0x834032BC  (called   4 time(s))  from: 0x800A5460, 0x800A57C8, 0x800A5938, 0x800A63C8
+
+  [Other       (0x83800000+)] (1 unique targets)
+    0x83807280  (called   1 time(s))  from: 0x800A4B30
+
+  [Other       (0x83A00000+)] (1 unique targets)
+    0x83A02294  (called   1 time(s))  from: 0x800A284C
+
+  [Other       (0x83B00000+)] (3 unique targets)
+    0x83B06290  (called   1 time(s))  from: 0x800A1D0C
+    0x83B433AC  (called   1 time(s))  from: 0x800A59EC
+    0x83B44324  (called   1 time(s))  from: 0x800A13D0
+
+  [Other       (0x83E00000+)] (2 unique targets)
+    0x83E02260  (called   1 time(s))  from: 0x800A074C
+    0x83E04438  (called   1 time(s))  from: 0x800A1230
+
+  [Other       (0x84000000+)] (18 unique targets)
+    0x84000000  (called   1 time(s))  from: 0x800861C0
+    0x84001000  (called   3 time(s))  from: 0x800750A4, 0x800756A8, 0x80075E04
+    0x8400103C  (called   3 time(s))  from: 0x80074C0C, 0x80074C54, 0x80074C9C
+    0x840010C8  (called   1 time(s))  from: 0x8007542C
+    0x840010EC  (called   2 time(s))  from: 0x80075424, 0x8007545C
+    0x8400110C  (called   3 time(s))  from: 0x80074F98, 0x80075338, 0x80075CB0
+    0x84001128  (called   2 time(s))  from: 0x80074FAC, 0x80075B40
+    0x84001150  (called   2 time(s))  from: 0x80076118, 0x80076188
+    0x84001184  (called   7 time(s))  from: 0x800761D0, 0x80076298, 0x80076314, 0x80076554, 0x800767E8 ... (+2 more)
+    0x840011B0  (called   5 time(s))  from: 0x800762D8, 0x80076750, 0x800768C0, 0x80076B7C, 0x80076E68
+    0x840011C0  (called   1 time(s))  from: 0x80074E14
+    0x840015FC  (called   1 time(s))  from: 0x80075210
+    0x84001660  (called   2 time(s))  from: 0x80074FF0, 0x80075E90
+    0x84001688  (called   1 time(s))  from: 0x80074FFC
+    0x8400169C  (called   1 time(s))  from: 0x80075F84
+    0x84001FC4  (called   8 time(s))  from: 0x80074D30, 0x80074DC8, 0x80074E58, 0x80074FC8, 0x800751C4 ... (+3 more)
+    0x84001FD4  (called   6 time(s))  from: 0x80074CB8, 0x80074D0C, 0x80074D28, 0x80074E50, 0x80075BD4 ... (+1 more)
+    0x84001FD8  (called   3 time(s))  from: 0x80074DC0, 0x800751BC, 0x800760B8
+
+  [Other       (0x84200000+)] (2 unique targets)
+    0x842C3188  (called   1 time(s))  from: 0x800A25E8
+    0x842DF480  (called   1 time(s))  from: 0x800A692C
+
+  [Other       (0x84300000+)] (4 unique targets)
+    0x84306310  (called   1 time(s))  from: 0x800A1F5C
+    0x84342330  (called   3 time(s))  from: 0x800A3A14, 0x800A44E0, 0x800A7E90
+    0x84350840  (called   1 time(s))  from: 0x800A141C
+    0x843D0840  (called   1 time(s))  from: 0x800A1444
+
+  [Other       (0x84B00000+)] (1 unique targets)
+    0x84B08418  (called   1 time(s))  from: 0x800A6F0C
+
+  [Other       (0x85000000+)] (1 unique targets)
+    0x850C2488  (called   2 time(s))  from: 0x800A4100, 0x800A4304
+
+  [Other       (0x85100000+)] (1 unique targets)
+    0x851BFF7C  (called   1 time(s))  from: 0x800BE704
+
+  [Other       (0x85400000+)] (2 unique targets)
+    0x8541B194  (called   1 time(s))  from: 0x800BDA08
+    0x854C8424  (called   2 time(s))  from: 0x800A1DD0, 0x800A1DF8
+
+  [Other       (0x85800000+)] (1 unique targets)
+    0x8584B498  (called   1 time(s))  from: 0x800A245C
+
+  [Other       (0x85B00000+)] (1 unique targets)
+    0x85B08420  (called   1 time(s))  from: 0x800A4DAC
+
+  [Other       (0x85C00000+)] (1 unique targets)
+    0x85CDC1A4  (called   1 time(s))  from: 0x800AF618
+
+  [Other       (0x85D00000+)] (1 unique targets)
+    0x85D074AC  (called   1 time(s))  from: 0x800A1E4C
+
+  [Other       (0x86800000+)] (1 unique targets)
+    0x86802580  (called   2 time(s))  from: 0x800A413C, 0x800A4340
+
+  [Other       (0x88000000+)] (1 unique targets)
+    0x88000000  (called   1 time(s))  from: 0x80086210
+
+  [Other       (0x88F00000+)] (1 unique targets)
+    0x88F8963C  (called   1 time(s))  from: 0x800A5ED4
+
+  [Other       (0x89700000+)] (1 unique targets)
+    0x897FFF60  (called   1 time(s))  from: 0x800BE70C
+
+  [Other       (0x89F00000+)] (1 unique targets)
+    0x89F8CB74  (called   1 time(s))  from: 0x800A5EEC
+
+  [Other       (0x8A800000+)] (1 unique targets)
+    0x8A8C2A08  (called   4 time(s))  from: 0x800A53E0, 0x800A58B8, 0x800A6348, 0x800A6D7C
+
+  [Other       (0x8C000000+)] (1 unique targets)
+    0x8C000000  (called   1 time(s))  from: 0x80086260
+
+  [Other       (0x8C200000+)] (1 unique targets)
+    0x8C290000  (called   1 time(s))  from: 0x800857B4
+
+  [Other       (0x8DF00000+)] (1 unique targets)
+    0x8DFC4200  (called   1 time(s))  from: 0x800BDE44
+
+  [Other       (0x8E000000+)] (1 unique targets)
+    0x8E0FFF40  (called   1 time(s))  from: 0x800BE714
+
+  [Other       (0x8FE00000+)] (1 unique targets)
+    0x8FEBC018  (called   1 time(s))  from: 0x800BDE68
+
+  [Other       (0x8FF00000+)] (1 unique targets)
+    0x8FFFFFFC  (called   1 time(s))  from: 0x8007A0A0
+
+  [Very high   (0x80400000 - 0x80800000)] (3 unique targets)
+    0x80543054  (called  15 time(s))  from: 0x80085DC8, 0x80085E18, 0x80085E68, 0x80085EB8, 0x80085F08 ... (+10 more)
+    0x80643068  (called   5 time(s))  from: 0x80086688, 0x80086728, 0x800867C8, 0x80086868, 0x80086C28
+    0x80703070  (called  10 time(s))  from: 0x800866D8, 0x80086778, 0x80086818, 0x800868B8, 0x80086908 ... (+5 more)
+
+  === Complete Sorted List of External JAL Targets ===
+
+    0x80000000  (2 call(s))
+    0x801378DC  (1 call(s))
+    0x80137FEC  (1 call(s))
+    0x8013858C  (1 call(s))
+    0x80138934  (2 call(s))
+    0x80138C30  (1 call(s))
+    0x80138EFC  (1 call(s))
+    0x80139D7C  (1 call(s))
+    0x8013A128  (1 call(s))
+    0x8013A650  (1 call(s))
+    0x8013A89C  (1 call(s))
+    0x8013ABB0  (1 call(s))
+    0x8013AE84  (1 call(s))
+    0x8013B0D4  (1 call(s))
+    0x8013B3B4  (1 call(s))
+    0x8013B620  (2 call(s))
+    0x8013B668  (2 call(s))
+    0x8013BD28  (1 call(s))
+    0x8013E750  (2 call(s))
+    0x8013E788  (1 call(s))
+    0x80142BCC  (2 call(s))
+    0x801430E0  (1 call(s))
+    0x801431A4  (1 call(s))
+    0x801436F0  (1 call(s))
+    0x8014376C  (1 call(s))
+    0x801459C8  (1 call(s))
+    0x8014F280  (1 call(s))
+    0x8014F648  (1 call(s))
+    0x802C1028  (1 call(s))
+    0x80303030  (1 call(s))
+    0x80543054  (15 call(s))
+    0x80643068  (5 call(s))
+    0x80703070  (10 call(s))
+    0x80842084  (1 call(s))
+    0x80842108  (1 call(s))
+    0x80E59AB4  (1 call(s))
+    0x81002000  (1 call(s))
+    0x81042080  (2 call(s))
+    0x81043100  (1 call(s))
+    0x8109FF80  (1 call(s))
+    0x81800030  (1 call(s))
+    0x81880200  (1 call(s))
+    0x818C0000  (2 call(s))
+    0x818C1084  (5 call(s))
+    0x818C1180  (1 call(s))
+    0x818C2108  (6 call(s))
+    0x818C4184  (1 call(s))
+    0x818C5000  (1 call(s))
+    0x818C5294  (1 call(s))
+    0x818C5328  (1 call(s))
+    0x818C7000  (1 call(s))
+    0x818C8420  (1 call(s))
+    0x818C9000  (1 call(s))
+    0x818C9398  (1 call(s))
+    0x818C94A4  (1 call(s))
+    0x818CA41C  (1 call(s))
+    0x818CF7BC  (1 call(s))
+    0x818D394C  (1 call(s))
+    0x81900280  (1 call(s))
+    0x819010A0  (1 call(s))
+    0x81902108  (1 call(s))
+    0x81906108  (1 call(s))
+    0x8194210C  (1 call(s))
+    0x81945108  (1 call(s))
+    0x8198C000  (1 call(s))
+    0x81A82124  (1 call(s))
+    0x81AC2124  (3 call(s))
+    0x81BC31B4  (15 call(s))
+    0x82003104  (1 call(s))
+    0x8204C730  (1 call(s))
+    0x82082184  (2 call(s))
+    0x82090944  (1 call(s))
+    0x820C2108  (1 call(s))
+    0x820C2188  (3 call(s))
+    0x820CF7BC  (1 call(s))
+    0x820D5DFC  (1 call(s))
+    0x82101084  (1 call(s))
+    0x821C01A8  (1 call(s))
+    0x821C3198  (1 call(s))
+    0x821C3218  (2 call(s))
+    0x823C32BC  (1 call(s))
+    0x82845410  (1 call(s))
+    0x82881084  (1 call(s))
+    0x829C0084  (1 call(s))
+    0x829C2218  (1 call(s))
+    0x829C85B8  (1 call(s))
+    0x829D0944  (1 call(s))
+    0x829D8940  (1 call(s))
+    0x82A03204  (1 call(s))
+    0x82A04210  (3 call(s))
+    0x82A0520C  (1 call(s))
+    0x82A4528C  (1 call(s))
+    0x82AC31A4  (5 call(s))
+    0x82BC21B4  (2 call(s))
+    0x82BC2238  (2 call(s))
+    0x82C03340  (1 call(s))
+    0x82C10024  (1 call(s))
+    0x831C2208  (1 call(s))
+    0x8328329C  (1 call(s))
+    0x834032BC  (4 call(s))
+    0x83807280  (1 call(s))
+    0x83A02294  (1 call(s))
+    0x83B06290  (1 call(s))
+    0x83B433AC  (1 call(s))
+    0x83B44324  (1 call(s))
+    0x83E02260  (1 call(s))
+    0x83E04438  (1 call(s))
+    0x84000000  (1 call(s))
+    0x84001000  (3 call(s))
+    0x8400103C  (3 call(s))
+    0x840010C8  (1 call(s))
+    0x840010EC  (2 call(s))
+    0x8400110C  (3 call(s))
+    0x84001128  (2 call(s))
+    0x84001150  (2 call(s))
+    0x84001184  (7 call(s))
+    0x840011B0  (5 call(s))
+    0x840011C0  (1 call(s))
+    0x840015FC  (1 call(s))
+    0x84001660  (2 call(s))
+    0x84001688  (1 call(s))
+    0x8400169C  (1 call(s))
+    0x84001FC4  (8 call(s))
+    0x84001FD4  (6 call(s))
+    0x84001FD8  (3 call(s))
+    0x842C3188  (1 call(s))
+    0x842DF480  (1 call(s))
+    0x84306310  (1 call(s))
+    0x84342330  (3 call(s))
+    0x84350840  (1 call(s))
+    0x843D0840  (1 call(s))
+    0x84B08418  (1 call(s))
+    0x850C2488  (2 call(s))
+    0x851BFF7C  (1 call(s))
+    0x8541B194  (1 call(s))
+    0x854C8424  (2 call(s))
+    0x8584B498  (1 call(s))
+    0x85B08420  (1 call(s))
+    0x85CDC1A4  (1 call(s))
+    0x85D074AC  (1 call(s))
+    0x86802580  (2 call(s))
+    0x88000000  (1 call(s))
+    0x88F8963C  (1 call(s))
+    0x897FFF60  (1 call(s))
+    0x89F8CB74  (1 call(s))
+    0x8A8C2A08  (4 call(s))
+    0x8C000000  (1 call(s))
+    0x8C290000  (1 call(s))
+    0x8DFC4200  (1 call(s))
+    0x8E0FFF40  (1 call(s))
+    0x8FEBC018  (1 call(s))
+    0x8FFFFFFC  (1 call(s))
+
+------------------------------------------------------------------------
+  RAMPAGE 2 - UNIVERSAL TOUR (U)
+------------------------------------------------------------------------
+
+  ROM file        : D:\rampage\Rampage 2 - Universal Tour (U) [!].z64
+  Code VRAM range : 0x80000400 - 0x800C26E0
+  Code size       : 795,360 bytes (198,840 instructions)
+  ROM offset      : 0x1000
+
+  Total JAL instructions  : 8,990
+  Internal targets        : 6,942
+  External call sites     : 2,048
+  Unique external targets : 829
+
+  === External JAL Targets Grouped by Address Range ===
+
+  [Before code (0x80000000 - 0x80000400)] (1 unique targets)
+    0x80000000  (called   2 time(s))  from: 0x80091480, 0x800A9C14
+
+  [High RAM    (0x80200000 - 0x80400000)] (1 unique targets)
+    0x80303030  (called   1 time(s))  from: 0x800C21D4
+
+  [Other       (0x80E00000+)] (1 unique targets)
+    0x80E59AB4  (called   1 time(s))  from: 0x80093020
+
+  [Other       (0x81B00000+)] (1 unique targets)
+    0x81BC31B4  (called  29 time(s))  from: 0x80091538, 0x80091588, 0x800915D8, 0x80091628, 0x80091678 ... (+24 more)
+
+  [Other       (0x84000000+)] (418 unique targets)
+    0x84000000  (called   1 time(s))  from: 0x800914D0
+    0x84001000  (called   3 time(s))  from: 0x8007E9FC, 0x8007F000, 0x8007F764
+    0x8400103C  (called   3 time(s))  from: 0x8007E56C, 0x8007E5B4, 0x8007E5FC
+    0x840010C8  (called   1 time(s))  from: 0x8007ED84
+    0x840010E4  (called   2 time(s))  from: 0x8007ED7C, 0x8007EDB4
+    0x84001104  (called   3 time(s))  from: 0x8007E8F0, 0x8007EC90, 0x8007F610
+    0x84001120  (called   2 time(s))  from: 0x8007E904, 0x8007F498
+    0x84001150  (called   2 time(s))  from: 0x8007FA78, 0x8007FAE8
+    0x84001184  (called   7 time(s))  from: 0x8007FB30, 0x8007FBF8, 0x8007FC74, 0x8007FEB4, 0x80080148 ... (+2 more)
+    0x840011B0  (called   5 time(s))  from: 0x8007FC38, 0x800800B0, 0x80080220, 0x800804DC, 0x800807C8
+    0x840011B8  (called   1 time(s))  from: 0x8007E76C
+    0x840015F4  (called   1 time(s))  from: 0x8007EB68
+    0x84001658  (called   2 time(s))  from: 0x8007E948, 0x8007F7F0
+    0x84001680  (called   1 time(s))  from: 0x8007E954
+    0x84001694  (called   1 time(s))  from: 0x8007F8E4
+    0x84001FC4  (called   8 time(s))  from: 0x8007E688, 0x8007E720, 0x8007E7B0, 0x8007E920, 0x8007EB1C ... (+3 more)
+    0x84001FD4  (called   5 time(s))  from: 0x8007E618, 0x8007E680, 0x8007E7A8, 0x8007F534, 0x8007F544
+    0x84001FD8  (called   3 time(s))  from: 0x8007E718, 0x8007EB14, 0x8007FA18
+    0x84004B40  (called   1 time(s))  from: 0x800BEC9C
+    0x84004B48  (called   1 time(s))  from: 0x800BECA4
+    0x84004B50  (called   1 time(s))  from: 0x800BECAC
+    0x84004B58  (called   1 time(s))  from: 0x800BECB4
+    0x84004B60  (called   1 time(s))  from: 0x800BECBC
+    0x84004B68  (called   1 time(s))  from: 0x800BECC4
+    0x84004B70  (called   1 time(s))  from: 0x800BECCC
+    0x84004B78  (called   1 time(s))  from: 0x800BECD4
+    0x84004B80  (called   1 time(s))  from: 0x800BF8DC
+    0x84004B88  (called   1 time(s))  from: 0x800BF8E4
+    0x84004B90  (called   1 time(s))  from: 0x800BF8EC
+    0x84004B98  (called   1 time(s))  from: 0x800BF8F4
+    0x84004BA0  (called   1 time(s))  from: 0x800BF8FC
+    0x84004BA8  (called   1 time(s))  from: 0x800BF904
+    0x84004BB0  (called   1 time(s))  from: 0x800BF90C
+    0x84004BB8  (called   1 time(s))  from: 0x800BF914
+    0x84004BC0  (called   1 time(s))  from: 0x800BEBCC
+    0x84004BC8  (called   1 time(s))  from: 0x800BEBD4
+    0x84004BD0  (called   1 time(s))  from: 0x800BEBDC
+    0x84004BD8  (called   1 time(s))  from: 0x800BEBE4
+    0x84004BE0  (called   1 time(s))  from: 0x800BEBEC
+    0x84004BE8  (called   1 time(s))  from: 0x800BEBF4
+    0x84004BF0  (called   1 time(s))  from: 0x800BEBFC
+    0x84004BF8  (called   1 time(s))  from: 0x800BEC04
+    0x84004C00  (called   1 time(s))  from: 0x800C1D88
+    0x84004C08  (called   2 time(s))  from: 0x800C1D90, 0x800C1DA0
+    0x84004C10  (called   1 time(s))  from: 0x800C1DBC
+    0x84004C18  (called   1 time(s))  from: 0x800C1DC4
+    0x84004C20  (called   1 time(s))  from: 0x800C1DCC
+    0x84004C28  (called   1 time(s))  from: 0x800C1DD4
+    0x84004C30  (called   1 time(s))  from: 0x800C1DDC
+    0x84004C38  (called   2 time(s))  from: 0x800C0060, 0x800C0180
+    0x84004C40  (called   4 time(s))  from: 0x800C0070, 0x800C00C0, 0x800C0100, 0x800C0140
+    0x84004C48  (called   4 time(s))  from: 0x800C0090, 0x800C00D0, 0x800C0110, 0x800C0150
+    0x84004C50  (called   4 time(s))  from: 0x800C00A0, 0x800C00E0, 0x800C0120, 0x800C0160
+    0x84004C58  (called   4 time(s))  from: 0x800C00B0, 0x800C00F0, 0x800C0130, 0x800C0170
+    0x84004C60  (called   1 time(s))  from: 0x800BF86C
+    0x84004C68  (called   1 time(s))  from: 0x800BF874
+    0x84004C70  (called   1 time(s))  from: 0x800BF87C
+    0x84004C78  (called   1 time(s))  from: 0x800BF884
+    0x84004C80  (called   1 time(s))  from: 0x800BF88C
+    0x84004C88  (called   1 time(s))  from: 0x800BF894
+    0x84004C90  (called   1 time(s))  from: 0x800BF89C
+    0x84004C98  (called   1 time(s))  from: 0x800BF8A4
+    0x84004CA0  (called   1 time(s))  from: 0x800BF8AC
+    0x84004CA8  (called   5 time(s))  from: 0x800BEC30, 0x800BF91C, 0x800C10D0, 0x800C18B4, 0x800C18F8
+    0x84004CB0  (called   2 time(s))  from: 0x800BEC38, 0x800C10D8
+    0x84004CB8  (called   2 time(s))  from: 0x800BEC40, 0x800C10E0
+    0x84004CC0  (called   2 time(s))  from: 0x800BEC48, 0x800C10E8
+    0x84004CC8  (called   2 time(s))  from: 0x800BEC50, 0x800C10F0
+    0x84004CD0  (called   2 time(s))  from: 0x800BEC58, 0x800C10F8
+    0x84004CD8  (called   2 time(s))  from: 0x800BEC60, 0x800C1100
+    0x84004CE0  (called   2 time(s))  from: 0x800BEC68, 0x800C1108
+    0x84004CE8  (called   1 time(s))  from: 0x800BF988
+    0x84004CF0  (called   1 time(s))  from: 0x800BF990
+    0x84004CF8  (called   1 time(s))  from: 0x800BF998
+    0x84004D00  (called   4 time(s))  from: 0x800BF9A4, 0x800BFA44, 0x800BFA64, 0x800BFA84
+    0x84004D08  (called   7 time(s))  from: 0x800BF9AC, 0x800BFA4C, 0x800BFA5C, 0x800BFA6C, 0x800BFA7C ... (+2 more)
+    0x84004D10  (called   4 time(s))  from: 0x800BF9B4, 0x800BFA54, 0x800BFA74, 0x800BFA94
+    0x84004D18  (called   1 time(s))  from: 0x800BFAA4
+    0x84004D20  (called   3 time(s))  from: 0x800C0FE8, 0x800C1050, 0x800C18BC
+    0x84004D28  (called   3 time(s))  from: 0x800C0FF0, 0x800C1048, 0x800C18C4
+    0x84004D30  (called   2 time(s))  from: 0x800C0FF8, 0x800C1040
+    0x84004D38  (called   2 time(s))  from: 0x800C1000, 0x800C1038
+    0x84004D40  (called   6 time(s))  from: 0x800C1008, 0x800C1010, 0x800C1018, 0x800C1020, 0x800C1028 ... (+1 more)
+    0x84004D48  (called   2 time(s))  from: 0x800C105C, 0x800C10C4
+    0x84004D50  (called   2 time(s))  from: 0x800C1064, 0x800C10BC
+    0x84004D58  (called   2 time(s))  from: 0x800C106C, 0x800C10B4
+    0x84004D60  (called   4 time(s))  from: 0x800C1074, 0x800C1084, 0x800C1094, 0x800C10A4
+    0x84004D68  (called   4 time(s))  from: 0x800C107C, 0x800C108C, 0x800C109C, 0x800C10AC
+    0x84004D78  (called   2 time(s))  from: 0x800BEB14, 0x800BEB2C
+    0x84004D80  (called   1 time(s))  from: 0x800BEB34
+    0x84004D88  (called   1 time(s))  from: 0x800BEB3C
+    0x84004D90  (called   1 time(s))  from: 0x800BEB44
+    0x84004D98  (called   1 time(s))  from: 0x800BEB4C
+    0x84004DA0  (called   1 time(s))  from: 0x800BEB54
+    0x84004DA8  (called   1 time(s))  from: 0x800BEB5C
+    0x84004DB0  (called   1 time(s))  from: 0x800BEB64
+    0x84004DB8  (called   1 time(s))  from: 0x800BEB6C
+    0x84004DC0  (called   1 time(s))  from: 0x800BEB80
+    0x84004DC8  (called   1 time(s))  from: 0x800BEB88
+    0x84004DD0  (called   1 time(s))  from: 0x800BEB90
+    0x84004DD8  (called   3 time(s))  from: 0x800BF2B0, 0x800C1114, 0x800C111C
+    0x84004DE0  (called   1 time(s))  from: 0x800BF2BC
+    0x84004DE8  (called   1 time(s))  from: 0x800BF2C4
+    0x84004DF0  (called   1 time(s))  from: 0x800BF2CC
+    0x84004DF8  (called   1 time(s))  from: 0x800BF2D4
+    0x84004E08  (called   1 time(s))  from: 0x800BF274
+    0x84004E10  (called   1 time(s))  from: 0x800BF280
+    0x84004E18  (called   3 time(s))  from: 0x800BF288, 0x800BF290, 0x800C04F0
+    0x84004E20  (called   8 time(s))  from: 0x800BF298, 0x800C0500, 0x800C0530, 0x800C0550, 0x800C0570 ... (+3 more)
+    0x84004E28  (called   1 time(s))  from: 0x800BF2A0
+    0x84004E30  (called   1 time(s))  from: 0x800BF1FC
+    0x84004E38  (called   1 time(s))  from: 0x800BF208
+    0x84004E40  (called   3 time(s))  from: 0x800BF210, 0x800BF218, 0x800C0298
+    0x84004E48  (called   8 time(s))  from: 0x800BF220, 0x800C02A8, 0x800C02D8, 0x800C02F8, 0x800C0318 ... (+3 more)
+    0x84004E50  (called   1 time(s))  from: 0x800BF228
+    0x84004E58  (called   1 time(s))  from: 0x800BF238
+    0x84004E60  (called   1 time(s))  from: 0x800BF244
+    0x84004E68  (called   3 time(s))  from: 0x800BF24C, 0x800BF254, 0x800C03C4
+    0x84004E70  (called   8 time(s))  from: 0x800BF25C, 0x800C03D4, 0x800C0404, 0x800C0424, 0x800C0444 ... (+3 more)
+    0x84004E78  (called   1 time(s))  from: 0x800BF264
+    0x84004E80  (called   4 time(s))  from: 0x800C12C4, 0x800C1658, 0x800C180C, 0x800C18CC
+    0x84004E88  (called   4 time(s))  from: 0x800C12CC, 0x800C1660, 0x800C1814, 0x800C18D4
+    0x84004E90  (called   4 time(s))  from: 0x800C12D4, 0x800C1678, 0x800C182C, 0x800C18EC
+    0x84004E98  (called   3 time(s))  from: 0x800C12E0, 0x800C1680, 0x800C1834
+    0x84004EA0  (called   1 time(s))  from: 0x800C0248
+    0x84004EA8  (called   2 time(s))  from: 0x800C0250, 0x800C15AC
+    0x84004EB0  (called   1 time(s))  from: 0x800C0258
+    0x84004EB8  (called   8 time(s))  from: 0x800BFB00, 0x800BFB34, 0x800BFB5C, 0x800C0728, 0x800C0734 ... (+3 more)
+    0x84004EC0  (called  10 time(s))  from: 0x800BFB08, 0x800BFB3C, 0x800BFB64, 0x800C073C, 0x800C0744 ... (+5 more)
+    0x84004EC8  (called   3 time(s))  from: 0x800BFB10, 0x800BFB44, 0x800BFB6C
+    0x84004ED0  (called   1 time(s))  from: 0x800BFB18
+    0x84004ED8  (called   2 time(s))  from: 0x800C15F4, 0x800C1760
+    0x84004EE0  (called   1 time(s))  from: 0x800C1768
+    0x84004EE8  (called   1 time(s))  from: 0x800BFDCC
+    0x84004EF0  (called   1 time(s))  from: 0x800BFDD8
+    0x84004EF8  (called   1 time(s))  from: 0x800BFDE4
+    0x84004F00  (called   1 time(s))  from: 0x800BFDEC
+    0x84004F08  (called   1 time(s))  from: 0x800BFF58
+    0x84004F10  (called   1 time(s))  from: 0x800BFF64
+    0x84004F18  (called   1 time(s))  from: 0x800BFF70
+    0x84004F20  (called   1 time(s))  from: 0x800BFF88
+    0x84004F28  (called   3 time(s))  from: 0x800BFB84, 0x800BFB90, 0x800C1A40
+    0x84004F30  (called   2 time(s))  from: 0x800BFB9C, 0x800C1A38
+    0x84004F38  (called   2 time(s))  from: 0x800BFBA4, 0x800C1A30
+    0x84004F40  (called   5 time(s))  from: 0x800BFBAC, 0x800C061C, 0x800C064C, 0x800C0664, 0x800C067C
+    0x84004F48  (called   6 time(s))  from: 0x800BFBB4, 0x800C0624, 0x800C0654, 0x800C066C, 0x800C0684 ... (+1 more)
+    0x84004F50  (called   9 time(s))  from: 0x800BFBBC, 0x800C062C, 0x800C0634, 0x800C063C, 0x800C0644 ... (+4 more)
+    0x84004F58  (called   4 time(s))  from: 0x800BFBD0, 0x800C001C, 0x800C06AC, 0x800C119C
+    0x84004F60  (called   4 time(s))  from: 0x800BFBD8, 0x800C0024, 0x800C06B4, 0x800C11A4
+    0x84004F68  (called   4 time(s))  from: 0x800BFBE0, 0x800C002C, 0x800C06BC, 0x800C11AC
+    0x84004F70  (called   3 time(s))  from: 0x800BFBE8, 0x800C0034, 0x800C11B4
+    0x84004F78  (called   3 time(s))  from: 0x800BFBF0, 0x800C003C, 0x800C11BC
+    0x84004F80  (called   1 time(s))  from: 0x800C0A60
+    0x84004F88  (called   3 time(s))  from: 0x800C0A68, 0x800C0A74, 0x800C1194
+    0x84004F90  (called   2 time(s))  from: 0x800BF944, 0x800C16B8
+    0x84004F98  (called   2 time(s))  from: 0x800BF94C, 0x800C16C0
+    0x84004FA0  (called   2 time(s))  from: 0x800BF954, 0x800C16C8
+    0x84004FA8  (called   7 time(s))  from: 0x800BF960, 0x800BF9CC, 0x800BF9EC, 0x800BFA0C, 0x800BFA2C ... (+2 more)
+    0x84004FB0  (called  10 time(s))  from: 0x800BF968, 0x800BF9D4, 0x800BF9E4, 0x800BF9F4, 0x800BFA04 ... (+5 more)
+    0x84004FB8  (called   6 time(s))  from: 0x800BF970, 0x800BF9DC, 0x800BF9FC, 0x800BFA1C, 0x800C16E4 ... (+1 more)
+    0x84004FC0  (called   3 time(s))  from: 0x800BFC78, 0x800BFE24, 0x800C19B0
+    0x84004FC8  (called   3 time(s))  from: 0x800BFC80, 0x800BFE30, 0x800C19B8
+    0x84004FD0  (called   3 time(s))  from: 0x800BFC8C, 0x800BFE3C, 0x800C19C4
+    0x84004FD8  (called   3 time(s))  from: 0x800BFC94, 0x800BFE44, 0x800C19CC
+    0x84004FE0  (called   3 time(s))  from: 0x800BFC9C, 0x800BFE4C, 0x800C19D4
+    0x84004FE8  (called   3 time(s))  from: 0x800BFCA4, 0x800BFE54, 0x800C19DC
+    0x84004FF0  (called   6 time(s))  from: 0x800BFCAC, 0x800BFCBC, 0x800BFE5C, 0x800BFE6C, 0x800C19E4 ... (+1 more)
+    0x84004FF8  (called   4 time(s))  from: 0x800BFCC4, 0x800BFE78, 0x800C19F4, 0x800C1A50
+    0x84005000  (called   4 time(s))  from: 0x800BFCD0, 0x800BFE80, 0x800C19FC, 0x800C1A58
+    0x84005008  (called  10 time(s))  from: 0x800BFCD8, 0x800BFE88, 0x800C1928, 0x800C1930, 0x800C193C ... (+5 more)
+    0x84005010  (called   3 time(s))  from: 0x800BFEA4, 0x800BFEF0, 0x800C1A88
+    0x84005018  (called   3 time(s))  from: 0x800BFEB0, 0x800BFEFC, 0x800C1A94
+    0x84005020  (called   3 time(s))  from: 0x800BFEB8, 0x800BFF04, 0x800C1A9C
+    0x84005028  (called   3 time(s))  from: 0x800BFEC0, 0x800BFF0C, 0x800C1AA4
+    0x84005030  (called   3 time(s))  from: 0x800BFEC8, 0x800BFF14, 0x800C1AAC
+    0x84005038  (called   3 time(s))  from: 0x800BFED0, 0x800BFF1C, 0x800C1AB4
+    0x84005040  (called   3 time(s))  from: 0x800BFED8, 0x800BFF24, 0x800C1ABC
+    0x84005048  (called   2 time(s))  from: 0x800BFF3C, 0x800C1AD4
+    0x84005050  (called   3 time(s))  from: 0x800BFF48, 0x800C1AE0, 0x800C1AE8
+    0x84005058  (called   8 time(s))  from: 0x800BFF50, 0x800C196C, 0x800C1974, 0x800C1980, 0x800C198C ... (+3 more)
+    0x84005060  (called   4 time(s))  from: 0x800C0B58, 0x800C0C80, 0x800C13C4, 0x800C1460
+    0x84005068  (called   4 time(s))  from: 0x800C0B60, 0x800C0C70, 0x800C13CC, 0x800C1458
+    0x84005070  (called   4 time(s))  from: 0x800C0B80, 0x800C0C60, 0x800C13E0, 0x800C1450
+    0x84005078  (called   4 time(s))  from: 0x800C0B90, 0x800C0C50, 0x800C13E8, 0x800C1448
+    0x84005080  (called   4 time(s))  from: 0x800C0BA0, 0x800C0C40, 0x800C13F0, 0x800C1440
+    0x84005088  (called   4 time(s))  from: 0x800C0BB0, 0x800C0C30, 0x800C13F8, 0x800C1438
+    0x84005090  (called   4 time(s))  from: 0x800C0BC0, 0x800C0C20, 0x800C1400, 0x800C1430
+    0x84005098  (called   4 time(s))  from: 0x800C0BD0, 0x800C0C10, 0x800C1408, 0x800C1428
+    0x840050A0  (called   4 time(s))  from: 0x800C0BE0, 0x800C0C00, 0x800C1410, 0x800C1420
+    0x840050A8  (called   2 time(s))  from: 0x800C0BF0, 0x800C1418
+    0x840050B0  (called   1 time(s))  from: 0x800BF10C
+    0x840050B8  (called   1 time(s))  from: 0x800BF118
+    0x840050C0  (called   1 time(s))  from: 0x800BF120
+    0x840050C8  (called   1 time(s))  from: 0x800BF128
+    0x840050D0  (called   1 time(s))  from: 0x800BF130
+    0x84005108  (called   1 time(s))  from: 0x800BFD68
+    0x84005110  (called   1 time(s))  from: 0x800BFD70
+    0x84005118  (called   1 time(s))  from: 0x800BFD78
+    0x84005120  (called   1 time(s))  from: 0x800BFD90
+    0x84005128  (called   1 time(s))  from: 0x800BFD98
+    0x84005130  (called   1 time(s))  from: 0x800BFDA0
+    0x84005138  (called   2 time(s))  from: 0x800BFDA8, 0x800C0ED4
+    0x84005140  (called   1 time(s))  from: 0x800BFD04
+    0x84005148  (called   1 time(s))  from: 0x800BFD0C
+    0x84005150  (called   1 time(s))  from: 0x800BFD14
+    0x84005158  (called   1 time(s))  from: 0x800BFD1C
+    0x84005160  (called   1 time(s))  from: 0x800BFD24
+    0x84005168  (called   1 time(s))  from: 0x800BFD2C
+    0x84005170  (called   1 time(s))  from: 0x800BFD34
+    0x84005178  (called   1 time(s))  from: 0x800BEA60
+    0x84005180  (called   1 time(s))  from: 0x800BEA6C
+    0x84005188  (called   1 time(s))  from: 0x800BEA74
+    0x84005190  (called   1 time(s))  from: 0x800BEA7C
+    0x84005198  (called   1 time(s))  from: 0x800BEA84
+    0x840051A0  (called   1 time(s))  from: 0x800C01BC
+    0x840051A8  (called   1 time(s))  from: 0x800C01C4
+    0x840051B8  (called   1 time(s))  from: 0x800C01CC
+    0x840051C0  (called   5 time(s))  from: 0x800C01D4, 0x800C01E4, 0x800C01F4, 0x800C0204, 0x800C0214
+    0x840051C8  (called   5 time(s))  from: 0x800C01DC, 0x800C01EC, 0x800C01FC, 0x800C020C, 0x800C021C
+    0x840051D0  (called   1 time(s))  from: 0x800C0224
+    0x840051D8  (called   1 time(s))  from: 0x800C0CEC
+    0x840051E0  (called   1 time(s))  from: 0x800C0CF8
+    0x840051E8  (called   1 time(s))  from: 0x800C0D00
+    0x840051F0  (called   1 time(s))  from: 0x800C0D08
+    0x840051F8  (called   1 time(s))  from: 0x800C0D10
+    0x84005200  (called   4 time(s))  from: 0x800BF0D0, 0x800BF0FC, 0x800C1234, 0x800C1258
+    0x84005208  (called   2 time(s))  from: 0x800BF0DC, 0x800BF0F4
+    0x84005210  (called   1 time(s))  from: 0x800BF0E4
+    0x84005218  (called   1 time(s))  from: 0x800BF0EC
+    0x84005220  (called   2 time(s))  from: 0x800BF148, 0x800BF184
+    0x84005228  (called   4 time(s))  from: 0x800BF154, 0x800BF174, 0x800BF190, 0x800BF1B0
+    0x84005230  (called   4 time(s))  from: 0x800BF15C, 0x800BF16C, 0x800BF198, 0x800BF1A8
+    0x84005238  (called   2 time(s))  from: 0x800BF164, 0x800BF1A0
+    0x84005240  (called   1 time(s))  from: 0x800C0D2C
+    0x84005248  (called   1 time(s))  from: 0x800C0D38
+    0x84005250  (called   1 time(s))  from: 0x800C0D40
+    0x84005258  (called   1 time(s))  from: 0x800C0D48
+    0x84005260  (called   1 time(s))  from: 0x800C0D50
+    0x84005268  (called   1 time(s))  from: 0x800BF1C0
+    0x84005270  (called   2 time(s))  from: 0x800BF1CC, 0x800BF1EC
+    0x84005278  (called   2 time(s))  from: 0x800BF1D4, 0x800BF1E4
+    0x84005280  (called   1 time(s))  from: 0x800BF1DC
+    0x84005288  (called   1 time(s))  from: 0x800C1354
+    0x84005290  (called   1 time(s))  from: 0x800C135C
+    0x84005298  (called   1 time(s))  from: 0x800C1364
+    0x840052A0  (called   1 time(s))  from: 0x800C1384
+    0x840052A8  (called   1 time(s))  from: 0x800C138C
+    0x840052B0  (called   1 time(s))  from: 0x800C1394
+    0x840052B8  (called   9 time(s))  from: 0x800C0DC4, 0x800C0DF8, 0x800C170C, 0x800C173C, 0x800C1B0C ... (+4 more)
+    0x840052C0  (called   8 time(s))  from: 0x800C0DD0, 0x800C0DF0, 0x800C1714, 0x800C1734, 0x800C1B2C ... (+3 more)
+    0x840052C8  (called   8 time(s))  from: 0x800C0DD8, 0x800C0DE8, 0x800C171C, 0x800C172C, 0x800C1B34 ... (+3 more)
+    0x840052D0  (called   4 time(s))  from: 0x800C0DE0, 0x800C1724, 0x800C1B3C, 0x800C1B90
+    0x840052D8  (called   4 time(s))  from: 0x800C127C, 0x800C1600, 0x800C17B4, 0x800C185C
+    0x840052E0  (called   4 time(s))  from: 0x800C1284, 0x800C1608, 0x800C17BC, 0x800C1864
+    0x840052E8  (called   4 time(s))  from: 0x800C128C, 0x800C1610, 0x800C17C4, 0x800C186C
+    0x840052F0  (called   4 time(s))  from: 0x800C1298, 0x800C1628, 0x800C17DC, 0x800C1874
+    0x840052F8  (called   4 time(s))  from: 0x800C12A0, 0x800C1630, 0x800C17E4, 0x800C187C
+    0x84005300  (called  12 time(s))  from: 0x8008C5E0, 0x800BE9FC, 0x800BEA34, 0x800BF678, 0x800BFC5C ... (+7 more)
+    0x84005308  (called   7 time(s))  from: 0x800C0D78, 0x800C0E1C, 0x800C0E5C, 0x800C0E9C, 0x800C0EE4 ... (+2 more)
+    0x84005310  (called   7 time(s))  from: 0x800C0D80, 0x800C0E24, 0x800C0E64, 0x800C0EA4, 0x800C0EEC ... (+2 more)
+    0x84005318  (called   7 time(s))  from: 0x800C0D88, 0x800C0E2C, 0x800C0E6C, 0x800C0EAC, 0x800C0EF4 ... (+2 more)
+    0x84005320  (called   7 time(s))  from: 0x800C0D90, 0x800C0E34, 0x800C0E74, 0x800C0EB4, 0x800C0EFC ... (+2 more)
+    0x84005328  (called   7 time(s))  from: 0x800C0D98, 0x800C0E3C, 0x800C0E7C, 0x800C0EBC, 0x800C0F04 ... (+2 more)
+    0x84005330  (called   7 time(s))  from: 0x800C0DA0, 0x800C0E44, 0x800C0E84, 0x800C0EC4, 0x800C0F0C ... (+2 more)
+    0x84005338  (called   7 time(s))  from: 0x800C0DA8, 0x800C0E4C, 0x800C0E8C, 0x800C0ECC, 0x800C0F14 ... (+2 more)
+    0x84005340  (called   4 time(s))  from: 0x800BF6A0, 0x800BF718, 0x800C1484, 0x800C15D0
+    0x84005348  (called   7 time(s))  from: 0x800BF6B8, 0x800BF6E0, 0x800BF708, 0x800BF730, 0x800BF758 ... (+2 more)
+    0x84005350  (called  11 time(s))  from: 0x800BF6C0, 0x800BF6E8, 0x800BF738, 0x800BF760, 0x800BF78C ... (+6 more)
+    0x84005358  (called   4 time(s))  from: 0x800BF6C8, 0x800BF6F0, 0x800BF740, 0x800BF768
+    0x84005360  (called   4 time(s))  from: 0x800BF6D0, 0x800BF6F8, 0x800BF748, 0x800BF770
+    0x84005368  (called   4 time(s))  from: 0x800BF6D8, 0x800BF700, 0x800BF750, 0x800BF778
+    0x84005370  (called   1 time(s))  from: 0x800BFC14
+    0x84005378  (called   1 time(s))  from: 0x800BFC1C
+    0x84005380  (called   1 time(s))  from: 0x800BFC24
+    0x84005388  (called   1 time(s))  from: 0x800BFC2C
+    0x84005390  (called   1 time(s))  from: 0x800BFC34
+    0x84005398  (called   1 time(s))  from: 0x800BFC3C
+    0x840053A0  (called   1 time(s))  from: 0x800BFC44
+    0x840053A8  (called   1 time(s))  from: 0x800BFC4C
+    0x840053B0  (called   1 time(s))  from: 0x800BFC54
+    0x840053C0  (called   2 time(s))  from: 0x800BE9E4, 0x800BEA1C
+    0x840053C8  (called   2 time(s))  from: 0x800BE9EC, 0x800BEA24
+    0x840053D0  (called   2 time(s))  from: 0x800BE9F4, 0x800BEA2C
+    0x840053D8  (called   1 time(s))  from: 0x800BEAB4
+    0x840053E0  (called   1 time(s))  from: 0x800BEAC0
+    0x840053E8  (called   1 time(s))  from: 0x800BEAC8
+    0x840053F0  (called   1 time(s))  from: 0x800BEAD0
+    0x840053F8  (called   1 time(s))  from: 0x800BEAD8
+    0x84005400  (called   1 time(s))  from: 0x800BEAE0
+    0x84005408  (called   1 time(s))  from: 0x800BEAE8
+    0x84005410  (called   1 time(s))  from: 0x800BEAF0
+    0x84005418  (called   4 time(s))  from: 0x800BE834, 0x800BE898, 0x800BE954, 0x800BE9B8
+    0x84005420  (called   4 time(s))  from: 0x800BE83C, 0x800BE8A0, 0x800BE95C, 0x800BE9C0
+    0x84005428  (called   4 time(s))  from: 0x800BE844, 0x800BE8A8, 0x800BE964, 0x800BE9C8
+    0x84005430  (called   2 time(s))  from: 0x800BE870, 0x800BE990
+    0x84005438  (called   2 time(s))  from: 0x800BE878, 0x800BE998
+    0x84005440  (called   2 time(s))  from: 0x800BE880, 0x800BE9A0
+    0x84005448  (called   2 time(s))  from: 0x800BE888, 0x800BE9A8
+    0x84005450  (called   2 time(s))  from: 0x800BE890, 0x800BE9B0
+    0x84005458  (called   2 time(s))  from: 0x800BE8C4, 0x800BE928
+    0x84005460  (called   2 time(s))  from: 0x800BE8CC, 0x800BE930
+    0x84005468  (called   2 time(s))  from: 0x800BE8D4, 0x800BE938
+    0x84005470  (called   1 time(s))  from: 0x800BE900
+    0x84005478  (called   1 time(s))  from: 0x800BE908
+    0x84005480  (called   1 time(s))  from: 0x800BE910
+    0x84005488  (called   1 time(s))  from: 0x800BE918
+    0x84005490  (called   1 time(s))  from: 0x800BE920
+    0x84005498  (called   1 time(s))  from: 0x800BFABC
+    0x840054A0  (called   1 time(s))  from: 0x800BFAC4
+    0x840054A8  (called   1 time(s))  from: 0x800BFAD0
+    0x840054B0  (called   1 time(s))  from: 0x800BFAD8
+    0x840054B8  (called   1 time(s))  from: 0x800BFAE0
+    0x840054C0  (called   1 time(s))  from: 0x800BFAE8
+    0x840054C8  (called   5 time(s))  from: 0x800C06E0, 0x800C1304, 0x800C1328, 0x800C1338, 0x800C191C
+    0x840054D0  (called   1 time(s))  from: 0x800C06EC
+    0x840054D8  (called   1 time(s))  from: 0x800C06F4
+    0x840054E0  (called   1 time(s))  from: 0x800C06FC
+    0x840054E8  (called   1 time(s))  from: 0x800C0704
+    0x840054F0  (called   1 time(s))  from: 0x800C070C
+    0x840054F8  (called   1 time(s))  from: 0x800C0714
+    0x84005500  (called   1 time(s))  from: 0x800C071C
+    0x84005508  (called   7 time(s))  from: 0x800BF79C, 0x800BF7C8, 0x800BF7D0, 0x800BF7D8, 0x800BF7E0 ... (+2 more)
+    0x84005510  (called   2 time(s))  from: 0x800BF7A4, 0x800BF830
+    0x84005518  (called   2 time(s))  from: 0x800BF7B8, 0x800BF838
+    0x84005520  (called   2 time(s))  from: 0x800BF7C0, 0x800BF840
+    0x84005528  (called   1 time(s))  from: 0x800BF848
+    0x84005530  (called   1 time(s))  from: 0x800BF850
+    0x84005548  (called   1 time(s))  from: 0x800BFFB0
+    0x84005550  (called   1 time(s))  from: 0x800BFFC8
+    0x84005558  (called   1 time(s))  from: 0x800BFFD0
+    0x84005560  (called   1 time(s))  from: 0x800BFFD8
+    0x84005568  (called   1 time(s))  from: 0x800BFFE0
+    0x84005570  (called   1 time(s))  from: 0x800BFFE8
+    0x84005578  (called   1 time(s))  from: 0x800BFFF0
+    0x84005580  (called   1 time(s))  from: 0x800BFFF8
+    0x84005588  (called   1 time(s))  from: 0x800C0000
+    0x84005590  (called   1 time(s))  from: 0x800BF628
+    0x84005598  (called   1 time(s))  from: 0x800BF634
+    0x840055A0  (called   1 time(s))  from: 0x800BF640
+    0x840055A8  (called   1 time(s))  from: 0x800BF650
+    0x840055B8  (called   1 time(s))  from: 0x800BEE50
+    0x840055C0  (called   2 time(s))  from: 0x800BEE5C, 0x800BEE64
+    0x840055C8  (called   1 time(s))  from: 0x800BED90
+    0x840055D0  (called   2 time(s))  from: 0x800BED9C, 0x800BEDA4
+    0x840055D8  (called   1 time(s))  from: 0x800BEE10
+    0x840055E0  (called   2 time(s))  from: 0x800BEE1C, 0x800BEE24
+    0x840055E8  (called   4 time(s))  from: 0x800BF33C, 0x800BF398, 0x800BF3E0, 0x800BF3FC
+    0x840055F0  (called   3 time(s))  from: 0x800BF344, 0x800BF3A0, 0x800C097C
+    0x840055F8  (called   3 time(s))  from: 0x800BF34C, 0x800BF3A8, 0x800C0988
+    0x84005600  (called   8 time(s))  from: 0x800BF364, 0x800BF3B0, 0x800BF418, 0x800BF420, 0x800BF454 ... (+3 more)
+    0x84005608  (called   5 time(s))  from: 0x800BF370, 0x800BF3BC, 0x800BF42C, 0x800BF468, 0x800BF4A4
+    0x84005610  (called  24 time(s))  from: 0x800BF378, 0x800BF3C4, 0x800BF4D4, 0x800BF4E4, 0x800BF4F4 ... (+19 more)
+    0x84005618  (called   1 time(s))  from: 0x800BEDD0
+    0x84005620  (called   2 time(s))  from: 0x800BEDDC, 0x800BEDE4
+    0x84005628  (called   3 time(s))  from: 0x800BF2E4, 0x800C07F4, 0x800C0824
+    0x84005630  (called   1 time(s))  from: 0x800BF304
+    0x84005638  (called   2 time(s))  from: 0x800BF310, 0x800BF4CC
+    0x84005640  (called   1 time(s))  from: 0x800BF318
+    0x84005648  (called   3 time(s))  from: 0x800BF320, 0x800C0850, 0x800C0858
+    0x84005650  (called   1 time(s))  from: 0x800C0968
+    0x84005658  (called   4 time(s))  from: 0x800C08CC, 0x800C08F0, 0x800C0944, 0x800C09A4
+    0x84005660  (called   3 time(s))  from: 0x800C08D4, 0x800C08F8, 0x800C094C
+    0x84005668  (called   3 time(s))  from: 0x800C08DC, 0x800C0900, 0x800C0954
+    0x84005670  (called   3 time(s))  from: 0x800C08E4, 0x800C0908, 0x800C095C
+    0x84005678  (called   7 time(s))  from: 0x800C0914, 0x800C0920, 0x800C092C, 0x800C0A0C, 0x800C0A10 ... (+2 more)
+    0x84008C30  (called   1 time(s))  from: 0x800C1BB4
+    0x84008C38  (called   7 time(s))  from: 0x800C1BBC, 0x800C1BE4, 0x800C1C0C, 0x800C1C34, 0x800C1C5C ... (+2 more)
+    0x84008C40  (called   7 time(s))  from: 0x800C1BC4, 0x800C1BEC, 0x800C1C14, 0x800C1C3C, 0x800C1C64 ... (+2 more)
+    0x84008C48  (called   7 time(s))  from: 0x800C1BCC, 0x800C1BF4, 0x800C1C1C, 0x800C1C44, 0x800C1C6C ... (+2 more)
+    0x84008C50  (called   7 time(s))  from: 0x800C1BD4, 0x800C1BFC, 0x800C1C24, 0x800C1C4C, 0x800C1C74 ... (+2 more)
+    0x84008C58  (called   7 time(s))  from: 0x800C1BDC, 0x800C1C04, 0x800C1C2C, 0x800C1C54, 0x800C1C7C ... (+2 more)
+    0x84008C60  (called   1 time(s))  from: 0x800C1CF0
+    0x84008C68  (called   1 time(s))  from: 0x800C1CF8
+    0x84008C70  (called   1 time(s))  from: 0x800C1D00
+    0x84008C78  (called   1 time(s))  from: 0x800C1D08
+    0x84008C80  (called   1 time(s))  from: 0x800C1D10
+    0x84008C88  (called   1 time(s))  from: 0x800C1D18
+    0x84008C90  (called   1 time(s))  from: 0x800C1D20
+    0x84008C98  (called   2 time(s))  from: 0x800C1D28, 0x800C1D34
+    0x84008CA0  (called   1 time(s))  from: 0x800C1D3C
+    0x84008CA8  (called   1 time(s))  from: 0x800C1D44
+    0x84008CB0  (called   1 time(s))  from: 0x800C1D4C
+    0x84008CB8  (called   1 time(s))  from: 0x800C1D54
+    0x84008CC0  (called   1 time(s))  from: 0x800C1D5C
+    0x84008CC8  (called   1 time(s))  from: 0x800C1D64
+    0x84008CD0  (called   2 time(s))  from: 0x800A3D74, 0x800A3DFC
+    0x84008CD8  (called   2 time(s))  from: 0x800A3D7C, 0x800A3E04
+    0x84008CE0  (called   2 time(s))  from: 0x800A3D84, 0x800A3E0C
+    0x84008CE8  (called   2 time(s))  from: 0x800A3D8C, 0x800A3E14
+    0x84008CF0  (called   2 time(s))  from: 0x800A3D94, 0x800A3E1C
+    0x84008CF8  (called   1 time(s))  from: 0x800A3D9C
+    0x84008D00  (called   1 time(s))  from: 0x800A3DA4
+    0x84008D08  (called   1 time(s))  from: 0x800A3DAC
+    0x84008D10  (called   2 time(s))  from: 0x800A3DB4, 0x800A3DC0
+    0x84008D18  (called   1 time(s))  from: 0x800A3DC8
+    0x84008D20  (called   1 time(s))  from: 0x800A3DD0
+    0x84008D28  (called   2 time(s))  from: 0x800A3DD8, 0x800A3E24
+    0x84008D30  (called   2 time(s))  from: 0x800A3DE0, 0x800A3E2C
+    0x84009F28  (called   2 time(s))  from: 0x800A3E48, 0x800A3E54
+    0x84009F30  (called   1 time(s))  from: 0x800A3E5C
+    0x84009F38  (called   1 time(s))  from: 0x800A3E64
+    0x84009F40  (called   1 time(s))  from: 0x800A3E6C
+    0x84009F48  (called   1 time(s))  from: 0x800A3E74
+    0x84009F50  (called   1 time(s))  from: 0x800A3E7C
+    0x84009F58  (called   1 time(s))  from: 0x800A3E84
+    0x84009F60  (called   1 time(s))  from: 0x800A3E8C
+    0x8400F640  (called   6 time(s))  from: 0x800C0520, 0x800C0540, 0x800C0560, 0x800C0580, 0x800C05B0 ... (+1 more)
+    0x8400F648  (called   6 time(s))  from: 0x800C02C8, 0x800C02E8, 0x800C0308, 0x800C0328, 0x800C0358 ... (+1 more)
+    0x8400F650  (called   5 time(s))  from: 0x800C14C4, 0x800C14E4, 0x800C1504, 0x800C1534, 0x800C1554
+    0x8400F658  (called   6 time(s))  from: 0x800C03F4, 0x800C0414, 0x800C0434, 0x800C0454, 0x800C0484 ... (+1 more)
+    0x8400FDC8  (called   2 time(s))  from: 0x800C0A7C, 0x800C118C
+    0x8400FDD0  (called   2 time(s))  from: 0x800C0A84, 0x800C1184
+    0x8400FDD8  (called   2 time(s))  from: 0x800C0A8C, 0x800C117C
+    0x8400FDE0  (called   2 time(s))  from: 0x800C0A94, 0x800C1174
+    0x8400FDE8  (called   2 time(s))  from: 0x800C0A9C, 0x800C116C
+    0x8400FDF0  (called   2 time(s))  from: 0x800C0AA4, 0x800C1164
+    0x8400FDF8  (called   2 time(s))  from: 0x800C0AAC, 0x800C115C
+    0x8400FE00  (called   2 time(s))  from: 0x800C0AB4, 0x800C1158
+
+  [Other       (0x85100000+)] (1 unique targets)
+    0x851BFF7C  (called   1 time(s))  from: 0x80093024
+
+  [Other       (0x88000000+)] (393 unique targets)
+    0x88000000  (called   1 time(s))  from: 0x80091520
+    0x880003D8  (called   1 time(s))  from: 0x800ADB2C
+    0x880003E0  (called   1 time(s))  from: 0x800ADB34
+    0x880003E8  (called   1 time(s))  from: 0x800ADB3C
+    0x880003F0  (called   1 time(s))  from: 0x800ADB44
+    0x880003F8  (called   1 time(s))  from: 0x800ADB4C
+    0x88000400  (called   1 time(s))  from: 0x800ADB54
+    0x88000408  (called   1 time(s))  from: 0x800ADB5C
+    0x88000410  (called   1 time(s))  from: 0x800ADB64
+    0x88000418  (called   1 time(s))  from: 0x800ADA5C
+    0x88000420  (called   1 time(s))  from: 0x800ADA64
+    0x88000428  (called   1 time(s))  from: 0x800ADA6C
+    0x88000430  (called   1 time(s))  from: 0x800ADA74
+    0x88000438  (called   1 time(s))  from: 0x800ADA7C
+    0x88000440  (called   1 time(s))  from: 0x800ADA84
+    0x88000448  (called   1 time(s))  from: 0x800ADA8C
+    0x88000450  (called   1 time(s))  from: 0x800ADA94
+    0x88000458  (called   2 time(s))  from: 0x800AEF00, 0x800AF020
+    0x88000460  (called   4 time(s))  from: 0x800AEF10, 0x800AEF60, 0x800AEFA0, 0x800AEFE0
+    0x88000468  (called   4 time(s))  from: 0x800AEF30, 0x800AEF70, 0x800AEFB0, 0x800AEFF0
+    0x88000470  (called   4 time(s))  from: 0x800AEF40, 0x800AEF80, 0x800AEFC0, 0x800AF000
+    0x88000478  (called   4 time(s))  from: 0x800AEF50, 0x800AEF90, 0x800AEFD0, 0x800AF010
+    0x88000480  (called   5 time(s))  from: 0x800ADAC0, 0x800AE7AC, 0x800AFFC0, 0x800B07A4, 0x800B07E0
+    0x88000488  (called   2 time(s))  from: 0x800ADAC8, 0x800AFFC8
+    0x88000490  (called   2 time(s))  from: 0x800ADAD0, 0x800AFFD0
+    0x88000498  (called   2 time(s))  from: 0x800ADAD8, 0x800AFFD8
+    0x880004A0  (called   2 time(s))  from: 0x800ADAE0, 0x800AFFE0
+    0x880004A8  (called   2 time(s))  from: 0x800ADAE8, 0x800AFFE8
+    0x880004B0  (called   2 time(s))  from: 0x800ADAF0, 0x800AFFF0
+    0x880004B8  (called   2 time(s))  from: 0x800ADAF8, 0x800AFFF8
+    0x880004C0  (called   1 time(s))  from: 0x800AE818
+    0x880004C8  (called   1 time(s))  from: 0x800AE820
+    0x880004D0  (called   1 time(s))  from: 0x800AE828
+    0x880004D8  (called   4 time(s))  from: 0x800AE834, 0x800AE8D4, 0x800AE8F4, 0x800AE914
+    0x880004E0  (called   7 time(s))  from: 0x800AE83C, 0x800AE8DC, 0x800AE8EC, 0x800AE8FC, 0x800AE90C ... (+2 more)
+    0x880004E8  (called   4 time(s))  from: 0x800AE844, 0x800AE8E4, 0x800AE904, 0x800AE924
+    0x880004F0  (called   1 time(s))  from: 0x800AE934
+    0x880004F8  (called   3 time(s))  from: 0x800AFED8, 0x800AFF40, 0x800B07AC
+    0x88000500  (called   2 time(s))  from: 0x800AFEE0, 0x800AFF38
+    0x88000508  (called   2 time(s))  from: 0x800AFEE8, 0x800AFF30
+    0x88000510  (called   2 time(s))  from: 0x800AFEF0, 0x800AFF28
+    0x88000518  (called   6 time(s))  from: 0x800AFEF8, 0x800AFF00, 0x800AFF08, 0x800AFF10, 0x800AFF18 ... (+1 more)
+    0x88000520  (called   2 time(s))  from: 0x800AFF4C, 0x800AFFB4
+    0x88000528  (called   2 time(s))  from: 0x800AFF54, 0x800AFFAC
+    0x88000530  (called   2 time(s))  from: 0x800AFF5C, 0x800AFFA4
+    0x88000538  (called   4 time(s))  from: 0x800AFF64, 0x800AFF74, 0x800AFF84, 0x800AFF94
+    0x88000540  (called   4 time(s))  from: 0x800AFF6C, 0x800AFF7C, 0x800AFF8C, 0x800AFF9C
+    0x88000550  (called   2 time(s))  from: 0x800AD9A4, 0x800AD9BC
+    0x88000558  (called   1 time(s))  from: 0x800AD9C4
+    0x88000560  (called   1 time(s))  from: 0x800AD9CC
+    0x88000568  (called   1 time(s))  from: 0x800AD9D4
+    0x88000570  (called   1 time(s))  from: 0x800AD9DC
+    0x88000578  (called   1 time(s))  from: 0x800AD9E4
+    0x88000580  (called   1 time(s))  from: 0x800AD9EC
+    0x88000588  (called   1 time(s))  from: 0x800AD9F4
+    0x88000590  (called   1 time(s))  from: 0x800AD9FC
+    0x88000598  (called   1 time(s))  from: 0x800ADA10
+    0x880005A0  (called   1 time(s))  from: 0x800ADA18
+    0x880005A8  (called   1 time(s))  from: 0x800ADA20
+    0x880005B0  (called   3 time(s))  from: 0x800AE140, 0x800B0004, 0x800B000C
+    0x880005B8  (called   1 time(s))  from: 0x800AE14C
+    0x880005C0  (called   1 time(s))  from: 0x800AE154
+    0x880005C8  (called   1 time(s))  from: 0x800AE15C
+    0x880005D0  (called   1 time(s))  from: 0x800AE164
+    0x880005E0  (called   1 time(s))  from: 0x800AE104
+    0x880005E8  (called   1 time(s))  from: 0x800AE110
+    0x880005F0  (called   3 time(s))  from: 0x800AE118, 0x800AE120, 0x800AF390
+    0x880005F8  (called   8 time(s))  from: 0x800AE128, 0x800AF3A0, 0x800AF3D0, 0x800AF3F0, 0x800AF410 ... (+3 more)
+    0x88000600  (called   1 time(s))  from: 0x800AE130
+    0x88000608  (called   1 time(s))  from: 0x800AE08C
+    0x88000610  (called   1 time(s))  from: 0x800AE098
+    0x88000618  (called   3 time(s))  from: 0x800AE0A0, 0x800AE0A8, 0x800AF138
+    0x88000620  (called   8 time(s))  from: 0x800AE0B0, 0x800AF148, 0x800AF178, 0x800AF198, 0x800AF1B8 ... (+3 more)
+    0x88000628  (called   1 time(s))  from: 0x800AE0B8
+    0x88000630  (called   1 time(s))  from: 0x800AE0C8
+    0x88000638  (called   1 time(s))  from: 0x800AE0D4
+    0x88000640  (called   3 time(s))  from: 0x800AE0DC, 0x800AE0E4, 0x800AF264
+    0x88000648  (called   8 time(s))  from: 0x800AE0EC, 0x800AF274, 0x800AF2A4, 0x800AF2C4, 0x800AF2E4 ... (+3 more)
+    0x88000650  (called   1 time(s))  from: 0x800AE0F4
+    0x88000658  (called   1 time(s))  from: 0x800AF0E8
+    0x88000660  (called   2 time(s))  from: 0x800AF0F0, 0x800B049C
+    0x88000668  (called   1 time(s))  from: 0x800AF0F8
+    0x88000670  (called   8 time(s))  from: 0x800AE990, 0x800AE9C4, 0x800AE9EC, 0x800AF5C8, 0x800AF5D4 ... (+3 more)
+    0x88000678  (called  10 time(s))  from: 0x800AE998, 0x800AE9CC, 0x800AE9F4, 0x800AF5DC, 0x800AF5E4 ... (+5 more)
+    0x88000680  (called   3 time(s))  from: 0x800AE9A0, 0x800AE9D4, 0x800AE9FC
+    0x88000688  (called   1 time(s))  from: 0x800AE9A8
+    0x88000690  (called   1 time(s))  from: 0x800AE6FC
+    0x88000698  (called   1 time(s))  from: 0x800AE704
+    0x880006A0  (called   1 time(s))  from: 0x800AE70C
+    0x880006A8  (called   1 time(s))  from: 0x800AE714
+    0x880006B0  (called   1 time(s))  from: 0x800AE71C
+    0x880006B8  (called   1 time(s))  from: 0x800AE724
+    0x880006C0  (called   1 time(s))  from: 0x800AE72C
+    0x880006C8  (called   1 time(s))  from: 0x800AE734
+    0x880006D0  (called   1 time(s))  from: 0x800AE73C
+    0x880006D8  (called  13 time(s))  from: 0x8008C5D4, 0x800AD88C, 0x800AD8C4, 0x800AE508, 0x800AEAEC ... (+8 more)
+    0x880006E0  (called   7 time(s))  from: 0x800AFC68, 0x800AFD0C, 0x800AFD4C, 0x800AFD8C, 0x800AFDD4 ... (+2 more)
+    0x880006E8  (called   7 time(s))  from: 0x800AFC70, 0x800AFD14, 0x800AFD54, 0x800AFD94, 0x800AFDDC ... (+2 more)
+    0x880006F0  (called   7 time(s))  from: 0x800AFC78, 0x800AFD1C, 0x800AFD5C, 0x800AFD9C, 0x800AFDE4 ... (+2 more)
+    0x880006F8  (called   7 time(s))  from: 0x800AFC80, 0x800AFD24, 0x800AFD64, 0x800AFDA4, 0x800AFDEC ... (+2 more)
+    0x88000700  (called   7 time(s))  from: 0x800AFC88, 0x800AFD2C, 0x800AFD6C, 0x800AFDAC, 0x800AFDF4 ... (+2 more)
+    0x88000708  (called   7 time(s))  from: 0x800AFC90, 0x800AFD34, 0x800AFD74, 0x800AFDB4, 0x800AFDFC ... (+2 more)
+    0x88000710  (called   7 time(s))  from: 0x800AFC98, 0x800AFD3C, 0x800AFD7C, 0x800AFDBC, 0x800AFE04 ... (+2 more)
+    0x88000718  (called   2 time(s))  from: 0x800B04E4, 0x800B0650
+    0x88000720  (called   1 time(s))  from: 0x800B0658
+    0x88000728  (called   1 time(s))  from: 0x800AEC5C
+    0x88000730  (called   1 time(s))  from: 0x800AEC68
+    0x88000738  (called   1 time(s))  from: 0x800AEC74
+    0x88000740  (called   1 time(s))  from: 0x800AEC7C
+    0x88000748  (called   1 time(s))  from: 0x800AEDF8
+    0x88000750  (called   1 time(s))  from: 0x800AEE04
+    0x88000758  (called   1 time(s))  from: 0x800AEE10
+    0x88000760  (called   1 time(s))  from: 0x800AEE28
+    0x88000768  (called   3 time(s))  from: 0x800AEA14, 0x800AEA20, 0x800B0928
+    0x88000770  (called   2 time(s))  from: 0x800AEA2C, 0x800B0920
+    0x88000778  (called   2 time(s))  from: 0x800AEA34, 0x800B0918
+    0x88000780  (called   5 time(s))  from: 0x800AEA3C, 0x800AF4BC, 0x800AF4EC, 0x800AF504, 0x800AF51C
+    0x88000788  (called   6 time(s))  from: 0x800AEA44, 0x800AF4C4, 0x800AF4F4, 0x800AF50C, 0x800AF524 ... (+1 more)
+    0x88000790  (called   9 time(s))  from: 0x800AEA4C, 0x800AF4CC, 0x800AF4D4, 0x800AF4DC, 0x800AF4E4 ... (+4 more)
+    0x88000798  (called   4 time(s))  from: 0x800AEA60, 0x800AEEBC, 0x800AF54C, 0x800B008C
+    0x880007A0  (called   4 time(s))  from: 0x800AEA68, 0x800AEEC4, 0x800AF554, 0x800B0094
+    0x880007A8  (called   4 time(s))  from: 0x800AEA70, 0x800AEECC, 0x800AF55C, 0x800B009C
+    0x880007B0  (called   3 time(s))  from: 0x800AEA78, 0x800AEED4, 0x800B00A4
+    0x880007B8  (called   3 time(s))  from: 0x800AEA80, 0x800AEEDC, 0x800B00AC
+    0x880007C0  (called   1 time(s))  from: 0x800AF900
+    0x880007C8  (called   3 time(s))  from: 0x800AF908, 0x800AF914, 0x800B0084
+    0x880007D0  (called   2 time(s))  from: 0x800AE7D4, 0x800B05A8
+    0x880007D8  (called   2 time(s))  from: 0x800AE7DC, 0x800B05B0
+    0x880007E0  (called   2 time(s))  from: 0x800AE7E4, 0x800B05B8
+    0x880007E8  (called   7 time(s))  from: 0x800AE7F0, 0x800AE85C, 0x800AE87C, 0x800AE89C, 0x800AE8BC ... (+2 more)
+    0x880007F0  (called  10 time(s))  from: 0x800AE7F8, 0x800AE864, 0x800AE874, 0x800AE884, 0x800AE894 ... (+5 more)
+    0x880007F8  (called   6 time(s))  from: 0x800AE800, 0x800AE86C, 0x800AE88C, 0x800AE8AC, 0x800B05D4 ... (+1 more)
+    0x88000800  (called   3 time(s))  from: 0x800AEB08, 0x800AECB4, 0x800B0898
+    0x88000808  (called   3 time(s))  from: 0x800AEB10, 0x800AECC0, 0x800B08A0
+    0x88000810  (called   3 time(s))  from: 0x800AEB1C, 0x800AECCC, 0x800B08AC
+    0x88000818  (called   3 time(s))  from: 0x800AEB24, 0x800AECD4, 0x800B08B4
+    0x88000820  (called   3 time(s))  from: 0x800AEB2C, 0x800AECDC, 0x800B08BC
+    0x88000828  (called   3 time(s))  from: 0x800AEB34, 0x800AECE4, 0x800B08C4
+    0x88000830  (called   6 time(s))  from: 0x800AEB3C, 0x800AEB4C, 0x800AECEC, 0x800AECFC, 0x800B08CC ... (+1 more)
+    0x88000838  (called   4 time(s))  from: 0x800AEB54, 0x800AED08, 0x800B08DC, 0x800B0938
+    0x88000840  (called   4 time(s))  from: 0x800AEB60, 0x800AED10, 0x800B08E4, 0x800B0940
+    0x88000848  (called  10 time(s))  from: 0x800AEB68, 0x800AED18, 0x800B0810, 0x800B0818, 0x800B0824 ... (+5 more)
+    0x88000850  (called   3 time(s))  from: 0x800AED34, 0x800AED80, 0x800B0970
+    0x88000858  (called   3 time(s))  from: 0x800AED40, 0x800AED8C, 0x800B097C
+    0x88000860  (called   3 time(s))  from: 0x800AED48, 0x800AED94, 0x800B0984
+    0x88000868  (called   3 time(s))  from: 0x800AED50, 0x800AED9C, 0x800B098C
+    0x88000870  (called   3 time(s))  from: 0x800AED58, 0x800AEDA4, 0x800B0994
+    0x88000878  (called   3 time(s))  from: 0x800AED60, 0x800AEDAC, 0x800B099C
+    0x88000880  (called   3 time(s))  from: 0x800AED68, 0x800AEDB4, 0x800B09A4
+    0x88000888  (called   2 time(s))  from: 0x800AEDCC, 0x800B09BC
+    0x88000890  (called   3 time(s))  from: 0x800AEDD8, 0x800B09C8, 0x800B09D0
+    0x88000898  (called   8 time(s))  from: 0x800AEDE0, 0x800B0854, 0x800B085C, 0x800B0868, 0x800B0874 ... (+3 more)
+    0x880008A0  (called   4 time(s))  from: 0x800AFA48, 0x800AFB70, 0x800B02B4, 0x800B0350
+    0x880008A8  (called   4 time(s))  from: 0x800AFA50, 0x800AFB60, 0x800B02BC, 0x800B0348
+    0x880008B0  (called   4 time(s))  from: 0x800AFA70, 0x800AFB50, 0x800B02D0, 0x800B0340
+    0x880008B8  (called   4 time(s))  from: 0x800AFA80, 0x800AFB40, 0x800B02D8, 0x800B0338
+    0x880008C0  (called   4 time(s))  from: 0x800AFA90, 0x800AFB30, 0x800B02E0, 0x800B0330
+    0x880008C8  (called   4 time(s))  from: 0x800AFAA0, 0x800AFB20, 0x800B02E8, 0x800B0328
+    0x880008D0  (called   4 time(s))  from: 0x800AFAB0, 0x800AFB10, 0x800B02F0, 0x800B0320
+    0x880008D8  (called   4 time(s))  from: 0x800AFAC0, 0x800AFB00, 0x800B02F8, 0x800B0318
+    0x880008E0  (called   4 time(s))  from: 0x800AFAD0, 0x800AFAF0, 0x800B0300, 0x800B0310
+    0x880008E8  (called   2 time(s))  from: 0x800AFAE0, 0x800B0308
+    0x880008F0  (called   1 time(s))  from: 0x800ADF9C
+    0x880008F8  (called   1 time(s))  from: 0x800ADFA8
+    0x88000900  (called   1 time(s))  from: 0x800ADFB0
+    0x88000908  (called   1 time(s))  from: 0x800ADFB8
+    0x88000910  (called   1 time(s))  from: 0x800ADFC0
+    0x88000948  (called   1 time(s))  from: 0x800AEBF8
+    0x88000950  (called   1 time(s))  from: 0x800AEC00
+    0x88000958  (called   1 time(s))  from: 0x800AEC08
+    0x88000960  (called   1 time(s))  from: 0x800AEC20
+    0x88000968  (called   1 time(s))  from: 0x800AEC28
+    0x88000970  (called   1 time(s))  from: 0x800AEC30
+    0x88000978  (called   2 time(s))  from: 0x800AEC38, 0x800AFDC4
+    0x88000980  (called   1 time(s))  from: 0x800AEB94
+    0x88000988  (called   1 time(s))  from: 0x800AEB9C
+    0x88000990  (called   1 time(s))  from: 0x800AEBA4
+    0x88000998  (called   1 time(s))  from: 0x800AEBAC
+    0x880009A0  (called   1 time(s))  from: 0x800AEBB4
+    0x880009A8  (called   1 time(s))  from: 0x800AEBBC
+    0x880009B0  (called   1 time(s))  from: 0x800AEBC4
+    0x880009B8  (called   1 time(s))  from: 0x800AD8F0
+    0x880009C0  (called   1 time(s))  from: 0x800AD8FC
+    0x880009C8  (called   1 time(s))  from: 0x800AD904
+    0x880009D0  (called   1 time(s))  from: 0x800AD90C
+    0x880009D8  (called   1 time(s))  from: 0x800AD914
+    0x880009E0  (called   1 time(s))  from: 0x800AF05C
+    0x880009E8  (called   1 time(s))  from: 0x800AF064
+    0x880009F8  (called   1 time(s))  from: 0x800AF06C
+    0x88000A00  (called   5 time(s))  from: 0x800AF074, 0x800AF084, 0x800AF094, 0x800AF0A4, 0x800AF0B4
+    0x88000A08  (called   5 time(s))  from: 0x800AF07C, 0x800AF08C, 0x800AF09C, 0x800AF0AC, 0x800AF0BC
+    0x88000A10  (called   1 time(s))  from: 0x800AF0C4
+    0x88000A18  (called   1 time(s))  from: 0x800AFBDC
+    0x88000A20  (called   1 time(s))  from: 0x800AFBE8
+    0x88000A28  (called   1 time(s))  from: 0x800AFBF0
+    0x88000A30  (called   1 time(s))  from: 0x800AFBF8
+    0x88000A38  (called   1 time(s))  from: 0x800AFC00
+    0x88000A40  (called   4 time(s))  from: 0x800ADF60, 0x800ADF8C, 0x800B0124, 0x800B0148
+    0x88000A48  (called   2 time(s))  from: 0x800ADF6C, 0x800ADF84
+    0x88000A50  (called   1 time(s))  from: 0x800ADF74
+    0x88000A58  (called   1 time(s))  from: 0x800ADF7C
+    0x88000A60  (called   2 time(s))  from: 0x800ADFD8, 0x800AE014
+    0x88000A68  (called   4 time(s))  from: 0x800ADFE4, 0x800AE004, 0x800AE020, 0x800AE040
+    0x88000A70  (called   4 time(s))  from: 0x800ADFEC, 0x800ADFFC, 0x800AE028, 0x800AE038
+    0x88000A78  (called   2 time(s))  from: 0x800ADFF4, 0x800AE030
+    0x88000A80  (called   1 time(s))  from: 0x800AFC1C
+    0x88000A88  (called   1 time(s))  from: 0x800AFC28
+    0x88000A90  (called   1 time(s))  from: 0x800AFC30
+    0x88000A98  (called   1 time(s))  from: 0x800AFC38
+    0x88000AA0  (called   1 time(s))  from: 0x800AFC40
+    0x88000AA8  (called   1 time(s))  from: 0x800AE050
+    0x88000AB0  (called   2 time(s))  from: 0x800AE05C, 0x800AE07C
+    0x88000AB8  (called   2 time(s))  from: 0x800AE064, 0x800AE074
+    0x88000AC0  (called   1 time(s))  from: 0x800AE06C
+    0x88000AC8  (called   1 time(s))  from: 0x800B0244
+    0x88000AD0  (called   1 time(s))  from: 0x800B024C
+    0x88000AD8  (called   1 time(s))  from: 0x800B0254
+    0x88000AE0  (called   1 time(s))  from: 0x800B0274
+    0x88000AE8  (called   1 time(s))  from: 0x800B027C
+    0x88000AF0  (called   1 time(s))  from: 0x800B0284
+    0x88000AF8  (called   8 time(s))  from: 0x800AFCB4, 0x800AFCE8, 0x800B05FC, 0x800B062C, 0x800B0A0C ... (+3 more)
+    0x88000B00  (called   8 time(s))  from: 0x800AFCC0, 0x800AFCE0, 0x800B0604, 0x800B0624, 0x800B0A14 ... (+3 more)
+    0x88000B08  (called   8 time(s))  from: 0x800AFCC8, 0x800AFCD8, 0x800B060C, 0x800B061C, 0x800B0A1C ... (+3 more)
+    0x88000B10  (called   4 time(s))  from: 0x800AFCD0, 0x800B0614, 0x800B0A24, 0x800B0A78
+    0x88000B18  (called   4 time(s))  from: 0x800B016C, 0x800B04F0, 0x800B06A4, 0x800B074C
+    0x88000B20  (called   4 time(s))  from: 0x800B0174, 0x800B04F8, 0x800B06AC, 0x800B0754
+    0x88000B28  (called   4 time(s))  from: 0x800B017C, 0x800B0500, 0x800B06B4, 0x800B075C
+    0x88000B30  (called   4 time(s))  from: 0x800B0188, 0x800B0518, 0x800B06CC, 0x800B0764
+    0x88000B38  (called   4 time(s))  from: 0x800B0190, 0x800B0520, 0x800B06D4, 0x800B076C
+    0x88000B40  (called   4 time(s))  from: 0x800AE530, 0x800AE5A8, 0x800B0374, 0x800B04C0
+    0x88000B48  (called   7 time(s))  from: 0x800AE548, 0x800AE570, 0x800AE598, 0x800AE5C0, 0x800AE5E8 ... (+2 more)
+    0x88000B50  (called  11 time(s))  from: 0x800AE550, 0x800AE578, 0x800AE5C8, 0x800AE5F0, 0x800AE61C ... (+6 more)
+    0x88000B58  (called   4 time(s))  from: 0x800AE558, 0x800AE580, 0x800AE5D0, 0x800AE5F8
+    0x88000B60  (called   4 time(s))  from: 0x800AE560, 0x800AE588, 0x800AE5D8, 0x800AE600
+    0x88000B68  (called   4 time(s))  from: 0x800AE568, 0x800AE590, 0x800AE5E0, 0x800AE608
+    0x88000B70  (called   1 time(s))  from: 0x800AEAA4
+    0x88000B78  (called   1 time(s))  from: 0x800AEAAC
+    0x88000B80  (called   1 time(s))  from: 0x800AEAB4
+    0x88000B88  (called   1 time(s))  from: 0x800AEABC
+    0x88000B90  (called   1 time(s))  from: 0x800AEAC4
+    0x88000B98  (called   1 time(s))  from: 0x800AEACC
+    0x88000BA0  (called   1 time(s))  from: 0x800AEAD4
+    0x88000BA8  (called   1 time(s))  from: 0x800AEADC
+    0x88000BB0  (called   1 time(s))  from: 0x800AEAE4
+    0x88000BC0  (called   2 time(s))  from: 0x800AD874, 0x800AD8AC
+    0x88000BC8  (called   2 time(s))  from: 0x800AD87C, 0x800AD8B4
+    0x88000BD0  (called   2 time(s))  from: 0x800AD884, 0x800AD8BC
+    0x88000BD8  (called   1 time(s))  from: 0x800AD944
+    0x88000BE0  (called   1 time(s))  from: 0x800AD950
+    0x88000BE8  (called   1 time(s))  from: 0x800AD958
+    0x88000BF0  (called   1 time(s))  from: 0x800AD960
+    0x88000BF8  (called   1 time(s))  from: 0x800AD968
+    0x88000C00  (called   1 time(s))  from: 0x800AD970
+    0x88000C08  (called   1 time(s))  from: 0x800AD978
+    0x88000C10  (called   1 time(s))  from: 0x800AD980
+    0x88000C18  (called   4 time(s))  from: 0x800AD6C4, 0x800AD728, 0x800AD7E4, 0x800AD848
+    0x88000C20  (called   4 time(s))  from: 0x800AD6CC, 0x800AD730, 0x800AD7EC, 0x800AD850
+    0x88000C28  (called   4 time(s))  from: 0x800AD6D4, 0x800AD738, 0x800AD7F4, 0x800AD858
+    0x88000C30  (called   2 time(s))  from: 0x800AD700, 0x800AD820
+    0x88000C38  (called   2 time(s))  from: 0x800AD708, 0x800AD828
+    0x88000C40  (called   2 time(s))  from: 0x800AD710, 0x800AD830
+    0x88000C48  (called   2 time(s))  from: 0x800AD718, 0x800AD838
+    0x88000C50  (called   2 time(s))  from: 0x800AD720, 0x800AD840
+    0x88000C58  (called   2 time(s))  from: 0x800AD754, 0x800AD7B8
+    0x88000C60  (called   2 time(s))  from: 0x800AD75C, 0x800AD7C0
+    0x88000C68  (called   2 time(s))  from: 0x800AD764, 0x800AD7C8
+    0x88000C70  (called   1 time(s))  from: 0x800AD790
+    0x88000C78  (called   1 time(s))  from: 0x800AD798
+    0x88000C80  (called   1 time(s))  from: 0x800AD7A0
+    0x88000C88  (called   1 time(s))  from: 0x800AD7A8
+    0x88000C90  (called   1 time(s))  from: 0x800AD7B0
+    0x88000C98  (called   1 time(s))  from: 0x800AE94C
+    0x88000CA0  (called   1 time(s))  from: 0x800AE954
+    0x88000CA8  (called   1 time(s))  from: 0x800AE960
+    0x88000CB0  (called   1 time(s))  from: 0x800AE968
+    0x88000CB8  (called   1 time(s))  from: 0x800AE970
+    0x88000CC0  (called   1 time(s))  from: 0x800AE978
+    0x88000CC8  (called   5 time(s))  from: 0x800AF580, 0x800B01F4, 0x800B0218, 0x800B0228, 0x800B0804
+    0x88000CD0  (called   1 time(s))  from: 0x800AF58C
+    0x88000CD8  (called   1 time(s))  from: 0x800AF594
+    0x88000CE0  (called   1 time(s))  from: 0x800AF59C
+    0x88000CE8  (called   1 time(s))  from: 0x800AF5A4
+    0x88000CF0  (called   1 time(s))  from: 0x800AF5AC
+    0x88000CF8  (called   1 time(s))  from: 0x800AF5B4
+    0x88000D00  (called   1 time(s))  from: 0x800AF5BC
+    0x88000D08  (called   7 time(s))  from: 0x800AE62C, 0x800AE658, 0x800AE660, 0x800AE668, 0x800AE670 ... (+2 more)
+    0x88000D10  (called   2 time(s))  from: 0x800AE634, 0x800AE6C0
+    0x88000D18  (called   2 time(s))  from: 0x800AE648, 0x800AE6C8
+    0x88000D20  (called   2 time(s))  from: 0x800AE650, 0x800AE6D0
+    0x88000D28  (called   1 time(s))  from: 0x800AE6D8
+    0x88000D30  (called   1 time(s))  from: 0x800AE6E0
+    0x88000D48  (called   1 time(s))  from: 0x800AEE50
+    0x88000D50  (called   1 time(s))  from: 0x800AEE68
+    0x88000D58  (called   1 time(s))  from: 0x800AEE70
+    0x88000D60  (called   1 time(s))  from: 0x800AEE78
+    0x88000D68  (called   1 time(s))  from: 0x800AEE80
+    0x88000D70  (called   1 time(s))  from: 0x800AEE88
+    0x88000D78  (called   1 time(s))  from: 0x800AEE90
+    0x88000D80  (called   1 time(s))  from: 0x800AEE98
+    0x88000D88  (called   1 time(s))  from: 0x800AEEA0
+    0x88000D90  (called   1 time(s))  from: 0x800AE4B8
+    0x88000D98  (called   1 time(s))  from: 0x800AE4C4
+    0x88000DA0  (called   1 time(s))  from: 0x800AE4D0
+    0x88000DA8  (called   1 time(s))  from: 0x800AE4E0
+    0x88000DB8  (called   1 time(s))  from: 0x800ADCE0
+    0x88000DC0  (called   2 time(s))  from: 0x800ADCEC, 0x800ADCF4
+    0x88000DC8  (called   1 time(s))  from: 0x800ADC20
+    0x88000DD0  (called   2 time(s))  from: 0x800ADC2C, 0x800ADC34
+    0x88000DD8  (called   1 time(s))  from: 0x800ADCA0
+    0x88000DE0  (called   2 time(s))  from: 0x800ADCAC, 0x800ADCB4
+    0x88000DE8  (called   4 time(s))  from: 0x800AE1CC, 0x800AE228, 0x800AE270, 0x800AE28C
+    0x88000DF0  (called   3 time(s))  from: 0x800AE1D4, 0x800AE230, 0x800AF81C
+    0x88000DF8  (called   3 time(s))  from: 0x800AE1DC, 0x800AE238, 0x800AF828
+    0x88000E00  (called   8 time(s))  from: 0x800AE1F4, 0x800AE240, 0x800AE2A8, 0x800AE2B0, 0x800AE2E4 ... (+3 more)
+    0x88000E08  (called   5 time(s))  from: 0x800AE200, 0x800AE24C, 0x800AE2BC, 0x800AE2F8, 0x800AE334
+    0x88000E10  (called  24 time(s))  from: 0x800AE208, 0x800AE254, 0x800AE364, 0x800AE374, 0x800AE384 ... (+19 more)
+    0x88000E18  (called   3 time(s))  from: 0x800AE174, 0x800AF694, 0x800AF6C4
+    0x88000E20  (called   1 time(s))  from: 0x800AE194
+    0x88000E28  (called   2 time(s))  from: 0x800AE1A0, 0x800AE35C
+    0x88000E30  (called   1 time(s))  from: 0x800AE1A8
+    0x88000E38  (called   3 time(s))  from: 0x800AE1B0, 0x800AF6F0, 0x800AF6F8
+    0x88000E40  (called   1 time(s))  from: 0x800AF808
+    0x88000E48  (called   4 time(s))  from: 0x800AF76C, 0x800AF790, 0x800AF7E4, 0x800AF844
+    0x88000E50  (called   3 time(s))  from: 0x800AF774, 0x800AF798, 0x800AF7EC
+    0x88000E58  (called   3 time(s))  from: 0x800AF77C, 0x800AF7A0, 0x800AF7F4
+    0x88000E60  (called   3 time(s))  from: 0x800AF784, 0x800AF7A8, 0x800AF7FC
+    0x88000E68  (called   7 time(s))  from: 0x800AF7B4, 0x800AF7C0, 0x800AF7CC, 0x800AF8AC, 0x800AF8B0 ... (+2 more)
+    0x88000E70  (called   1 time(s))  from: 0x800AE76C
+    0x88000E78  (called   1 time(s))  from: 0x800AE774
+    0x88000E80  (called   1 time(s))  from: 0x800AE77C
+    0x88000E88  (called   1 time(s))  from: 0x800AE784
+    0x88000E90  (called   1 time(s))  from: 0x800AE78C
+    0x88000E98  (called   1 time(s))  from: 0x800AE794
+    0x88000EA0  (called   1 time(s))  from: 0x800AE79C
+    0x88000EA8  (called   1 time(s))  from: 0x800AE7A4
+    0x88000EB0  (called   1 time(s))  from: 0x800B0C68
+    0x88000EB8  (called   2 time(s))  from: 0x800B0C70, 0x800B0C80
+    0x88000EC0  (called   1 time(s))  from: 0x800B0C9C
+    0x88000EC8  (called   1 time(s))  from: 0x800B0CA4
+    0x88000ED0  (called   1 time(s))  from: 0x800B0CAC
+    0x88000ED8  (called   1 time(s))  from: 0x800B0CB4
+    0x88000EE0  (called   1 time(s))  from: 0x800B0CBC
+    0x88000EE8  (called   4 time(s))  from: 0x800B01B4, 0x800B0548, 0x800B06FC, 0x800B07B4
+    0x88000EF0  (called   4 time(s))  from: 0x800B01BC, 0x800B0550, 0x800B0704, 0x800B07BC
+    0x88000EF8  (called   4 time(s))  from: 0x800B01C4, 0x800B0568, 0x800B071C, 0x800B07D4
+    0x88000F00  (called   3 time(s))  from: 0x800B01D0, 0x800B0570, 0x800B0724
+    0x88000F08  (called   1 time(s))  from: 0x800ADC60
+    0x88000F10  (called   2 time(s))  from: 0x800ADC6C, 0x800ADC74
+    0x88008880  (called   1 time(s))  from: 0x800B0BF4
+    0x88008888  (called   1 time(s))  from: 0x800B0BFC
+    0x88008890  (called   1 time(s))  from: 0x800B0C04
+    0x88008898  (called   1 time(s))  from: 0x800B0C0C
+    0x880088A0  (called   1 time(s))  from: 0x800B0C14
+    0x880088A8  (called   1 time(s))  from: 0x800B0C1C
+    0x880088B0  (called   1 time(s))  from: 0x800B0C24
+    0x880088B8  (called   1 time(s))  from: 0x800B0C2C
+    0x880088C0  (called   1 time(s))  from: 0x800B0C34
+    0x880088C8  (called   1 time(s))  from: 0x800B0C3C
+    0x880088D0  (called   1 time(s))  from: 0x800B0C44
+    0x880088D8  (called   1 time(s))  from: 0x800A3B98
+    0x880088E0  (called   1 time(s))  from: 0x800A3BB0
+    0x880088E8  (called   1 time(s))  from: 0x800A3BB8
+    0x880088F0  (called   1 time(s))  from: 0x800A3BC0
+    0x880088F8  (called   1 time(s))  from: 0x800A3BC8
+    0x88008900  (called   1 time(s))  from: 0x800A3BD0
+    0x88008908  (called   1 time(s))  from: 0x800A3BD8
+    0x88008910  (called   1 time(s))  from: 0x800A3BE0
+    0x88008918  (called   1 time(s))  from: 0x800A3BE8
+    0x88008920  (called   1 time(s))  from: 0x800A3BF0
+    0x88008928  (called   1 time(s))  from: 0x800A3BF8
+    0x88008930  (called   1 time(s))  from: 0x800A3C00
+    0x88008938  (called   1 time(s))  from: 0x800A3C08
+    0x88008940  (called   1 time(s))  from: 0x800A3C10
+    0x88008948  (called   1 time(s))  from: 0x800A3C18
+    0x88008A48  (called   1 time(s))  from: 0x800B0A9C
+    0x88008A50  (called   6 time(s))  from: 0x800B0AA4, 0x800B0AD4, 0x800B0B04, 0x800B0B34, 0x800B0B64 ... (+1 more)
+    0x88008A58  (called   6 time(s))  from: 0x800B0AAC, 0x800B0ADC, 0x800B0B0C, 0x800B0B3C, 0x800B0B6C ... (+1 more)
+    0x88008A60  (called   6 time(s))  from: 0x800B0AB4, 0x800B0AE4, 0x800B0B14, 0x800B0B44, 0x800B0B74 ... (+1 more)
+    0x88008A68  (called   6 time(s))  from: 0x800B0ABC, 0x800B0AEC, 0x800B0B1C, 0x800B0B4C, 0x800B0B7C ... (+1 more)
+    0x88008A70  (called   6 time(s))  from: 0x800B0AC4, 0x800B0AF4, 0x800B0B24, 0x800B0B54, 0x800B0B84 ... (+1 more)
+    0x88008A78  (called   6 time(s))  from: 0x800B0ACC, 0x800B0AFC, 0x800B0B2C, 0x800B0B5C, 0x800B0B8C ... (+1 more)
+    0x8800FA20  (called   6 time(s))  from: 0x800AF3C0, 0x800AF3E0, 0x800AF400, 0x800AF420, 0x800AF450 ... (+1 more)
+    0x8800FA28  (called   6 time(s))  from: 0x800AF168, 0x800AF188, 0x800AF1A8, 0x800AF1C8, 0x800AF1F8 ... (+1 more)
+    0x8800FA30  (called   6 time(s))  from: 0x800AF294, 0x800AF2B4, 0x800AF2D4, 0x800AF2F4, 0x800AF324 ... (+1 more)
+    0x8800FA38  (called   5 time(s))  from: 0x800B03B4, 0x800B03D4, 0x800B03F4, 0x800B0424, 0x800B0444
+    0x8800FD08  (called   2 time(s))  from: 0x800AF91C, 0x800B007C
+    0x8800FD10  (called   2 time(s))  from: 0x800AF924, 0x800B0074
+    0x8800FD18  (called   2 time(s))  from: 0x800AF92C, 0x800B006C
+    0x8800FD20  (called   2 time(s))  from: 0x800AF934, 0x800B0064
+    0x8800FD28  (called   2 time(s))  from: 0x800AF93C, 0x800B005C
+    0x8800FD30  (called   2 time(s))  from: 0x800AF944, 0x800B0054
+    0x8800FD38  (called   2 time(s))  from: 0x800AF94C, 0x800B004C
+    0x8800FD40  (called   2 time(s))  from: 0x800AF954, 0x800B0048
+
+  [Other       (0x88C00000+)] (1 unique targets)
+    0x88C52FF8  (called   2 time(s))  from: 0x800C20C4, 0x800C2124
+
+  [Other       (0x88E00000+)] (1 unique targets)
+    0x88E03294  (called   1 time(s))  from: 0x8009250C
+
+  [Other       (0x89700000+)] (1 unique targets)
+    0x897FFF60  (called   1 time(s))  from: 0x8009302C
+
+  [Other       (0x8A500000+)] (1 unique targets)
+    0x8A53B8E4  (called   1 time(s))  from: 0x800C23E4
+
+  [Other       (0x8C000000+)] (1 unique targets)
+    0x8C000000  (called   1 time(s))  from: 0x80091570
+
+  [Other       (0x8DF00000+)] (1 unique targets)
+    0x8DFC4200  (called   1 time(s))  from: 0x80092764
+
+  [Other       (0x8E000000+)] (1 unique targets)
+    0x8E0FFF40  (called   1 time(s))  from: 0x80093034
+
+  [Other       (0x8FE00000+)] (1 unique targets)
+    0x8FEBC018  (called   1 time(s))  from: 0x80092788
+
+  [Other       (0x8FF00000+)] (2 unique targets)
+    0x8FFC7FFC  (called   1 time(s))  from: 0x80090FF4
+    0x8FFFFFFC  (called   1 time(s))  from: 0x800841F8
+
+  [Very high   (0x80400000 - 0x80800000)] (3 unique targets)
+    0x80543054  (called  15 time(s))  from: 0x800910D8, 0x80091128, 0x80091178, 0x800911C8, 0x80091218 ... (+10 more)
+    0x80643068  (called   5 time(s))  from: 0x80091998, 0x80091A38, 0x80091AD8, 0x80091B78, 0x80092678
+    0x80703070  (called  10 time(s))  from: 0x800919E8, 0x80091A88, 0x80091B28, 0x80091BC8, 0x80091C18 ... (+5 more)
+
+  === Complete Sorted List of External JAL Targets ===
+
+    0x80000000  (2 call(s))
+    0x80303030  (1 call(s))
+    0x80543054  (15 call(s))
+    0x80643068  (5 call(s))
+    0x80703070  (10 call(s))
+    0x80E59AB4  (1 call(s))
+    0x81BC31B4  (29 call(s))
+    0x84000000  (1 call(s))
+    0x84001000  (3 call(s))
+    0x8400103C  (3 call(s))
+    0x840010C8  (1 call(s))
+    0x840010E4  (2 call(s))
+    0x84001104  (3 call(s))
+    0x84001120  (2 call(s))
+    0x84001150  (2 call(s))
+    0x84001184  (7 call(s))
+    0x840011B0  (5 call(s))
+    0x840011B8  (1 call(s))
+    0x840015F4  (1 call(s))
+    0x84001658  (2 call(s))
+    0x84001680  (1 call(s))
+    0x84001694  (1 call(s))
+    0x84001FC4  (8 call(s))
+    0x84001FD4  (5 call(s))
+    0x84001FD8  (3 call(s))
+    0x84004B40  (1 call(s))
+    0x84004B48  (1 call(s))
+    0x84004B50  (1 call(s))
+    0x84004B58  (1 call(s))
+    0x84004B60  (1 call(s))
+    0x84004B68  (1 call(s))
+    0x84004B70  (1 call(s))
+    0x84004B78  (1 call(s))
+    0x84004B80  (1 call(s))
+    0x84004B88  (1 call(s))
+    0x84004B90  (1 call(s))
+    0x84004B98  (1 call(s))
+    0x84004BA0  (1 call(s))
+    0x84004BA8  (1 call(s))
+    0x84004BB0  (1 call(s))
+    0x84004BB8  (1 call(s))
+    0x84004BC0  (1 call(s))
+    0x84004BC8  (1 call(s))
+    0x84004BD0  (1 call(s))
+    0x84004BD8  (1 call(s))
+    0x84004BE0  (1 call(s))
+    0x84004BE8  (1 call(s))
+    0x84004BF0  (1 call(s))
+    0x84004BF8  (1 call(s))
+    0x84004C00  (1 call(s))
+    0x84004C08  (2 call(s))
+    0x84004C10  (1 call(s))
+    0x84004C18  (1 call(s))
+    0x84004C20  (1 call(s))
+    0x84004C28  (1 call(s))
+    0x84004C30  (1 call(s))
+    0x84004C38  (2 call(s))
+    0x84004C40  (4 call(s))
+    0x84004C48  (4 call(s))
+    0x84004C50  (4 call(s))
+    0x84004C58  (4 call(s))
+    0x84004C60  (1 call(s))
+    0x84004C68  (1 call(s))
+    0x84004C70  (1 call(s))
+    0x84004C78  (1 call(s))
+    0x84004C80  (1 call(s))
+    0x84004C88  (1 call(s))
+    0x84004C90  (1 call(s))
+    0x84004C98  (1 call(s))
+    0x84004CA0  (1 call(s))
+    0x84004CA8  (5 call(s))
+    0x84004CB0  (2 call(s))
+    0x84004CB8  (2 call(s))
+    0x84004CC0  (2 call(s))
+    0x84004CC8  (2 call(s))
+    0x84004CD0  (2 call(s))
+    0x84004CD8  (2 call(s))
+    0x84004CE0  (2 call(s))
+    0x84004CE8  (1 call(s))
+    0x84004CF0  (1 call(s))
+    0x84004CF8  (1 call(s))
+    0x84004D00  (4 call(s))
+    0x84004D08  (7 call(s))
+    0x84004D10  (4 call(s))
+    0x84004D18  (1 call(s))
+    0x84004D20  (3 call(s))
+    0x84004D28  (3 call(s))
+    0x84004D30  (2 call(s))
+    0x84004D38  (2 call(s))
+    0x84004D40  (6 call(s))
+    0x84004D48  (2 call(s))
+    0x84004D50  (2 call(s))
+    0x84004D58  (2 call(s))
+    0x84004D60  (4 call(s))
+    0x84004D68  (4 call(s))
+    0x84004D78  (2 call(s))
+    0x84004D80  (1 call(s))
+    0x84004D88  (1 call(s))
+    0x84004D90  (1 call(s))
+    0x84004D98  (1 call(s))
+    0x84004DA0  (1 call(s))
+    0x84004DA8  (1 call(s))
+    0x84004DB0  (1 call(s))
+    0x84004DB8  (1 call(s))
+    0x84004DC0  (1 call(s))
+    0x84004DC8  (1 call(s))
+    0x84004DD0  (1 call(s))
+    0x84004DD8  (3 call(s))
+    0x84004DE0  (1 call(s))
+    0x84004DE8  (1 call(s))
+    0x84004DF0  (1 call(s))
+    0x84004DF8  (1 call(s))
+    0x84004E08  (1 call(s))
+    0x84004E10  (1 call(s))
+    0x84004E18  (3 call(s))
+    0x84004E20  (8 call(s))
+    0x84004E28  (1 call(s))
+    0x84004E30  (1 call(s))
+    0x84004E38  (1 call(s))
+    0x84004E40  (3 call(s))
+    0x84004E48  (8 call(s))
+    0x84004E50  (1 call(s))
+    0x84004E58  (1 call(s))
+    0x84004E60  (1 call(s))
+    0x84004E68  (3 call(s))
+    0x84004E70  (8 call(s))
+    0x84004E78  (1 call(s))
+    0x84004E80  (4 call(s))
+    0x84004E88  (4 call(s))
+    0x84004E90  (4 call(s))
+    0x84004E98  (3 call(s))
+    0x84004EA0  (1 call(s))
+    0x84004EA8  (2 call(s))
+    0x84004EB0  (1 call(s))
+    0x84004EB8  (8 call(s))
+    0x84004EC0  (10 call(s))
+    0x84004EC8  (3 call(s))
+    0x84004ED0  (1 call(s))
+    0x84004ED8  (2 call(s))
+    0x84004EE0  (1 call(s))
+    0x84004EE8  (1 call(s))
+    0x84004EF0  (1 call(s))
+    0x84004EF8  (1 call(s))
+    0x84004F00  (1 call(s))
+    0x84004F08  (1 call(s))
+    0x84004F10  (1 call(s))
+    0x84004F18  (1 call(s))
+    0x84004F20  (1 call(s))
+    0x84004F28  (3 call(s))
+    0x84004F30  (2 call(s))
+    0x84004F38  (2 call(s))
+    0x84004F40  (5 call(s))
+    0x84004F48  (6 call(s))
+    0x84004F50  (9 call(s))
+    0x84004F58  (4 call(s))
+    0x84004F60  (4 call(s))
+    0x84004F68  (4 call(s))
+    0x84004F70  (3 call(s))
+    0x84004F78  (3 call(s))
+    0x84004F80  (1 call(s))
+    0x84004F88  (3 call(s))
+    0x84004F90  (2 call(s))
+    0x84004F98  (2 call(s))
+    0x84004FA0  (2 call(s))
+    0x84004FA8  (7 call(s))
+    0x84004FB0  (10 call(s))
+    0x84004FB8  (6 call(s))
+    0x84004FC0  (3 call(s))
+    0x84004FC8  (3 call(s))
+    0x84004FD0  (3 call(s))
+    0x84004FD8  (3 call(s))
+    0x84004FE0  (3 call(s))
+    0x84004FE8  (3 call(s))
+    0x84004FF0  (6 call(s))
+    0x84004FF8  (4 call(s))
+    0x84005000  (4 call(s))
+    0x84005008  (10 call(s))
+    0x84005010  (3 call(s))
+    0x84005018  (3 call(s))
+    0x84005020  (3 call(s))
+    0x84005028  (3 call(s))
+    0x84005030  (3 call(s))
+    0x84005038  (3 call(s))
+    0x84005040  (3 call(s))
+    0x84005048  (2 call(s))
+    0x84005050  (3 call(s))
+    0x84005058  (8 call(s))
+    0x84005060  (4 call(s))
+    0x84005068  (4 call(s))
+    0x84005070  (4 call(s))
+    0x84005078  (4 call(s))
+    0x84005080  (4 call(s))
+    0x84005088  (4 call(s))
+    0x84005090  (4 call(s))
+    0x84005098  (4 call(s))
+    0x840050A0  (4 call(s))
+    0x840050A8  (2 call(s))
+    0x840050B0  (1 call(s))
+    0x840050B8  (1 call(s))
+    0x840050C0  (1 call(s))
+    0x840050C8  (1 call(s))
+    0x840050D0  (1 call(s))
+    0x84005108  (1 call(s))
+    0x84005110  (1 call(s))
+    0x84005118  (1 call(s))
+    0x84005120  (1 call(s))
+    0x84005128  (1 call(s))
+    0x84005130  (1 call(s))
+    0x84005138  (2 call(s))
+    0x84005140  (1 call(s))
+    0x84005148  (1 call(s))
+    0x84005150  (1 call(s))
+    0x84005158  (1 call(s))
+    0x84005160  (1 call(s))
+    0x84005168  (1 call(s))
+    0x84005170  (1 call(s))
+    0x84005178  (1 call(s))
+    0x84005180  (1 call(s))
+    0x84005188  (1 call(s))
+    0x84005190  (1 call(s))
+    0x84005198  (1 call(s))
+    0x840051A0  (1 call(s))
+    0x840051A8  (1 call(s))
+    0x840051B8  (1 call(s))
+    0x840051C0  (5 call(s))
+    0x840051C8  (5 call(s))
+    0x840051D0  (1 call(s))
+    0x840051D8  (1 call(s))
+    0x840051E0  (1 call(s))
+    0x840051E8  (1 call(s))
+    0x840051F0  (1 call(s))
+    0x840051F8  (1 call(s))
+    0x84005200  (4 call(s))
+    0x84005208  (2 call(s))
+    0x84005210  (1 call(s))
+    0x84005218  (1 call(s))
+    0x84005220  (2 call(s))
+    0x84005228  (4 call(s))
+    0x84005230  (4 call(s))
+    0x84005238  (2 call(s))
+    0x84005240  (1 call(s))
+    0x84005248  (1 call(s))
+    0x84005250  (1 call(s))
+    0x84005258  (1 call(s))
+    0x84005260  (1 call(s))
+    0x84005268  (1 call(s))
+    0x84005270  (2 call(s))
+    0x84005278  (2 call(s))
+    0x84005280  (1 call(s))
+    0x84005288  (1 call(s))
+    0x84005290  (1 call(s))
+    0x84005298  (1 call(s))
+    0x840052A0  (1 call(s))
+    0x840052A8  (1 call(s))
+    0x840052B0  (1 call(s))
+    0x840052B8  (9 call(s))
+    0x840052C0  (8 call(s))
+    0x840052C8  (8 call(s))
+    0x840052D0  (4 call(s))
+    0x840052D8  (4 call(s))
+    0x840052E0  (4 call(s))
+    0x840052E8  (4 call(s))
+    0x840052F0  (4 call(s))
+    0x840052F8  (4 call(s))
+    0x84005300  (12 call(s))
+    0x84005308  (7 call(s))
+    0x84005310  (7 call(s))
+    0x84005318  (7 call(s))
+    0x84005320  (7 call(s))
+    0x84005328  (7 call(s))
+    0x84005330  (7 call(s))
+    0x84005338  (7 call(s))
+    0x84005340  (4 call(s))
+    0x84005348  (7 call(s))
+    0x84005350  (11 call(s))
+    0x84005358  (4 call(s))
+    0x84005360  (4 call(s))
+    0x84005368  (4 call(s))
+    0x84005370  (1 call(s))
+    0x84005378  (1 call(s))
+    0x84005380  (1 call(s))
+    0x84005388  (1 call(s))
+    0x84005390  (1 call(s))
+    0x84005398  (1 call(s))
+    0x840053A0  (1 call(s))
+    0x840053A8  (1 call(s))
+    0x840053B0  (1 call(s))
+    0x840053C0  (2 call(s))
+    0x840053C8  (2 call(s))
+    0x840053D0  (2 call(s))
+    0x840053D8  (1 call(s))
+    0x840053E0  (1 call(s))
+    0x840053E8  (1 call(s))
+    0x840053F0  (1 call(s))
+    0x840053F8  (1 call(s))
+    0x84005400  (1 call(s))
+    0x84005408  (1 call(s))
+    0x84005410  (1 call(s))
+    0x84005418  (4 call(s))
+    0x84005420  (4 call(s))
+    0x84005428  (4 call(s))
+    0x84005430  (2 call(s))
+    0x84005438  (2 call(s))
+    0x84005440  (2 call(s))
+    0x84005448  (2 call(s))
+    0x84005450  (2 call(s))
+    0x84005458  (2 call(s))
+    0x84005460  (2 call(s))
+    0x84005468  (2 call(s))
+    0x84005470  (1 call(s))
+    0x84005478  (1 call(s))
+    0x84005480  (1 call(s))
+    0x84005488  (1 call(s))
+    0x84005490  (1 call(s))
+    0x84005498  (1 call(s))
+    0x840054A0  (1 call(s))
+    0x840054A8  (1 call(s))
+    0x840054B0  (1 call(s))
+    0x840054B8  (1 call(s))
+    0x840054C0  (1 call(s))
+    0x840054C8  (5 call(s))
+    0x840054D0  (1 call(s))
+    0x840054D8  (1 call(s))
+    0x840054E0  (1 call(s))
+    0x840054E8  (1 call(s))
+    0x840054F0  (1 call(s))
+    0x840054F8  (1 call(s))
+    0x84005500  (1 call(s))
+    0x84005508  (7 call(s))
+    0x84005510  (2 call(s))
+    0x84005518  (2 call(s))
+    0x84005520  (2 call(s))
+    0x84005528  (1 call(s))
+    0x84005530  (1 call(s))
+    0x84005548  (1 call(s))
+    0x84005550  (1 call(s))
+    0x84005558  (1 call(s))
+    0x84005560  (1 call(s))
+    0x84005568  (1 call(s))
+    0x84005570  (1 call(s))
+    0x84005578  (1 call(s))
+    0x84005580  (1 call(s))
+    0x84005588  (1 call(s))
+    0x84005590  (1 call(s))
+    0x84005598  (1 call(s))
+    0x840055A0  (1 call(s))
+    0x840055A8  (1 call(s))
+    0x840055B8  (1 call(s))
+    0x840055C0  (2 call(s))
+    0x840055C8  (1 call(s))
+    0x840055D0  (2 call(s))
+    0x840055D8  (1 call(s))
+    0x840055E0  (2 call(s))
+    0x840055E8  (4 call(s))
+    0x840055F0  (3 call(s))
+    0x840055F8  (3 call(s))
+    0x84005600  (8 call(s))
+    0x84005608  (5 call(s))
+    0x84005610  (24 call(s))
+    0x84005618  (1 call(s))
+    0x84005620  (2 call(s))
+    0x84005628  (3 call(s))
+    0x84005630  (1 call(s))
+    0x84005638  (2 call(s))
+    0x84005640  (1 call(s))
+    0x84005648  (3 call(s))
+    0x84005650  (1 call(s))
+    0x84005658  (4 call(s))
+    0x84005660  (3 call(s))
+    0x84005668  (3 call(s))
+    0x84005670  (3 call(s))
+    0x84005678  (7 call(s))
+    0x84008C30  (1 call(s))
+    0x84008C38  (7 call(s))
+    0x84008C40  (7 call(s))
+    0x84008C48  (7 call(s))
+    0x84008C50  (7 call(s))
+    0x84008C58  (7 call(s))
+    0x84008C60  (1 call(s))
+    0x84008C68  (1 call(s))
+    0x84008C70  (1 call(s))
+    0x84008C78  (1 call(s))
+    0x84008C80  (1 call(s))
+    0x84008C88  (1 call(s))
+    0x84008C90  (1 call(s))
+    0x84008C98  (2 call(s))
+    0x84008CA0  (1 call(s))
+    0x84008CA8  (1 call(s))
+    0x84008CB0  (1 call(s))
+    0x84008CB8  (1 call(s))
+    0x84008CC0  (1 call(s))
+    0x84008CC8  (1 call(s))
+    0x84008CD0  (2 call(s))
+    0x84008CD8  (2 call(s))
+    0x84008CE0  (2 call(s))
+    0x84008CE8  (2 call(s))
+    0x84008CF0  (2 call(s))
+    0x84008CF8  (1 call(s))
+    0x84008D00  (1 call(s))
+    0x84008D08  (1 call(s))
+    0x84008D10  (2 call(s))
+    0x84008D18  (1 call(s))
+    0x84008D20  (1 call(s))
+    0x84008D28  (2 call(s))
+    0x84008D30  (2 call(s))
+    0x84009F28  (2 call(s))
+    0x84009F30  (1 call(s))
+    0x84009F38  (1 call(s))
+    0x84009F40  (1 call(s))
+    0x84009F48  (1 call(s))
+    0x84009F50  (1 call(s))
+    0x84009F58  (1 call(s))
+    0x84009F60  (1 call(s))
+    0x8400F640  (6 call(s))
+    0x8400F648  (6 call(s))
+    0x8400F650  (5 call(s))
+    0x8400F658  (6 call(s))
+    0x8400FDC8  (2 call(s))
+    0x8400FDD0  (2 call(s))
+    0x8400FDD8  (2 call(s))
+    0x8400FDE0  (2 call(s))
+    0x8400FDE8  (2 call(s))
+    0x8400FDF0  (2 call(s))
+    0x8400FDF8  (2 call(s))
+    0x8400FE00  (2 call(s))
+    0x851BFF7C  (1 call(s))
+    0x88000000  (1 call(s))
+    0x880003D8  (1 call(s))
+    0x880003E0  (1 call(s))
+    0x880003E8  (1 call(s))
+    0x880003F0  (1 call(s))
+    0x880003F8  (1 call(s))
+    0x88000400  (1 call(s))
+    0x88000408  (1 call(s))
+    0x88000410  (1 call(s))
+    0x88000418  (1 call(s))
+    0x88000420  (1 call(s))
+    0x88000428  (1 call(s))
+    0x88000430  (1 call(s))
+    0x88000438  (1 call(s))
+    0x88000440  (1 call(s))
+    0x88000448  (1 call(s))
+    0x88000450  (1 call(s))
+    0x88000458  (2 call(s))
+    0x88000460  (4 call(s))
+    0x88000468  (4 call(s))
+    0x88000470  (4 call(s))
+    0x88000478  (4 call(s))
+    0x88000480  (5 call(s))
+    0x88000488  (2 call(s))
+    0x88000490  (2 call(s))
+    0x88000498  (2 call(s))
+    0x880004A0  (2 call(s))
+    0x880004A8  (2 call(s))
+    0x880004B0  (2 call(s))
+    0x880004B8  (2 call(s))
+    0x880004C0  (1 call(s))
+    0x880004C8  (1 call(s))
+    0x880004D0  (1 call(s))
+    0x880004D8  (4 call(s))
+    0x880004E0  (7 call(s))
+    0x880004E8  (4 call(s))
+    0x880004F0  (1 call(s))
+    0x880004F8  (3 call(s))
+    0x88000500  (2 call(s))
+    0x88000508  (2 call(s))
+    0x88000510  (2 call(s))
+    0x88000518  (6 call(s))
+    0x88000520  (2 call(s))
+    0x88000528  (2 call(s))
+    0x88000530  (2 call(s))
+    0x88000538  (4 call(s))
+    0x88000540  (4 call(s))
+    0x88000550  (2 call(s))
+    0x88000558  (1 call(s))
+    0x88000560  (1 call(s))
+    0x88000568  (1 call(s))
+    0x88000570  (1 call(s))
+    0x88000578  (1 call(s))
+    0x88000580  (1 call(s))
+    0x88000588  (1 call(s))
+    0x88000590  (1 call(s))
+    0x88000598  (1 call(s))
+    0x880005A0  (1 call(s))
+    0x880005A8  (1 call(s))
+    0x880005B0  (3 call(s))
+    0x880005B8  (1 call(s))
+    0x880005C0  (1 call(s))
+    0x880005C8  (1 call(s))
+    0x880005D0  (1 call(s))
+    0x880005E0  (1 call(s))
+    0x880005E8  (1 call(s))
+    0x880005F0  (3 call(s))
+    0x880005F8  (8 call(s))
+    0x88000600  (1 call(s))
+    0x88000608  (1 call(s))
+    0x88000610  (1 call(s))
+    0x88000618  (3 call(s))
+    0x88000620  (8 call(s))
+    0x88000628  (1 call(s))
+    0x88000630  (1 call(s))
+    0x88000638  (1 call(s))
+    0x88000640  (3 call(s))
+    0x88000648  (8 call(s))
+    0x88000650  (1 call(s))
+    0x88000658  (1 call(s))
+    0x88000660  (2 call(s))
+    0x88000668  (1 call(s))
+    0x88000670  (8 call(s))
+    0x88000678  (10 call(s))
+    0x88000680  (3 call(s))
+    0x88000688  (1 call(s))
+    0x88000690  (1 call(s))
+    0x88000698  (1 call(s))
+    0x880006A0  (1 call(s))
+    0x880006A8  (1 call(s))
+    0x880006B0  (1 call(s))
+    0x880006B8  (1 call(s))
+    0x880006C0  (1 call(s))
+    0x880006C8  (1 call(s))
+    0x880006D0  (1 call(s))
+    0x880006D8  (13 call(s))
+    0x880006E0  (7 call(s))
+    0x880006E8  (7 call(s))
+    0x880006F0  (7 call(s))
+    0x880006F8  (7 call(s))
+    0x88000700  (7 call(s))
+    0x88000708  (7 call(s))
+    0x88000710  (7 call(s))
+    0x88000718  (2 call(s))
+    0x88000720  (1 call(s))
+    0x88000728  (1 call(s))
+    0x88000730  (1 call(s))
+    0x88000738  (1 call(s))
+    0x88000740  (1 call(s))
+    0x88000748  (1 call(s))
+    0x88000750  (1 call(s))
+    0x88000758  (1 call(s))
+    0x88000760  (1 call(s))
+    0x88000768  (3 call(s))
+    0x88000770  (2 call(s))
+    0x88000778  (2 call(s))
+    0x88000780  (5 call(s))
+    0x88000788  (6 call(s))
+    0x88000790  (9 call(s))
+    0x88000798  (4 call(s))
+    0x880007A0  (4 call(s))
+    0x880007A8  (4 call(s))
+    0x880007B0  (3 call(s))
+    0x880007B8  (3 call(s))
+    0x880007C0  (1 call(s))
+    0x880007C8  (3 call(s))
+    0x880007D0  (2 call(s))
+    0x880007D8  (2 call(s))
+    0x880007E0  (2 call(s))
+    0x880007E8  (7 call(s))
+    0x880007F0  (10 call(s))
+    0x880007F8  (6 call(s))
+    0x88000800  (3 call(s))
+    0x88000808  (3 call(s))
+    0x88000810  (3 call(s))
+    0x88000818  (3 call(s))
+    0x88000820  (3 call(s))
+    0x88000828  (3 call(s))
+    0x88000830  (6 call(s))
+    0x88000838  (4 call(s))
+    0x88000840  (4 call(s))
+    0x88000848  (10 call(s))
+    0x88000850  (3 call(s))
+    0x88000858  (3 call(s))
+    0x88000860  (3 call(s))
+    0x88000868  (3 call(s))
+    0x88000870  (3 call(s))
+    0x88000878  (3 call(s))
+    0x88000880  (3 call(s))
+    0x88000888  (2 call(s))
+    0x88000890  (3 call(s))
+    0x88000898  (8 call(s))
+    0x880008A0  (4 call(s))
+    0x880008A8  (4 call(s))
+    0x880008B0  (4 call(s))
+    0x880008B8  (4 call(s))
+    0x880008C0  (4 call(s))
+    0x880008C8  (4 call(s))
+    0x880008D0  (4 call(s))
+    0x880008D8  (4 call(s))
+    0x880008E0  (4 call(s))
+    0x880008E8  (2 call(s))
+    0x880008F0  (1 call(s))
+    0x880008F8  (1 call(s))
+    0x88000900  (1 call(s))
+    0x88000908  (1 call(s))
+    0x88000910  (1 call(s))
+    0x88000948  (1 call(s))
+    0x88000950  (1 call(s))
+    0x88000958  (1 call(s))
+    0x88000960  (1 call(s))
+    0x88000968  (1 call(s))
+    0x88000970  (1 call(s))
+    0x88000978  (2 call(s))
+    0x88000980  (1 call(s))
+    0x88000988  (1 call(s))
+    0x88000990  (1 call(s))
+    0x88000998  (1 call(s))
+    0x880009A0  (1 call(s))
+    0x880009A8  (1 call(s))
+    0x880009B0  (1 call(s))
+    0x880009B8  (1 call(s))
+    0x880009C0  (1 call(s))
+    0x880009C8  (1 call(s))
+    0x880009D0  (1 call(s))
+    0x880009D8  (1 call(s))
+    0x880009E0  (1 call(s))
+    0x880009E8  (1 call(s))
+    0x880009F8  (1 call(s))
+    0x88000A00  (5 call(s))
+    0x88000A08  (5 call(s))
+    0x88000A10  (1 call(s))
+    0x88000A18  (1 call(s))
+    0x88000A20  (1 call(s))
+    0x88000A28  (1 call(s))
+    0x88000A30  (1 call(s))
+    0x88000A38  (1 call(s))
+    0x88000A40  (4 call(s))
+    0x88000A48  (2 call(s))
+    0x88000A50  (1 call(s))
+    0x88000A58  (1 call(s))
+    0x88000A60  (2 call(s))
+    0x88000A68  (4 call(s))
+    0x88000A70  (4 call(s))
+    0x88000A78  (2 call(s))
+    0x88000A80  (1 call(s))
+    0x88000A88  (1 call(s))
+    0x88000A90  (1 call(s))
+    0x88000A98  (1 call(s))
+    0x88000AA0  (1 call(s))
+    0x88000AA8  (1 call(s))
+    0x88000AB0  (2 call(s))
+    0x88000AB8  (2 call(s))
+    0x88000AC0  (1 call(s))
+    0x88000AC8  (1 call(s))
+    0x88000AD0  (1 call(s))
+    0x88000AD8  (1 call(s))
+    0x88000AE0  (1 call(s))
+    0x88000AE8  (1 call(s))
+    0x88000AF0  (1 call(s))
+    0x88000AF8  (8 call(s))
+    0x88000B00  (8 call(s))
+    0x88000B08  (8 call(s))
+    0x88000B10  (4 call(s))
+    0x88000B18  (4 call(s))
+    0x88000B20  (4 call(s))
+    0x88000B28  (4 call(s))
+    0x88000B30  (4 call(s))
+    0x88000B38  (4 call(s))
+    0x88000B40  (4 call(s))
+    0x88000B48  (7 call(s))
+    0x88000B50  (11 call(s))
+    0x88000B58  (4 call(s))
+    0x88000B60  (4 call(s))
+    0x88000B68  (4 call(s))
+    0x88000B70  (1 call(s))
+    0x88000B78  (1 call(s))
+    0x88000B80  (1 call(s))
+    0x88000B88  (1 call(s))
+    0x88000B90  (1 call(s))
+    0x88000B98  (1 call(s))
+    0x88000BA0  (1 call(s))
+    0x88000BA8  (1 call(s))
+    0x88000BB0  (1 call(s))
+    0x88000BC0  (2 call(s))
+    0x88000BC8  (2 call(s))
+    0x88000BD0  (2 call(s))
+    0x88000BD8  (1 call(s))
+    0x88000BE0  (1 call(s))
+    0x88000BE8  (1 call(s))
+    0x88000BF0  (1 call(s))
+    0x88000BF8  (1 call(s))
+    0x88000C00  (1 call(s))
+    0x88000C08  (1 call(s))
+    0x88000C10  (1 call(s))
+    0x88000C18  (4 call(s))
+    0x88000C20  (4 call(s))
+    0x88000C28  (4 call(s))
+    0x88000C30  (2 call(s))
+    0x88000C38  (2 call(s))
+    0x88000C40  (2 call(s))
+    0x88000C48  (2 call(s))
+    0x88000C50  (2 call(s))
+    0x88000C58  (2 call(s))
+    0x88000C60  (2 call(s))
+    0x88000C68  (2 call(s))
+    0x88000C70  (1 call(s))
+    0x88000C78  (1 call(s))
+    0x88000C80  (1 call(s))
+    0x88000C88  (1 call(s))
+    0x88000C90  (1 call(s))
+    0x88000C98  (1 call(s))
+    0x88000CA0  (1 call(s))
+    0x88000CA8  (1 call(s))
+    0x88000CB0  (1 call(s))
+    0x88000CB8  (1 call(s))
+    0x88000CC0  (1 call(s))
+    0x88000CC8  (5 call(s))
+    0x88000CD0  (1 call(s))
+    0x88000CD8  (1 call(s))
+    0x88000CE0  (1 call(s))
+    0x88000CE8  (1 call(s))
+    0x88000CF0  (1 call(s))
+    0x88000CF8  (1 call(s))
+    0x88000D00  (1 call(s))
+    0x88000D08  (7 call(s))
+    0x88000D10  (2 call(s))
+    0x88000D18  (2 call(s))
+    0x88000D20  (2 call(s))
+    0x88000D28  (1 call(s))
+    0x88000D30  (1 call(s))
+    0x88000D48  (1 call(s))
+    0x88000D50  (1 call(s))
+    0x88000D58  (1 call(s))
+    0x88000D60  (1 call(s))
+    0x88000D68  (1 call(s))
+    0x88000D70  (1 call(s))
+    0x88000D78  (1 call(s))
+    0x88000D80  (1 call(s))
+    0x88000D88  (1 call(s))
+    0x88000D90  (1 call(s))
+    0x88000D98  (1 call(s))
+    0x88000DA0  (1 call(s))
+    0x88000DA8  (1 call(s))
+    0x88000DB8  (1 call(s))
+    0x88000DC0  (2 call(s))
+    0x88000DC8  (1 call(s))
+    0x88000DD0  (2 call(s))
+    0x88000DD8  (1 call(s))
+    0x88000DE0  (2 call(s))
+    0x88000DE8  (4 call(s))
+    0x88000DF0  (3 call(s))
+    0x88000DF8  (3 call(s))
+    0x88000E00  (8 call(s))
+    0x88000E08  (5 call(s))
+    0x88000E10  (24 call(s))
+    0x88000E18  (3 call(s))
+    0x88000E20  (1 call(s))
+    0x88000E28  (2 call(s))
+    0x88000E30  (1 call(s))
+    0x88000E38  (3 call(s))
+    0x88000E40  (1 call(s))
+    0x88000E48  (4 call(s))
+    0x88000E50  (3 call(s))
+    0x88000E58  (3 call(s))
+    0x88000E60  (3 call(s))
+    0x88000E68  (7 call(s))
+    0x88000E70  (1 call(s))
+    0x88000E78  (1 call(s))
+    0x88000E80  (1 call(s))
+    0x88000E88  (1 call(s))
+    0x88000E90  (1 call(s))
+    0x88000E98  (1 call(s))
+    0x88000EA0  (1 call(s))
+    0x88000EA8  (1 call(s))
+    0x88000EB0  (1 call(s))
+    0x88000EB8  (2 call(s))
+    0x88000EC0  (1 call(s))
+    0x88000EC8  (1 call(s))
+    0x88000ED0  (1 call(s))
+    0x88000ED8  (1 call(s))
+    0x88000EE0  (1 call(s))
+    0x88000EE8  (4 call(s))
+    0x88000EF0  (4 call(s))
+    0x88000EF8  (4 call(s))
+    0x88000F00  (3 call(s))
+    0x88000F08  (1 call(s))
+    0x88000F10  (2 call(s))
+    0x88008880  (1 call(s))
+    0x88008888  (1 call(s))
+    0x88008890  (1 call(s))
+    0x88008898  (1 call(s))
+    0x880088A0  (1 call(s))
+    0x880088A8  (1 call(s))
+    0x880088B0  (1 call(s))
+    0x880088B8  (1 call(s))
+    0x880088C0  (1 call(s))
+    0x880088C8  (1 call(s))
+    0x880088D0  (1 call(s))
+    0x880088D8  (1 call(s))
+    0x880088E0  (1 call(s))
+    0x880088E8  (1 call(s))
+    0x880088F0  (1 call(s))
+    0x880088F8  (1 call(s))
+    0x88008900  (1 call(s))
+    0x88008908  (1 call(s))
+    0x88008910  (1 call(s))
+    0x88008918  (1 call(s))
+    0x88008920  (1 call(s))
+    0x88008928  (1 call(s))
+    0x88008930  (1 call(s))
+    0x88008938  (1 call(s))
+    0x88008940  (1 call(s))
+    0x88008948  (1 call(s))
+    0x88008A48  (1 call(s))
+    0x88008A50  (6 call(s))
+    0x88008A58  (6 call(s))
+    0x88008A60  (6 call(s))
+    0x88008A68  (6 call(s))
+    0x88008A70  (6 call(s))
+    0x88008A78  (6 call(s))
+    0x8800FA20  (6 call(s))
+    0x8800FA28  (6 call(s))
+    0x8800FA30  (6 call(s))
+    0x8800FA38  (5 call(s))
+    0x8800FD08  (2 call(s))
+    0x8800FD10  (2 call(s))
+    0x8800FD18  (2 call(s))
+    0x8800FD20  (2 call(s))
+    0x8800FD28  (2 call(s))
+    0x8800FD30  (2 call(s))
+    0x8800FD38  (2 call(s))
+    0x8800FD40  (2 call(s))
+    0x88C52FF8  (2 call(s))
+    0x88E03294  (1 call(s))
+    0x897FFF60  (1 call(s))
+    0x8A53B8E4  (1 call(s))
+    0x8C000000  (1 call(s))
+    0x8DFC4200  (1 call(s))
+    0x8E0FFF40  (1 call(s))
+    0x8FEBC018  (1 call(s))
+    0x8FFC7FFC  (1 call(s))
+    0x8FFFFFFC  (1 call(s))
+
+========================================================================
+  SUMMARY
+========================================================================
+
+  Rampage World Tour : 152 unique external JAL targets
+  Rampage 2          : 829 unique external JAL targets
+
+  Common external targets between both ROMs: 25
+    0x80000000
+    0x80303030
+    0x80543054
+    0x80643068
+    0x80703070
+    0x80E59AB4
+    0x81BC31B4
+    0x84000000
+    0x84001000
+    0x8400103C
+    0x840010C8
+    0x84001150
+    0x84001184
+    0x840011B0
+    0x84001FC4
+    0x84001FD4
+    0x84001FD8
+    0x851BFF7C
+    0x88000000
+    0x897FFF60
+    0x8C000000
+    0x8DFC4200
+    0x8E0FFF40
+    0x8FEBC018
+    0x8FFFFFFC
+
+  External targets unique to Rampage World Tour: 127
+    0x801378DC
+    0x80137FEC
+    0x8013858C
+    0x80138934
+    0x80138C30
+    0x80138EFC
+    0x80139D7C
+    0x8013A128
+    0x8013A650
+    0x8013A89C
+    0x8013ABB0
+    0x8013AE84
+    0x8013B0D4
+    0x8013B3B4
+    0x8013B620
+    0x8013B668
+    0x8013BD28
+    0x8013E750
+    0x8013E788
+    0x80142BCC
+    0x801430E0
+    0x801431A4
+    0x801436F0
+    0x8014376C
+    0x801459C8
+    0x8014F280
+    0x8014F648
+    0x802C1028
+    0x80842084
+    0x80842108
+    0x81002000
+    0x81042080
+    0x81043100
+    0x8109FF80
+    0x81800030
+    0x81880200
+    0x818C0000
+    0x818C1084
+    0x818C1180
+    0x818C2108
+    0x818C4184
+    0x818C5000
+    0x818C5294
+    0x818C5328
+    0x818C7000
+    0x818C8420
+    0x818C9000
+    0x818C9398
+    0x818C94A4
+    0x818CA41C
+    0x818CF7BC
+    0x818D394C
+    0x81900280
+    0x819010A0
+    0x81902108
+    0x81906108
+    0x8194210C
+    0x81945108
+    0x8198C000
+    0x81A82124
+    0x81AC2124
+    0x82003104
+    0x8204C730
+    0x82082184
+    0x82090944
+    0x820C2108
+    0x820C2188
+    0x820CF7BC
+    0x820D5DFC
+    0x82101084
+    0x821C01A8
+    0x821C3198
+    0x821C3218
+    0x823C32BC
+    0x82845410
+    0x82881084
+    0x829C0084
+    0x829C2218
+    0x829C85B8
+    0x829D0944
+    0x829D8940
+    0x82A03204
+    0x82A04210
+    0x82A0520C
+    0x82A4528C
+    0x82AC31A4
+    0x82BC21B4
+    0x82BC2238
+    0x82C03340
+    0x82C10024
+    0x831C2208
+    0x8328329C
+    0x834032BC
+    0x83807280
+    0x83A02294
+    0x83B06290
+    0x83B433AC
+    0x83B44324
+    0x83E02260
+    0x83E04438
+    0x840010EC
+    0x8400110C
+    0x84001128
+    0x840011C0
+    0x840015FC
+    0x84001660
+    0x84001688
+    0x8400169C
+    0x842C3188
+    0x842DF480
+    0x84306310
+    0x84342330
+    0x84350840
+    0x843D0840
+    0x84B08418
+    0x850C2488
+    0x8541B194
+    0x854C8424
+    0x8584B498
+    0x85B08420
+    0x85CDC1A4
+    0x85D074AC
+    0x86802580
+    0x88F8963C
+    0x89F8CB74
+    0x8A8C2A08
+    0x8C290000
+
+  External targets unique to Rampage 2: 804
+    0x840010E4
+    0x84001104
+    0x84001120
+    0x840011B8
+    0x840015F4
+    0x84001658
+    0x84001680
+    0x84001694
+    0x84004B40
+    0x84004B48
+    0x84004B50
+    0x84004B58
+    0x84004B60
+    0x84004B68
+    0x84004B70
+    0x84004B78
+    0x84004B80
+    0x84004B88
+    0x84004B90
+    0x84004B98
+    0x84004BA0
+    0x84004BA8
+    0x84004BB0
+    0x84004BB8
+    0x84004BC0
+    0x84004BC8
+    0x84004BD0
+    0x84004BD8
+    0x84004BE0
+    0x84004BE8
+    0x84004BF0
+    0x84004BF8
+    0x84004C00
+    0x84004C08
+    0x84004C10
+    0x84004C18
+    0x84004C20
+    0x84004C28
+    0x84004C30
+    0x84004C38
+    0x84004C40
+    0x84004C48
+    0x84004C50
+    0x84004C58
+    0x84004C60
+    0x84004C68
+    0x84004C70
+    0x84004C78
+    0x84004C80
+    0x84004C88
+    0x84004C90
+    0x84004C98
+    0x84004CA0
+    0x84004CA8
+    0x84004CB0
+    0x84004CB8
+    0x84004CC0
+    0x84004CC8
+    0x84004CD0
+    0x84004CD8
+    0x84004CE0
+    0x84004CE8
+    0x84004CF0
+    0x84004CF8
+    0x84004D00
+    0x84004D08
+    0x84004D10
+    0x84004D18
+    0x84004D20
+    0x84004D28
+    0x84004D30
+    0x84004D38
+    0x84004D40
+    0x84004D48
+    0x84004D50
+    0x84004D58
+    0x84004D60
+    0x84004D68
+    0x84004D78
+    0x84004D80
+    0x84004D88
+    0x84004D90
+    0x84004D98
+    0x84004DA0
+    0x84004DA8
+    0x84004DB0
+    0x84004DB8
+    0x84004DC0
+    0x84004DC8
+    0x84004DD0
+    0x84004DD8
+    0x84004DE0
+    0x84004DE8
+    0x84004DF0
+    0x84004DF8
+    0x84004E08
+    0x84004E10
+    0x84004E18
+    0x84004E20
+    0x84004E28
+    0x84004E30
+    0x84004E38
+    0x84004E40
+    0x84004E48
+    0x84004E50
+    0x84004E58
+    0x84004E60
+    0x84004E68
+    0x84004E70
+    0x84004E78
+    0x84004E80
+    0x84004E88
+    0x84004E90
+    0x84004E98
+    0x84004EA0
+    0x84004EA8
+    0x84004EB0
+    0x84004EB8
+    0x84004EC0
+    0x84004EC8
+    0x84004ED0
+    0x84004ED8
+    0x84004EE0
+    0x84004EE8
+    0x84004EF0
+    0x84004EF8
+    0x84004F00
+    0x84004F08
+    0x84004F10
+    0x84004F18
+    0x84004F20
+    0x84004F28
+    0x84004F30
+    0x84004F38
+    0x84004F40
+    0x84004F48
+    0x84004F50
+    0x84004F58
+    0x84004F60
+    0x84004F68
+    0x84004F70
+    0x84004F78
+    0x84004F80
+    0x84004F88
+    0x84004F90
+    0x84004F98
+    0x84004FA0
+    0x84004FA8
+    0x84004FB0
+    0x84004FB8
+    0x84004FC0
+    0x84004FC8
+    0x84004FD0
+    0x84004FD8
+    0x84004FE0
+    0x84004FE8
+    0x84004FF0
+    0x84004FF8
+    0x84005000
+    0x84005008
+    0x84005010
+    0x84005018
+    0x84005020
+    0x84005028
+    0x84005030
+    0x84005038
+    0x84005040
+    0x84005048
+    0x84005050
+    0x84005058
+    0x84005060
+    0x84005068
+    0x84005070
+    0x84005078
+    0x84005080
+    0x84005088
+    0x84005090
+    0x84005098
+    0x840050A0
+    0x840050A8
+    0x840050B0
+    0x840050B8
+    0x840050C0
+    0x840050C8
+    0x840050D0
+    0x84005108
+    0x84005110
+    0x84005118
+    0x84005120
+    0x84005128
+    0x84005130
+    0x84005138
+    0x84005140
+    0x84005148
+    0x84005150
+    0x84005158
+    0x84005160
+    0x84005168
+    0x84005170
+    0x84005178
+    0x84005180
+    0x84005188
+    0x84005190
+    0x84005198
+    0x840051A0
+    0x840051A8
+    0x840051B8
+    0x840051C0
+    0x840051C8
+    0x840051D0
+    0x840051D8
+    0x840051E0
+    0x840051E8
+    0x840051F0
+    0x840051F8
+    0x84005200
+    0x84005208
+    0x84005210
+    0x84005218
+    0x84005220
+    0x84005228
+    0x84005230
+    0x84005238
+    0x84005240
+    0x84005248
+    0x84005250
+    0x84005258
+    0x84005260
+    0x84005268
+    0x84005270
+    0x84005278
+    0x84005280
+    0x84005288
+    0x84005290
+    0x84005298
+    0x840052A0
+    0x840052A8
+    0x840052B0
+    0x840052B8
+    0x840052C0
+    0x840052C8
+    0x840052D0
+    0x840052D8
+    0x840052E0
+    0x840052E8
+    0x840052F0
+    0x840052F8
+    0x84005300
+    0x84005308
+    0x84005310
+    0x84005318
+    0x84005320
+    0x84005328
+    0x84005330
+    0x84005338
+    0x84005340
+    0x84005348
+    0x84005350
+    0x84005358
+    0x84005360
+    0x84005368
+    0x84005370
+    0x84005378
+    0x84005380
+    0x84005388
+    0x84005390
+    0x84005398
+    0x840053A0
+    0x840053A8
+    0x840053B0
+    0x840053C0
+    0x840053C8
+    0x840053D0
+    0x840053D8
+    0x840053E0
+    0x840053E8
+    0x840053F0
+    0x840053F8
+    0x84005400
+    0x84005408
+    0x84005410
+    0x84005418
+    0x84005420
+    0x84005428
+    0x84005430
+    0x84005438
+    0x84005440
+    0x84005448
+    0x84005450
+    0x84005458
+    0x84005460
+    0x84005468
+    0x84005470
+    0x84005478
+    0x84005480
+    0x84005488
+    0x84005490
+    0x84005498
+    0x840054A0
+    0x840054A8
+    0x840054B0
+    0x840054B8
+    0x840054C0
+    0x840054C8
+    0x840054D0
+    0x840054D8
+    0x840054E0
+    0x840054E8
+    0x840054F0
+    0x840054F8
+    0x84005500
+    0x84005508
+    0x84005510
+    0x84005518
+    0x84005520
+    0x84005528
+    0x84005530
+    0x84005548
+    0x84005550
+    0x84005558
+    0x84005560
+    0x84005568
+    0x84005570
+    0x84005578
+    0x84005580
+    0x84005588
+    0x84005590
+    0x84005598
+    0x840055A0
+    0x840055A8
+    0x840055B8
+    0x840055C0
+    0x840055C8
+    0x840055D0
+    0x840055D8
+    0x840055E0
+    0x840055E8
+    0x840055F0
+    0x840055F8
+    0x84005600
+    0x84005608
+    0x84005610
+    0x84005618
+    0x84005620
+    0x84005628
+    0x84005630
+    0x84005638
+    0x84005640
+    0x84005648
+    0x84005650
+    0x84005658
+    0x84005660
+    0x84005668
+    0x84005670
+    0x84005678
+    0x84008C30
+    0x84008C38
+    0x84008C40
+    0x84008C48
+    0x84008C50
+    0x84008C58
+    0x84008C60
+    0x84008C68
+    0x84008C70
+    0x84008C78
+    0x84008C80
+    0x84008C88
+    0x84008C90
+    0x84008C98
+    0x84008CA0
+    0x84008CA8
+    0x84008CB0
+    0x84008CB8
+    0x84008CC0
+    0x84008CC8
+    0x84008CD0
+    0x84008CD8
+    0x84008CE0
+    0x84008CE8
+    0x84008CF0
+    0x84008CF8
+    0x84008D00
+    0x84008D08
+    0x84008D10
+    0x84008D18
+    0x84008D20
+    0x84008D28
+    0x84008D30
+    0x84009F28
+    0x84009F30
+    0x84009F38
+    0x84009F40
+    0x84009F48
+    0x84009F50
+    0x84009F58
+    0x84009F60
+    0x8400F640
+    0x8400F648
+    0x8400F650
+    0x8400F658
+    0x8400FDC8
+    0x8400FDD0
+    0x8400FDD8
+    0x8400FDE0
+    0x8400FDE8
+    0x8400FDF0
+    0x8400FDF8
+    0x8400FE00
+    0x880003D8
+    0x880003E0
+    0x880003E8
+    0x880003F0
+    0x880003F8
+    0x88000400
+    0x88000408
+    0x88000410
+    0x88000418
+    0x88000420
+    0x88000428
+    0x88000430
+    0x88000438
+    0x88000440
+    0x88000448
+    0x88000450
+    0x88000458
+    0x88000460
+    0x88000468
+    0x88000470
+    0x88000478
+    0x88000480
+    0x88000488
+    0x88000490
+    0x88000498
+    0x880004A0
+    0x880004A8
+    0x880004B0
+    0x880004B8
+    0x880004C0
+    0x880004C8
+    0x880004D0
+    0x880004D8
+    0x880004E0
+    0x880004E8
+    0x880004F0
+    0x880004F8
+    0x88000500
+    0x88000508
+    0x88000510
+    0x88000518
+    0x88000520
+    0x88000528
+    0x88000530
+    0x88000538
+    0x88000540
+    0x88000550
+    0x88000558
+    0x88000560
+    0x88000568
+    0x88000570
+    0x88000578
+    0x88000580
+    0x88000588
+    0x88000590
+    0x88000598
+    0x880005A0
+    0x880005A8
+    0x880005B0
+    0x880005B8
+    0x880005C0
+    0x880005C8
+    0x880005D0
+    0x880005E0
+    0x880005E8
+    0x880005F0
+    0x880005F8
+    0x88000600
+    0x88000608
+    0x88000610
+    0x88000618
+    0x88000620
+    0x88000628
+    0x88000630
+    0x88000638
+    0x88000640
+    0x88000648
+    0x88000650
+    0x88000658
+    0x88000660
+    0x88000668
+    0x88000670
+    0x88000678
+    0x88000680
+    0x88000688
+    0x88000690
+    0x88000698
+    0x880006A0
+    0x880006A8
+    0x880006B0
+    0x880006B8
+    0x880006C0
+    0x880006C8
+    0x880006D0
+    0x880006D8
+    0x880006E0
+    0x880006E8
+    0x880006F0
+    0x880006F8
+    0x88000700
+    0x88000708
+    0x88000710
+    0x88000718
+    0x88000720
+    0x88000728
+    0x88000730
+    0x88000738
+    0x88000740
+    0x88000748
+    0x88000750
+    0x88000758
+    0x88000760
+    0x88000768
+    0x88000770
+    0x88000778
+    0x88000780
+    0x88000788
+    0x88000790
+    0x88000798
+    0x880007A0
+    0x880007A8
+    0x880007B0
+    0x880007B8
+    0x880007C0
+    0x880007C8
+    0x880007D0
+    0x880007D8
+    0x880007E0
+    0x880007E8
+    0x880007F0
+    0x880007F8
+    0x88000800
+    0x88000808
+    0x88000810
+    0x88000818
+    0x88000820
+    0x88000828
+    0x88000830
+    0x88000838
+    0x88000840
+    0x88000848
+    0x88000850
+    0x88000858
+    0x88000860
+    0x88000868
+    0x88000870
+    0x88000878
+    0x88000880
+    0x88000888
+    0x88000890
+    0x88000898
+    0x880008A0
+    0x880008A8
+    0x880008B0
+    0x880008B8
+    0x880008C0
+    0x880008C8
+    0x880008D0
+    0x880008D8
+    0x880008E0
+    0x880008E8
+    0x880008F0
+    0x880008F8
+    0x88000900
+    0x88000908
+    0x88000910
+    0x88000948
+    0x88000950
+    0x88000958
+    0x88000960
+    0x88000968
+    0x88000970
+    0x88000978
+    0x88000980
+    0x88000988
+    0x88000990
+    0x88000998
+    0x880009A0
+    0x880009A8
+    0x880009B0
+    0x880009B8
+    0x880009C0
+    0x880009C8
+    0x880009D0
+    0x880009D8
+    0x880009E0
+    0x880009E8
+    0x880009F8
+    0x88000A00
+    0x88000A08
+    0x88000A10
+    0x88000A18
+    0x88000A20
+    0x88000A28
+    0x88000A30
+    0x88000A38
+    0x88000A40
+    0x88000A48
+    0x88000A50
+    0x88000A58
+    0x88000A60
+    0x88000A68
+    0x88000A70
+    0x88000A78
+    0x88000A80
+    0x88000A88
+    0x88000A90
+    0x88000A98
+    0x88000AA0
+    0x88000AA8
+    0x88000AB0
+    0x88000AB8
+    0x88000AC0
+    0x88000AC8
+    0x88000AD0
+    0x88000AD8
+    0x88000AE0
+    0x88000AE8
+    0x88000AF0
+    0x88000AF8
+    0x88000B00
+    0x88000B08
+    0x88000B10
+    0x88000B18
+    0x88000B20
+    0x88000B28
+    0x88000B30
+    0x88000B38
+    0x88000B40
+    0x88000B48
+    0x88000B50
+    0x88000B58
+    0x88000B60
+    0x88000B68
+    0x88000B70
+    0x88000B78
+    0x88000B80
+    0x88000B88
+    0x88000B90
+    0x88000B98
+    0x88000BA0
+    0x88000BA8
+    0x88000BB0
+    0x88000BC0
+    0x88000BC8
+    0x88000BD0
+    0x88000BD8
+    0x88000BE0
+    0x88000BE8
+    0x88000BF0
+    0x88000BF8
+    0x88000C00
+    0x88000C08
+    0x88000C10
+    0x88000C18
+    0x88000C20
+    0x88000C28
+    0x88000C30
+    0x88000C38
+    0x88000C40
+    0x88000C48
+    0x88000C50
+    0x88000C58
+    0x88000C60
+    0x88000C68
+    0x88000C70
+    0x88000C78
+    0x88000C80
+    0x88000C88
+    0x88000C90
+    0x88000C98
+    0x88000CA0
+    0x88000CA8
+    0x88000CB0
+    0x88000CB8
+    0x88000CC0
+    0x88000CC8
+    0x88000CD0
+    0x88000CD8
+    0x88000CE0
+    0x88000CE8
+    0x88000CF0
+    0x88000CF8
+    0x88000D00
+    0x88000D08
+    0x88000D10
+    0x88000D18
+    0x88000D20
+    0x88000D28
+    0x88000D30
+    0x88000D48
+    0x88000D50
+    0x88000D58
+    0x88000D60
+    0x88000D68
+    0x88000D70
+    0x88000D78
+    0x88000D80
+    0x88000D88
+    0x88000D90
+    0x88000D98
+    0x88000DA0
+    0x88000DA8
+    0x88000DB8
+    0x88000DC0
+    0x88000DC8
+    0x88000DD0
+    0x88000DD8
+    0x88000DE0
+    0x88000DE8
+    0x88000DF0
+    0x88000DF8
+    0x88000E00
+    0x88000E08
+    0x88000E10
+    0x88000E18
+    0x88000E20
+    0x88000E28
+    0x88000E30
+    0x88000E38
+    0x88000E40
+    0x88000E48
+    0x88000E50
+    0x88000E58
+    0x88000E60
+    0x88000E68
+    0x88000E70
+    0x88000E78
+    0x88000E80
+    0x88000E88
+    0x88000E90
+    0x88000E98
+    0x88000EA0
+    0x88000EA8
+    0x88000EB0
+    0x88000EB8
+    0x88000EC0
+    0x88000EC8
+    0x88000ED0
+    0x88000ED8
+    0x88000EE0
+    0x88000EE8
+    0x88000EF0
+    0x88000EF8
+    0x88000F00
+    0x88000F08
+    0x88000F10
+    0x88008880
+    0x88008888
+    0x88008890
+    0x88008898
+    0x880088A0
+    0x880088A8
+    0x880088B0
+    0x880088B8
+    0x880088C0
+    0x880088C8
+    0x880088D0
+    0x880088D8
+    0x880088E0
+    0x880088E8
+    0x880088F0
+    0x880088F8
+    0x88008900
+    0x88008908
+    0x88008910
+    0x88008918
+    0x88008920
+    0x88008928
+    0x88008930
+    0x88008938
+    0x88008940
+    0x88008948
+    0x88008A48
+    0x88008A50
+    0x88008A58
+    0x88008A60
+    0x88008A68
+    0x88008A70
+    0x88008A78
+    0x8800FA20
+    0x8800FA28
+    0x8800FA30
+    0x8800FA38
+    0x8800FD08
+    0x8800FD10
+    0x8800FD18
+    0x8800FD20
+    0x8800FD28
+    0x8800FD30
+    0x8800FD38
+    0x8800FD40
+    0x88C52FF8
+    0x88E03294
+    0x8A53B8E4
+    0x8FFC7FFC
+
