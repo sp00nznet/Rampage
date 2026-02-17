@@ -1,0 +1,26 @@
+# ROM files (not redistributable)
+*.z64
+*.n64
+*.v64
+
+# Build artifacts
+build/
+N64Recomp/
+
+# Generated recompiled code (regenerated from ROMs + symbols)
+RecompiledFuncs_WT/
+RecompiledFuncs_R2/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# IDE files
+.vscode/
+.idea/
+*.suo
+*.user
+
+# OS files
+Thumbs.db
+.DS_Store
