@@ -11,7 +11,7 @@ if "%1"=="clean" (
 )
 
 echo ====== CONFIGURING ======
-cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release ^
+cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=RelWithDebInfo ^
     -DCMAKE_C_COMPILER="C:/Program Files/LLVM/bin/clang-cl.exe" ^
     -DCMAKE_CXX_COMPILER="C:/Program Files/LLVM/bin/clang-cl.exe" ^
     -DCMAKE_LINKER="C:/Program Files/LLVM/bin/lld-link.exe" ^
@@ -23,7 +23,7 @@ if %errorlevel% neq 0 (
 )
 
 echo ====== BUILDING ======
-cmake --build build --config Release
+cmake --build build --config RelWithDebInfo
 
 if %errorlevel% neq 0 (
     echo ====== BUILD FAILED ======

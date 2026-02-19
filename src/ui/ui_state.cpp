@@ -362,17 +362,18 @@ public:
             assert(false);
         }
         Rml::ElementDocument* document = context.get_document();
+        if (!document) {
+            static bool warned = false;
+            if (!warned) {
+                fprintf(stderr, "[UI] Warning: show_context called but document is null (missing assets?)\n"); fflush(stderr);
+                warned = true;
+            }
+            return;
+        }
         shown_contexts.push_back(ContextDetails{
             .context = context,
             .document = document
         });
-
-        // auto& on_show = context.on_show;
-        // if (on_show) {
-        //     context.open();
-        //     on_show();
-        //     context.close();
-        // }
 
         document->PullToFront();
         document->Show();

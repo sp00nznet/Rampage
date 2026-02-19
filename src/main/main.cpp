@@ -177,6 +177,11 @@ ultramodern::renderer::WindowHandle create_window(ultramodern::gfx_callbacks_t::
 }
 
 void update_gfx(void*) {
+    static int update_count = 0;
+    if (update_count < 5) {
+        fprintf(stderr, "[RAMPAGE] update_gfx #%d\n", update_count); fflush(stderr);
+    }
+    update_count++;
     recomp::handle_events();
 }
 
@@ -569,10 +574,49 @@ void reorder_texture_pack(recomp::mods::ModContext&) {
 #define REGISTER_FUNC(name) recomp::overlays::register_base_export(#name, name)
 
 #ifdef _WIN32
+#include <DbgHelp.h>
+#pragma comment(lib, "DbgHelp.lib")
+
 LONG WINAPI crash_handler(EXCEPTION_POINTERS* ep) {
     fprintf(stderr, "[RAMPAGE] CRASH: code=0x%08lX addr=%p\n",
         ep->ExceptionRecord->ExceptionCode,
         ep->ExceptionRecord->ExceptionAddress);
+
+    HMODULE exe_base = GetModuleHandle(NULL);
+    fprintf(stderr, "[RAMPAGE] EXE base=%p, crash offset=0x%llX\n",
+        (void*)exe_base,
+        (unsigned long long)((uintptr_t)ep->ExceptionRecord->ExceptionAddress - (uintptr_t)exe_base));
+
+    // Print registers
+    CONTEXT* ctx = ep->ContextRecord;
+    fprintf(stderr, "[RAMPAGE] RIP=%p RSP=%p RBP=%p\n", (void*)ctx->Rip, (void*)ctx->Rsp, (void*)ctx->Rbp);
+    fprintf(stderr, "[RAMPAGE] RAX=%p RBX=%p RCX=%p RDX=%p\n",
+        (void*)ctx->Rax, (void*)ctx->Rbx, (void*)ctx->Rcx, (void*)ctx->Rdx);
+    fprintf(stderr, "[RAMPAGE] RSI=%p RDI=%p R8=%p R9=%p\n",
+        (void*)ctx->Rsi, (void*)ctx->Rdi, (void*)ctx->R8, (void*)ctx->R9);
+
+    // Stack trace with symbol names
+    HANDLE process = GetCurrentProcess();
+    SymInitialize(process, NULL, TRUE);
+
+    fprintf(stderr, "[RAMPAGE] Stack trace:\n");
+    void* stack[64];
+    USHORT frames = CaptureStackBackTrace(0, 64, stack, NULL);
+    char sym_buf[sizeof(SYMBOL_INFO) + 256];
+    SYMBOL_INFO* sym = (SYMBOL_INFO*)sym_buf;
+    sym->SizeOfStruct = sizeof(SYMBOL_INFO);
+    sym->MaxNameLen = 255;
+    for (USHORT i = 0; i < frames; i++) {
+        DWORD64 displacement = 0;
+        if (SymFromAddr(process, (DWORD64)stack[i], &displacement, sym)) {
+            fprintf(stderr, "  [%d] %s+0x%llX\n", i, sym->Name, (unsigned long long)displacement);
+        } else {
+            DWORD64 offset = (DWORD64)stack[i] - (DWORD64)exe_base;
+            fprintf(stderr, "  [%d] %p (exe+0x%llX)\n", i, stack[i], (unsigned long long)offset);
+        }
+    }
+
+    SymCleanup(process);
     fflush(stderr);
     return EXCEPTION_EXECUTE_HANDLER;
 }
@@ -741,9 +785,49 @@ int main(int argc, char** argv) {
     // recomp::start() blocks, so we launch a thread to trigger game start.
     std::thread auto_start_thread([]() {
         // Wait for the renderer to finish initializing
-        std::this_thread::sleep_for(std::chrono::seconds(3));
+        std::this_thread::sleep_for(std::chrono::seconds(5));
+
+        std::u8string game_id = u8"rampage_wt";
+
+        // Check if ROM is already stored and valid
+        if (!recomp::is_rom_valid(game_id)) {
+            fprintf(stderr, "[RAMPAGE] ROM not stored yet, searching for ROM file...\n"); fflush(stderr);
+
+            // Search for ROM in common locations relative to CWD
+            std::filesystem::path rom_candidates[] = {
+                "rampage_wt.z64",
+                "Rampage - World Tour (U) [!].z64",
+                "roms/rampage_wt.z64",
+                "roms/Rampage - World Tour (U) [!].z64",
+            };
+
+            bool rom_found = false;
+            for (const auto& candidate : rom_candidates) {
+                if (std::filesystem::exists(candidate)) {
+                    fprintf(stderr, "[RAMPAGE] Found ROM candidate: %s\n", candidate.string().c_str()); fflush(stderr);
+                    std::u8string rom_game_id = game_id;
+                    auto result = recomp::select_rom(candidate, rom_game_id);
+                    if (result == recomp::RomValidationError::Good) {
+                        fprintf(stderr, "[RAMPAGE] ROM validated and stored successfully\n"); fflush(stderr);
+                        rom_found = true;
+                        break;
+                    } else {
+                        fprintf(stderr, "[RAMPAGE] ROM validation failed for %s (error=%d)\n",
+                            candidate.string().c_str(), (int)result); fflush(stderr);
+                    }
+                }
+            }
+
+            if (!rom_found) {
+                fprintf(stderr, "[RAMPAGE] ERROR: Could not find valid ROM file! Place rampage_wt.z64 in the working directory.\n"); fflush(stderr);
+                return;
+            }
+        } else {
+            fprintf(stderr, "[RAMPAGE] ROM already stored and valid\n"); fflush(stderr);
+        }
+
         fprintf(stderr, "[RAMPAGE] Auto-starting game: rampage_wt\n"); fflush(stderr);
-        recomp::start_game(u8"rampage_wt");
+        recomp::start_game(game_id);
     });
     auto_start_thread.detach();
 
