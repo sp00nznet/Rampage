@@ -72,6 +72,9 @@ target_compile_definitions(rmlui_core PRIVATE LUNASVG_BUILD_STATIC)
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/lib/N64ModernRuntime)
 
+# Fix fmt consteval incompatibility with clang-cl 21+
+target_compile_definitions(fmt PUBLIC FMT_USE_CONSTEVAL=0)
+
 target_include_directories(rt64 PRIVATE ${CMAKE_BINARY_DIR}/rt64/src)
 
 # RecompiledFuncs - Library containing the primary recompiler output
@@ -307,6 +310,8 @@ if (CMAKE_SYSTEM_NAME MATCHES "Linux")
 
     target_link_libraries(RampageRecompiled PRIVATE "-latomic -static-libstdc++" ${CMAKE_DL_LIBS} Threads::Threads)
 endif()
+
+target_compile_definitions(RampageRecompiled PRIVATE RMLUI_SDL_VERSION_MAJOR=2)
 
 target_link_libraries(RampageRecompiled PRIVATE
     PatchesLib

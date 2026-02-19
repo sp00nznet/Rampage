@@ -7,6 +7,8 @@
 #include <numeric>
 #include <stdexcept>
 #include <cinttypes>
+#include <thread>
+#include <chrono>
 
 #include "nfd.h"
 
@@ -566,9 +568,23 @@ void reorder_texture_pack(recomp::mods::ModContext&) {
 
 #define REGISTER_FUNC(name) recomp::overlays::register_base_export(#name, name)
 
+#ifdef _WIN32
+LONG WINAPI crash_handler(EXCEPTION_POINTERS* ep) {
+    fprintf(stderr, "[RAMPAGE] CRASH: code=0x%08lX addr=%p\n",
+        ep->ExceptionRecord->ExceptionCode,
+        ep->ExceptionRecord->ExceptionAddress);
+    fflush(stderr);
+    return EXCEPTION_EXECUTE_HANDLER;
+}
+#endif
+
 int main(int argc, char** argv) {
     (void)argc;
     (void)argv;
+#ifdef _WIN32
+    SetUnhandledExceptionFilter(crash_handler);
+#endif
+    fprintf(stderr, "[RAMPAGE] main() entered\n"); fflush(stderr);
     recomp::Version project_version{};
     if (!recomp::Version::from_string(version_string, project_version)) {
         ultramodern::error_handling::message_box(("Invalid version string: " + version_string).c_str());
@@ -631,8 +647,10 @@ int main(int argc, char** argv) {
         fprintf(stderr, "Failed to load controller mappings: %s\n", SDL_GetError());
     }
 
+    fprintf(stderr, "[RAMPAGE] SDL init done, registering config path\n"); fflush(stderr);
     recomp::register_config_path(zelda64::get_app_folder_path());
 
+    fprintf(stderr, "[RAMPAGE] Registering games\n"); fflush(stderr);
     // Register supported games and patches
     for (const auto& game : supported_games) {
         recomp::register_game(game);
@@ -657,10 +675,14 @@ int main(int argc, char** argv) {
     recompui::register_ui_exports();
     recomputil::register_data_api_exports();
 
+    fprintf(stderr, "[RAMPAGE] Registering overlays\n"); fflush(stderr);
     zelda64::register_overlays();
+    fprintf(stderr, "[RAMPAGE] Registering patches\n"); fflush(stderr);
     zelda64::register_patches();
+    fprintf(stderr, "[RAMPAGE] Registration done, loading config\n"); fflush(stderr);
     // recomputil::init_extended_actor_data();
     zelda64::load_config();
+    fprintf(stderr, "[RAMPAGE] Config loaded, setting up callbacks\n"); fflush(stderr);
 
     recomp::rsp::callbacks_t rsp_callbacks{
         .get_rsp_microcode = get_rsp_microcode,
@@ -715,6 +737,17 @@ int main(int argc, char** argv) {
     // Register the .rtz texture pack file format with the previous content type as its only allowed content type.
     recomp::mods::register_mod_container_type("rtz", std::vector{ texture_pack_content_type_id }, false);
 
+    // Auto-start the game after renderer init completes.
+    // recomp::start() blocks, so we launch a thread to trigger game start.
+    std::thread auto_start_thread([]() {
+        // Wait for the renderer to finish initializing
+        std::this_thread::sleep_for(std::chrono::seconds(3));
+        fprintf(stderr, "[RAMPAGE] Auto-starting game: rampage_wt\n"); fflush(stderr);
+        recomp::start_game(u8"rampage_wt");
+    });
+    auto_start_thread.detach();
+
+    fprintf(stderr, "[RAMPAGE] Calling recomp::start()\n"); fflush(stderr);
     recomp::start(
         project_version,
         {},
@@ -727,6 +760,7 @@ int main(int argc, char** argv) {
         error_handling_callbacks,
         threads_callbacks
     );
+    fprintf(stderr, "[RAMPAGE] recomp::start() returned\n"); fflush(stderr);
 
     NFD_Quit();
 

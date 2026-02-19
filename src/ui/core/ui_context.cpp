@@ -193,8 +193,17 @@ void recompui::init_styling(const std::filesystem::path& rcss_file) {
     std::string style{};
     {
         std::ifstream style_stream{rcss_file};
+        if (!style_stream.good()) {
+            fprintf(stderr, "[UI] Warning: could not open stylesheet '%s'\n", rcss_file.string().c_str());
+            return;
+        }
         style_stream.seekg(0, std::ios::end);
-        style.resize(style_stream.tellg());
+        auto size = style_stream.tellg();
+        if (size <= 0) {
+            fprintf(stderr, "[UI] Warning: stylesheet '%s' is empty or unreadable\n", rcss_file.string().c_str());
+            return;
+        }
+        style.resize(size);
         style_stream.seekg(0, std::ios::beg);
 
         style_stream.read(style.data(), style.size());
@@ -296,7 +305,7 @@ void recompui::destroy_all_contexts() {
         
         std::lock_guard context_lock{ ctx->context_lock };
         opened_context = ctx;
-        opened_context_id = ContextId{ key };
+        opened_context_id = ContextId{ key.raw };
 
         opened_context_id.clear_children();
 

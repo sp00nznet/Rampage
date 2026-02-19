@@ -529,7 +529,10 @@ public:
     void load_document() override {
 		config_context = recompui::create_context(zelda64::get_asset_path("config_menu.rml"));
         recompui::update_mod_list(false);
-        recompui::get_config_tabset()->AddEventListener(Rml::EventId::Tabchange, &config_tabset_listener);
+        Rml::ElementTabSet* tabset = recompui::get_config_tabset();
+        if (tabset != nullptr) {
+            tabset->AddEventListener(Rml::EventId::Tabchange, &config_tabset_listener);
+        }
     }
     void register_events(recompui::UiEventListenerInstancer& listener) override {
         recompui::register_event(listener, "apply_options",
@@ -1054,13 +1057,15 @@ Rml::ElementTabSet* recompui::get_config_tabset() {
     ContextId old_context = recompui::try_close_current_context();
 
     Rml::ElementDocument *doc = config_context.get_document();
-    assert(doc != nullptr);
+    if (doc == nullptr) {
+        if (old_context != ContextId::null()) {
+            old_context.open();
+        }
+        return nullptr;
+    }
 
     Rml::Element *tabset_el = doc->GetElementById("config_tabset");
-    assert(tabset_el != nullptr);
-
-    Rml::ElementTabSet *tabset = rmlui_dynamic_cast<Rml::ElementTabSet *>(tabset_el);
-    assert(tabset != nullptr);
+    Rml::ElementTabSet *tabset = tabset_el ? rmlui_dynamic_cast<Rml::ElementTabSet *>(tabset_el) : nullptr;
 
     if (old_context != ContextId::null()) {
         old_context.open();

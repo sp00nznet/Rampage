@@ -13,9 +13,13 @@ static RecompCustomElement custom_elements[] = {
 };
 
 void recompui::register_custom_elements() {
-    for (auto& element_config : custom_elements) {
-        Rml::Factory::RegisterElementInstancer(element_config.tag, element_config.instancer.get());
+    fprintf(stderr, "[UI] register_custom_elements: %zu elements\n", std::size(custom_elements)); fflush(stderr);
+    for (size_t i = 0; i < std::size(custom_elements); i++) {
+        fprintf(stderr, "[UI] registering element %zu: tag='%s' instancer=%p\n", i, custom_elements[i].tag.c_str(), (void*)custom_elements[i].instancer.get()); fflush(stderr);
+        Rml::Factory::RegisterElementInstancer(custom_elements[i].tag, custom_elements[i].instancer.get());
+        fprintf(stderr, "[UI] element %zu registered\n", i); fflush(stderr);
     }
+    fprintf(stderr, "[UI] register_custom_elements done\n"); fflush(stderr);
 }
 
 Rml::ElementInstancer* recompui::get_custom_element_instancer(std::string tag) {

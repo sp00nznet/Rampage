@@ -181,23 +181,35 @@ public:
     UIState& operator=(UIState&& rhs) = delete;
 
     UIState(SDL_Window* window, plume::RenderInterface* interface, plume::RenderDevice* device) {
+        fprintf(stderr, "[UI:UIState] constructor entered\n"); fflush(stderr);
         launcher_menu_controller = recompui::create_launcher_menu();
+        fprintf(stderr, "[UI:UIState] launcher_menu created\n"); fflush(stderr);
         config_menu_controller = recompui::create_config_menu();
+        fprintf(stderr, "[UI:UIState] config_menu created\n"); fflush(stderr);
 
-        system_interface = std::make_unique<SystemInterface_SDL>();
-        system_interface->SetWindow(window);
+        system_interface = std::make_unique<SystemInterface_SDL>(window);
+        fprintf(stderr, "[UI:UIState] system_interface created\n"); fflush(stderr);
         render_interface.init(interface, device);
+        fprintf(stderr, "[UI:UIState] render_interface initialized\n"); fflush(stderr);
 
+        fprintf(stderr, "[UI:UIState] registering launcher events\n"); fflush(stderr);
         launcher_menu_controller->register_events(event_listener_instancer);
+        fprintf(stderr, "[UI:UIState] registering config events\n"); fflush(stderr);
         config_menu_controller->register_events(event_listener_instancer);
+        fprintf(stderr, "[UI:UIState] events registered\n"); fflush(stderr);
 
         Rml::SetSystemInterface(system_interface.get());
+        fprintf(stderr, "[UI:UIState] SetSystemInterface done\n"); fflush(stderr);
         Rml::SetRenderInterface(render_interface.get_rml_interface());
+        fprintf(stderr, "[UI:UIState] SetRenderInterface done\n"); fflush(stderr);
         Rml::Factory::RegisterEventListenerInstancer(&event_listener_instancer);
-
-        recompui::register_custom_elements();
+        fprintf(stderr, "[UI:UIState] RegisterEventListenerInstancer done\n"); fflush(stderr);
 
         Rml::Initialise();
+        fprintf(stderr, "[UI:UIState] Rml::Initialise done\n"); fflush(stderr);
+
+        recompui::register_custom_elements();
+        fprintf(stderr, "[UI:UIState] custom elements registered\n"); fflush(stderr);
         
         // Apply the hack to replace RmlUi's default color parser with one that conforms to HTML5 alpha parsing for SASS compatibility
         recompui::apply_color_hack();
@@ -234,10 +246,15 @@ public:
     }
 
     void create_menus() {
+        fprintf(stderr, "[UI:menus] init_styling\n"); fflush(stderr);
         recompui::init_styling(zelda64::get_asset_path("recomp.rcss"));
+        fprintf(stderr, "[UI:menus] load launcher doc\n"); fflush(stderr);
         launcher_menu_controller->load_document();
+        fprintf(stderr, "[UI:menus] load config doc\n"); fflush(stderr);
         config_menu_controller->load_document();
+        fprintf(stderr, "[UI:menus] init prompt context\n"); fflush(stderr);
         recompui::init_prompt_context();
+        fprintf(stderr, "[UI:menus] done\n"); fflush(stderr);
     }
 
     void unload() {
@@ -447,11 +464,15 @@ inline const std::string read_file_to_string(std::filesystem::path path) {
 }
 
 void init_hook(plume::RenderInterface* interface, plume::RenderDevice* device) {
+    fprintf(stderr, "[UI] init_hook entered, window=%p interface=%p device=%p\n", (void*)window, (void*)interface, (void*)device); fflush(stderr);
 #if defined(__linux__)
     std::locale::global(std::locale::classic());
 #endif
+    fprintf(stderr, "[UI] creating UIState\n"); fflush(stderr);
     ui_state = std::make_unique<UIState>(window, interface, device);
+    fprintf(stderr, "[UI] UIState created, creating menus\n"); fflush(stderr);
     ui_state->create_menus();
+    fprintf(stderr, "[UI] init_hook done\n"); fflush(stderr);
 }
 
 moodycamel::ConcurrentQueue<SDL_Event> ui_event_queue{};
@@ -693,12 +714,12 @@ void draw_hook(plume::RenderCommandList* command_list, plume::RenderFramebuffer*
             // Send the event to RmlUi if this type of event is being captured.
             if (is_mouse_input) {
                 if (context_capturing_mouse) {
-                    RmlSDL::InputEventHandler(ui_state->context, cur_event);
+                    RmlSDL::InputEventHandler(ui_state->context, window, cur_event);
                 }
             }
             else {
                 if (context_capturing_input) {
-                    RmlSDL::InputEventHandler(ui_state->context, cur_event);
+                    RmlSDL::InputEventHandler(ui_state->context, window, cur_event);
                 }
             }
         }

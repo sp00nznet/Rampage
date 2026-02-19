@@ -203,8 +203,11 @@ ultramodern::renderer::GraphicsApi map_graphics_api(RT64::UserConfiguration::Gra
 }
 
 zelda64::renderer::RT64Context::RT64Context(uint8_t* rdram, ultramodern::renderer::WindowHandle window_handle, bool debug) {
+    fprintf(stderr, "[RT64] RT64Context constructor entered\n"); fflush(stderr);
     static unsigned char dummy_rom_header[0x40];
+    fprintf(stderr, "[RT64] calling set_render_hooks\n"); fflush(stderr);
     recompui::set_render_hooks();
+    fprintf(stderr, "[RT64] set_render_hooks done\n"); fflush(stderr);
 
     // Set up the RT64 application core fields.
     RT64::Application::Core appCore{};
@@ -257,7 +260,9 @@ zelda64::renderer::RT64Context::RT64Context(uint8_t* rdram, ultramodern::rendere
     appConfig.useConfigurationFile = false;
 
     // Create the RT64 application.
+    fprintf(stderr, "[RT64] creating RT64::Application\n"); fflush(stderr);
     app = std::make_unique<RT64::Application>(appCore, appConfig);
+    fprintf(stderr, "[RT64] RT64::Application created\n"); fflush(stderr);
 
     // Set initial user config settings based on the current settings.
     auto& cur_config = ultramodern::renderer::get_graphics_config();
@@ -290,7 +295,9 @@ zelda64::renderer::RT64Context::RT64Context(uint8_t* rdram, ultramodern::rendere
 #ifdef _WIN32
     thread_id = window_handle.thread_id;
 #endif
+    fprintf(stderr, "[RT64] calling app->setup(thread_id=%u)\n", thread_id); fflush(stderr);
     setup_result = map_setup_result(app->setup(thread_id));
+    fprintf(stderr, "[RT64] app->setup returned, result=%d\n", (int)setup_result); fflush(stderr);
     // Get the API that RT64 chose.
     chosen_api = map_graphics_api(app->chosenGraphicsAPI);
     if (setup_result != ultramodern::renderer::SetupResult::Success) {
