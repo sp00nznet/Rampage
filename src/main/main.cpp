@@ -785,7 +785,7 @@ int main(int argc, char** argv) {
     // recomp::start() blocks, so we launch a thread to trigger game start.
     std::thread auto_start_thread([]() {
         // Wait for the renderer to finish initializing
-        std::this_thread::sleep_for(std::chrono::seconds(5));
+        std::this_thread::sleep_for(std::chrono::seconds(2));
 
         std::u8string game_id = u8"rampage_wt";
 
@@ -828,6 +828,9 @@ int main(int argc, char** argv) {
 
         fprintf(stderr, "[RAMPAGE] Auto-starting game: rampage_wt\n"); fflush(stderr);
         recomp::start_game(game_id);
+        // Hide the launcher UI so it doesn't capture game input
+        recompui::hide_all_contexts();
+        fprintf(stderr, "[RAMPAGE] Launcher contexts hidden, input should be enabled\n"); fflush(stderr);
     });
     auto_start_thread.detach();
 

@@ -155,14 +155,8 @@ bool sdl_event_filter(void* userdata, SDL_Event* event) {
         }
         break;
     case SDL_EventType::SDL_QUIT: {
-        if (!ultramodern::is_game_started()) {
-            ultramodern::quit();
-            return true;
-        }
-
-        zelda64::open_quit_game_prompt();
-        recompui::activate_mouse();
-        break;
+        ultramodern::quit();
+        return true;
     }
     case SDL_EventType::SDL_MOUSEWHEEL:
         {
