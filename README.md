@@ -4,7 +4,7 @@ A PC port of **Rampage World Tour** (N64, 1997) and **Rampage 2: Universal Tour*
 
 ## Current Status
 
-**Phase 5: Runtime Integration** - The game boots, renders at 60fps via RT64 D3D12, accepts keyboard/controller input, and reaches full in-game gameplay. Visual artifact investigation is in progress.
+**Phase 5: Runtime Integration** - The game boots, renders at 60fps via RT64 D3D12, accepts keyboard/controller input, and reaches full in-game gameplay.
 
 ### What Works
 - Full static recompilation of both ROMs (World Tour: 3,736 functions, Rampage 2: 4,788 functions)
@@ -14,14 +14,24 @@ A PC port of **Rampage World Tour** (N64, 1997) and **Rampage 2: Universal Tour*
 - Keyboard and controller input fully functional
 - SDL2 window with gamepad support
 - VI register configuration (400x240 framebuffer, xScale=1.6, double-buffered)
-- RDRAM framebuffer dumps confirmed correct (raw pixel data matches expected game content)
-- Frame-level diagnostic system for RDP command analysis
+- Audio initialization (Midway SN64 engine stubs, ROM DMA, audio thread running)
+- 418 N64Recomp fallthrough functions automatically fixed
+- Render thread race condition resolved (NULL task pointer guard)
 
 ### What Doesn't Work Yet
-- **Audio** - Midway's proprietary SN64 sound engine not yet implemented (ROM audio bank identified at offset 0x906290)
-- **Visual artifacts** - Top-edge corruption and left-side misalignment in the VI presentation pipeline. Root cause investigation in progress: the GPU-rendered framebuffer pixels are correct, but the presentation to the display window introduces artifacts. The game uses ~453 CI8 TextureRect COPY-mode draws per frame with a non-standard 400x240 framebuffer.
-- Controller pak save/load (low-level PFS stubs not implemented)
-- 30 ignored functions in World Tour may cause missing functionality
+- **Audio output** - Midway's proprietary SN64 sound engine initialized but aspMain is diagnostic-only (no actual sound)
+- **Screen transitions** - Fade/wipe effects driven by SN64 audio timer callbacks; without audio processing, transitions show overlapping content
+- Controller pak save/load (PFS stubs not implemented)
+
+### N64Recomp Fallthrough Bug
+
+N64Recomp incorrectly splits continuous MIPS code at function boundaries, creating small "fallthrough" functions that load registers or perform arithmetic but never call the next function. This causes:
+
+1. **Simple fallthroughs** (418 found) - Function sets up registers then should continue to the next function. Fixed automatically by `tools/fix_fallthroughs_v2.py` which adds a call to the next function.
+
+2. **hi/lo register fallthroughs** (3 found) - Function performs `multu`/`divu` then falls through. The callee gets fresh `hi=0, lo=0` local variables, losing the computation. Fixed manually by recomputing the multiply/divide at the start of the callee.
+
+3. **Render thread race condition** - The scheduler thread (`func_80060BEC`, priority 19) writes a task pointer that the render thread (`func_800611A0`, priority 17) reads. On N64, cooperative scheduling ensures the higher-priority scheduler runs first. In the recompiled version with preemptive OS threads, the render thread can wake before the pointer is set. Fixed with NULL guards.
 
 ### Rendering Architecture
 Unlike most N64 games, Rampage World Tour does **not** use RSP 3D triangle rendering. The game performs all scene rendering on the CPU and draws the result to the framebuffer using RDP TextureRect commands (~453 per frame in CI8 COPY mode). This software-rendered approach with a non-standard 400x240 framebuffer (vs the typical 320x240) presents unique challenges for RT64 integration.
@@ -35,20 +45,10 @@ Key rendering details:
 
 ## Screenshots
 
-### RDRAM Framebuffer Dump (Raw Pixel Data)
-![RDRAM Framebuffer](screenshots/rdram_framebuffer_fixed.png)
-
-*Raw RDRAM framebuffer dump at 400x240 - confirms the RDP rendering pipeline produces correct pixels.*
-
-### In-Game Gameplay
-![Gameplay](screenshots/02_gameplay.png)
-
-*George the gorilla in gameplay - buildings, sky, and environment rendering at 60fps. Note visual artifacts at top and left edges.*
-
 ### Title Screen
-![Title screen](screenshots/01_title_screen.png)
+![Title screen](screenshots/screenshot.png)
 
-*The instructions/menu screen with monster artwork.*
+*Rampage World Tour title screen rendering at 60fps via RT64 D3D12.*
 
 ## Building
 
@@ -95,7 +95,6 @@ RecompiledFuncs_R2/ - 4,788 recompiled Rampage 2 functions
 rsp/               - RSP audio stub (not yet implemented)
 symbols/           - Function symbol tables for both ROMs
 tools/             - Python utilities for fixing recompilation issues
-tools/simple64/    - N64 emulator for reference frame comparison
 scripts/           - Build, capture, and diagnostic helper scripts
 screenshots/       - Game screenshots and diagnostic captures
 ```
