@@ -4414,6 +4414,11 @@ L_80037794:
         fprintf(stderr, "[WORLD] #%d: after func_80067DE4, calling func_80037C48\n", world_call);
         fflush(stderr);
     }
+    // PATCH: Force audio timer flag at 0x800CB7A4 to non-zero.
+    // Without SN64 audio timer callbacks, this flag is never set, blocking
+    // the fade transition and leaving the screen black.
+    MEM_HU(S32(0X800C << 16), -0X85C) = 1;
+
     // 0x8003779C: jal         0x80037C48
     // 0x800377A0: nop
 

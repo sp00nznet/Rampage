@@ -19,8 +19,9 @@ A PC port of **Rampage World Tour** (N64, 1997) and **Rampage 2: Universal Tour*
 - Render thread race condition resolved (NULL task pointer guard)
 
 ### What Doesn't Work Yet
+- **Sprite transparency** - CI8 COPY mode alpha discard implemented in RT64 RasterPS.hlsl; most sprites render correctly but some edge cases may remain
 - **Audio output** - Midway's proprietary SN64 sound engine initialized but aspMain is diagnostic-only (no actual sound)
-- **Screen transitions** - Fade/wipe effects driven by SN64 audio timer callbacks; without audio processing, transitions show overlapping content
+- **Screen transitions** - Fade/wipe effects partially fixed with timer flag bypass; full fix requires SN64 audio timer callbacks
 - Controller pak save/load (PFS stubs not implemented)
 
 ### N64Recomp Fallthrough Bug
@@ -45,10 +46,15 @@ Key rendering details:
 
 ## Screenshots
 
+### Gameplay
+![Gameplay](screenshots/gameplay2.png)
+
+*In-game gameplay with sprite transparency fix, running at 60fps via RT64 D3D12 with ImGui menu overlay.*
+
 ### Title Screen
 ![Title screen](screenshots/screenshot.png)
 
-*Rampage World Tour title screen rendering at 60fps via RT64 D3D12.*
+*Rampage World Tour instruction screen rendering at 60fps via RT64 D3D12.*
 
 ## Building
 
@@ -82,7 +88,7 @@ Built on the [N64ModernRuntime](https://github.com/sonicdcer/N64ModernRuntime) f
 - **RT64** - N64 RDP GPU emulation via D3D12/Vulkan
 - **ultramodern** - N64 OS function reimplementation (threads, scheduling, memory)
 - **librecomp** - Runtime for loading and executing recompiled code
-- **RmlUi** - Launcher/config UI framework
+- **Dear ImGui** - Menu bar overlay (File/Config/About) via RT64's built-in Inspector
 
 ## Project Structure
 

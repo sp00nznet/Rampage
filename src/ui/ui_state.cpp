@@ -571,6 +571,10 @@ void recompui::activate_mouse() {
 }
 
 void draw_hook(plume::RenderCommandList* command_list, plume::RenderFramebuffer* swap_chain_framebuffer) {
+    // RmlUi overlay disabled - using ImGui menu bar via RT64 Inspector instead.
+    (void)command_list;
+    (void)swap_chain_framebuffer;
+    return;
 
     apply_background_input_mode();
 
