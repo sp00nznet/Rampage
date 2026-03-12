@@ -4,25 +4,54 @@ A PC port of **Rampage World Tour** (N64, 1997) and **Rampage 2: Universal Tour*
 
 ## Current Status
 
-**Phase 5: Runtime Integration** - The game boots, renders at 60fps via RT64 D3D12, accepts keyboard/controller input, and reaches full in-game gameplay.
+**Phase 5: Runtime Integration** - The game is fully playable with working controls. Boots, renders at 60fps via RT64 D3D12, accepts keyboard/controller input, and plays through all game states including gameplay.
 
 ### What Works
 - Full static recompilation of both ROMs (World Tour: 3,736 functions, Rampage 2: 4,788 functions)
 - Game boots and renders via RT64 (D3D12/Vulkan) at 4x native resolution (1600x960)
 - Stable 60fps VI refresh rate
 - Complete game state progression: title -> instructions -> menus -> character select -> **gameplay**
-- Keyboard and controller input fully functional
-- SDL2 window with gamepad support
+- **Gameplay controls fully functional** - move, punch, kick, jump, climb buildings
+- Keyboard and controller input (SDL2 gamepad support)
+- Demo mode plays automatically when idle
 - VI register configuration (400x240 framebuffer, xScale=1.6, double-buffered)
 - Audio initialization (Midway SN64 engine stubs, ROM DMA, audio thread running)
 - 418 N64Recomp fallthrough functions automatically fixed
 - Render thread race condition resolved (NULL task pointer guard)
+- Button mapping tables force-refreshed every frame (game init clears them during state transitions)
 
 ### What Doesn't Work Yet
-- **Sprite transparency** - CI8 COPY mode alpha discard implemented in RT64 RasterPS.hlsl; most sprites render correctly but some edge cases may remain
 - **Audio output** - Midway's proprietary SN64 sound engine initialized but aspMain is diagnostic-only (no actual sound)
 - **Screen transitions** - Fade/wipe effects partially fixed with timer flag bypass; full fix requires SN64 audio timer callbacks
+- **Sprite transparency edge cases** - CI8 COPY mode alpha discard implemented; most sprites correct but some edge cases remain
 - Controller pak save/load (PFS stubs not implemented)
+
+### Default Controls
+| Key | N64 Button | Gameplay Action |
+|-----|-----------|-----------------|
+| Enter | START | Pause/Start |
+| Space | A | Punch |
+| Left Shift | B | Kick |
+| WASD | Analog Stick | Move |
+| Arrow Keys | C Buttons | Jump (C-Down) |
+| IJKL | D-Pad | Direction |
+
+## Screenshots
+
+### Title Screen
+![Title screen](screenshots/title.png)
+
+*Rampage World Tour title screen running at 60fps via RT64 D3D12.*
+
+### Gameplay
+![Gameplay](screenshots/gameplay3.png)
+
+*In-game gameplay with George climbing a building, running at 60fps with sprite transparency.*
+
+### Demo Mode
+![Demo mode](screenshots/demo-mode.png)
+
+*Demo mode plays automatically when idle at the title screen, showing all three monsters.*
 
 ### N64Recomp Fallthrough Bug
 
@@ -43,18 +72,6 @@ Key rendering details:
 - **Double-buffered framebuffers** at RDRAM 0x001A5EC0 / 0x001770C0
 - **fillRect (0,0)-(399,239)** clears the full framebuffer each frame
 - Resolution scaled to 4x native (1600x960) by RT64's WindowIntegerScale
-
-## Screenshots
-
-### Gameplay
-![Gameplay](screenshots/gameplay2.png)
-
-*In-game gameplay with sprite transparency fix, running at 60fps via RT64 D3D12 with ImGui menu overlay.*
-
-### Title Screen
-![Title screen](screenshots/screenshot.png)
-
-*Rampage World Tour instruction screen rendering at 60fps via RT64 D3D12.*
 
 ## Building
 

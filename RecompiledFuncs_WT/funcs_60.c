@@ -1,6 +1,5 @@
 #include "recomp.h"
 #include "funcs.h"
-#include <stdio.h>
 
 RECOMP_FUNC void func_8005F414(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
@@ -2187,7 +2186,6 @@ L_800600B8:
 RECOMP_FUNC void game_main(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    fprintf(stderr, "[BOOT] game_main entered\n"); fflush(stderr);
     // 0x800600D0: addiu       $sp, $sp, -0x20
     ctx->r29 = ADD32(ctx->r29, -0X20);
     // 0x800600D4: sw          $ra, 0x1C($sp)
@@ -2768,15 +2766,6 @@ RECOMP_FUNC void func_80060418(uint8_t* rdram, recomp_context* ctx) {
     // 0x80060434: or          $a2, $zero, $zero
     ctx->r6 = 0 | 0;
     after_0:
-    {
-        static int f418_count = 0;
-        f418_count++;
-        if (f418_count <= 30 || (f418_count % 120 == 0)) {
-            fprintf(stderr, "[INPUT-418] #%d: osRecvMesg returned %d\n",
-                    f418_count, (int32_t)ctx->r2);
-            fflush(stderr);
-        }
-    }
     // 0x80060438: addiu       $at, $zero, -0x1
     ctx->r1 = ADD32(0, -0X1);
     // 0x8006043C: beq         $v0, $at, L_800604AC
