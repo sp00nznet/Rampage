@@ -2768,6 +2768,15 @@ RECOMP_FUNC void func_80060418(uint8_t* rdram, recomp_context* ctx) {
     // 0x80060434: or          $a2, $zero, $zero
     ctx->r6 = 0 | 0;
     after_0:
+    {
+        static int f418_count = 0;
+        f418_count++;
+        if (f418_count <= 30 || (f418_count % 120 == 0)) {
+            fprintf(stderr, "[INPUT-418] #%d: osRecvMesg returned %d\n",
+                    f418_count, (int32_t)ctx->r2);
+            fflush(stderr);
+        }
+    }
     // 0x80060438: addiu       $at, $zero, -0x1
     ctx->r1 = ADD32(0, -0X1);
     // 0x8006043C: beq         $v0, $at, L_800604AC
