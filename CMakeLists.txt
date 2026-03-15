@@ -77,6 +77,18 @@ target_compile_definitions(fmt PUBLIC FMT_USE_CONSTEVAL=0)
 
 target_include_directories(rt64 PRIVATE ${CMAKE_BINARY_DIR}/rt64/src)
 
+# ROM selection: set RAMPAGE_GAME to "wt" (World Tour) or "r2" (Universal Tour)
+set(RAMPAGE_GAME "wt" CACHE STRING "Which Rampage ROM to build: wt or r2")
+set_property(CACHE RAMPAGE_GAME PROPERTY STRINGS "wt" "r2")
+
+if (RAMPAGE_GAME STREQUAL "r2")
+    set(RECOMP_FUNC_DIR "RecompiledFuncs_R2")
+    message(STATUS "Building for: Rampage 2 - Universal Tour")
+else()
+    set(RECOMP_FUNC_DIR "RecompiledFuncs_WT")
+    message(STATUS "Building for: Rampage - World Tour")
+endif()
+
 # RecompiledFuncs - Library containing the primary recompiler output
 add_library(RecompiledFuncs STATIC)
 
@@ -92,8 +104,8 @@ target_include_directories(RecompiledFuncs PRIVATE
     ${CMAKE_SOURCE_DIR}/lib/N64ModernRuntime/N64Recomp/include
 )
 
-file(GLOB FUNC_C_SOURCES ${CMAKE_SOURCE_DIR}/RecompiledFuncs_WT/*.c)
-file(GLOB FUNC_CXX_SOURCES ${CMAKE_SOURCE_DIR}/RecompiledFuncs_WT/*.cpp)
+file(GLOB FUNC_C_SOURCES ${CMAKE_SOURCE_DIR}/${RECOMP_FUNC_DIR}/*.c)
+file(GLOB FUNC_CXX_SOURCES ${CMAKE_SOURCE_DIR}/${RECOMP_FUNC_DIR}/*.cpp)
 
 target_sources(RecompiledFuncs PRIVATE ${FUNC_C_SOURCES} ${FUNC_CXX_SOURCES})
 
@@ -313,6 +325,15 @@ if (CMAKE_SYSTEM_NAME MATCHES "Linux")
 endif()
 
 target_compile_definitions(RampageRecompiled PRIVATE RMLUI_SDL_VERSION_MAJOR=2)
+
+# Pass ROM selection to C++ code
+if (RAMPAGE_GAME STREQUAL "r2")
+    target_compile_definitions(RampageRecompiled PRIVATE RAMPAGE_GAME_R2=1)
+    target_compile_definitions(RecompiledFuncs PRIVATE RAMPAGE_GAME_R2=1)
+else()
+    target_compile_definitions(RampageRecompiled PRIVATE RAMPAGE_GAME_WT=1)
+    target_compile_definitions(RecompiledFuncs PRIVATE RAMPAGE_GAME_WT=1)
+endif()
 
 target_link_libraries(RampageRecompiled PRIVATE
     PatchesLib

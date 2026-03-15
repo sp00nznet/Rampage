@@ -1,5 +1,10 @@
 #include "ovl_patches.hpp"
+
+#ifdef RAMPAGE_GAME_R2
+#include "../../RecompiledFuncs_R2/recomp_overlays.inl"
+#else
 #include "../../RecompiledFuncs_WT/recomp_overlays.inl"
+#endif
 
 #include "librecomp/overlays.hpp"
 

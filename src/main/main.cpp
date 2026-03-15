@@ -146,7 +146,11 @@ ultramodern::renderer::WindowHandle create_window(ultramodern::gfx_callbacks_t::
     flags |= SDL_WINDOW_VULKAN;
 #endif
 
-    window = SDL_CreateWindow("Rampage: World Tour Recompiled", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1600, 960,  flags);
+#ifdef RAMPAGE_GAME_R2
+    window = SDL_CreateWindow("Rampage 2: Universal Tour Recompiled", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1600, 960, flags);
+#else
+    window = SDL_CreateWindow("Rampage: World Tour Recompiled", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1600, 960, flags);
+#endif
 #if defined(__linux__)
     SetImageAsIcon("icons/512.png",window);
     if (ultramodern::renderer::get_graphics_config().wm_option == ultramodern::renderer::WindowMode::Fullscreen) { // TODO: Remove once RT64 gets native fullscreen support on Linux
@@ -357,10 +361,17 @@ gpr get_entrypoint_address();
 // array of supported GameEntry objects
 std::vector<recomp::GameEntry> supported_games = {
     {
+#ifdef RAMPAGE_GAME_R2
+        .rom_hash = 0x61d6fbc04d8ee275ULL,
+        .internal_name = "RAMPAGE2",
+        .game_id = u8"rampage_r2",
+        .mod_game_id = "rr2",
+#else
         .rom_hash = 0x4cac6a61483a1ad8ULL,
         .internal_name = "RAMPAGE",
         .game_id = u8"rampage_wt",
         .mod_game_id = "rwt",
+#endif
         .save_type = recomp::SaveType::AllowAll,
         .is_enabled = true,
         .entrypoint_address = get_entrypoint_address(),
@@ -787,7 +798,11 @@ int main(int argc, char** argv) {
         // Wait for the renderer to finish initializing
         std::this_thread::sleep_for(std::chrono::seconds(2));
 
+#ifdef RAMPAGE_GAME_R2
+        std::u8string game_id = u8"rampage_r2";
+#else
         std::u8string game_id = u8"rampage_wt";
+#endif
 
         // Check if ROM is already stored and valid
         if (!recomp::is_rom_valid(game_id)) {
@@ -795,10 +810,17 @@ int main(int argc, char** argv) {
 
             // Search for ROM in common locations relative to CWD
             std::filesystem::path rom_candidates[] = {
+#ifdef RAMPAGE_GAME_R2
+                "rampage2_ut.z64",
+                "Rampage 2 - Universal Tour (U) [!].z64",
+                "roms/rampage2_ut.z64",
+                "roms/Rampage 2 - Universal Tour (U) [!].z64",
+#else
                 "rampage_wt.z64",
                 "Rampage - World Tour (U) [!].z64",
                 "roms/rampage_wt.z64",
                 "roms/Rampage - World Tour (U) [!].z64",
+#endif
             };
 
             bool rom_found = false;
@@ -819,14 +841,22 @@ int main(int argc, char** argv) {
             }
 
             if (!rom_found) {
+#ifdef RAMPAGE_GAME_R2
+                fprintf(stderr, "[RAMPAGE] ERROR: Could not find valid ROM file! Place rampage2_ut.z64 in the working directory.\n"); fflush(stderr);
+#else
                 fprintf(stderr, "[RAMPAGE] ERROR: Could not find valid ROM file! Place rampage_wt.z64 in the working directory.\n"); fflush(stderr);
+#endif
                 return;
             }
         } else {
             fprintf(stderr, "[RAMPAGE] ROM already stored and valid\n"); fflush(stderr);
         }
 
+#ifdef RAMPAGE_GAME_R2
+        fprintf(stderr, "[RAMPAGE] Auto-starting game: rampage_r2\n"); fflush(stderr);
+#else
         fprintf(stderr, "[RAMPAGE] Auto-starting game: rampage_wt\n"); fflush(stderr);
+#endif
         recomp::start_game(game_id);
         // Hide the launcher UI so it doesn't capture game input
         recompui::hide_all_contexts();
