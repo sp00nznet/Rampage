@@ -7349,6 +7349,19 @@ RECOMP_FUNC void func_8005CA34(uint8_t* rdram, recomp_context* ctx) {
     // 0x8005CA38: sw          $ra, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->r31;
 L_8005CA3C:
+    // FIX: On N64, Thread 2 (pri=10) gets CPU time via interrupt-driven scheduling.
+    // In ultramodern's cooperative model, Thread 5 (pri=85) starves Thread 2 during
+    // init because every timer message wakes Thread 5 first. When game state is 0
+    // (init not complete), temporarily lower Thread 5's priority below Thread 2.
+    {
+        uint32_t state = *(uint32_t*)(rdram + 0xC2710);
+        if (state == 0) {
+            // Lower Thread 5 priority below Thread 2 (pri=10) during init
+            ctx->r4 = 0; // NULL = this thread
+            ctx->r5 = 1; // new priority = 1
+            osSetThreadPri_recomp(rdram, ctx);
+        }
+    }
     // 0x8005CA3C: lui         $a0, 0x8015
     ctx->r4 = S32(0X8015 << 16);
     // 0x8005CA40: addiu       $a0, $a0, 0x2568

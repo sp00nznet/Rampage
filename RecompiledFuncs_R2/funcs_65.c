@@ -638,6 +638,7 @@ RECOMP_FUNC void func_8005E710(uint8_t* rdram, recomp_context* ctx) {
     // 0x8005E720: ori         $a0, $a0, 0x900
     ctx->r4 = ctx->r4 | 0X900;
     after_0:
+    fprintf(stderr, "[R2-INIT] heap init done, calling func_8005C5F0 (threads/timer)\n"); fflush(stderr);
     // 0x8005E724: jal         0x8005C5F0
     // 0x8005E728: nop
 
@@ -646,6 +647,7 @@ RECOMP_FUNC void func_8005E710(uint8_t* rdram, recomp_context* ctx) {
     // 0x8005E728: nop
 
     after_1:
+    fprintf(stderr, "[R2-INIT] threads/timer done, calling func_8005E6E0 (resource loading)\n"); fflush(stderr);
     // 0x8005E72C: jal         0x8005E6E0
     // 0x8005E730: nop
 
