@@ -71,15 +71,15 @@ R2 uses the same build system and runtime as World Tour with game-specific fixes
 ## Screenshots
 
 ### World Tour - Title Screen
-![Title screen](title.png)
+![Title screen](screenshots/title.png)
 
 ### World Tour - Gameplay
-![Gameplay](gameplay3.png)
+![Gameplay](screenshots/gameplay3.png)
 
 *In-game gameplay with George climbing a building, running at 60fps.*
 
 ### World Tour - Demo Mode
-![Demo mode](demo-mode.png)
+![Demo mode](screenshots/demo-mode.png)
 
 ## Dual-ROM Build System
 
