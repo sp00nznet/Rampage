@@ -5510,6 +5510,13 @@ RECOMP_FUNC void func_80060454(uint8_t* rdram, recomp_context* ctx) {
     ctx->r22 = ADD32(ctx->r4, 0);
     // 0x80060490: lw          $s1, 0x0($s6)
     ctx->r17 = MEM_W(ctx->r22, 0X0);
+    // FIX: On N64, address 0 maps to physical RDRAM 0 (valid memory).
+    // The game uses RDRAM 0 as scratch space for first-time resource decompression.
+    // In the recomp, address 0 isn't sign-extended so MEM_B/MEM_W produce wild pointers.
+    // Map 0 → 0x80000000 which is rdram[0] in the recomp.
+    if ((uint32_t)ctx->r17 == 0) {
+        ctx->r17 = (gpr)(int32_t)0x80000000;
+    }
     // 0x80060494: bne         $v0, $zero, L_800604AC
     if (ctx->r2 != 0) {
         // 0x80060498: nop
