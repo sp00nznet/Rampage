@@ -7190,6 +7190,14 @@ RECOMP_FUNC void func_8005C984(uint8_t* rdram, recomp_context* ctx) {
     // 0x8005C994: sw          $ra, 0x1C($sp)
     MEM_W(0X1C, ctx->r29) = ctx->r31;
 L_8005C998:
+    {
+        static int sched_loop = 0;
+        if (sched_loop < 10 || (sched_loop % 300 == 0)) {
+            fprintf(stderr, "[R2-SCHED] loop #%d: waiting for event on mq=0x801696F8\n", sched_loop);
+            fflush(stderr);
+        }
+        sched_loop++;
+    }
     // 0x8005C998: lui         $a0, 0x8017
     ctx->r4 = S32(0X8017 << 16);
     // 0x8005C99C: addiu       $a0, $a0, -0x6908
@@ -7204,6 +7212,15 @@ L_8005C998:
     // 0x8005C9A8: addiu       $a2, $zero, 0x1
     ctx->r6 = ADD32(0, 0X1);
     after_0:
+    {
+        uint32_t msg = (uint32_t)MEM_W(ctx->r29, 0X10);
+        static int sched_recv = 0;
+        if (sched_recv < 10 || (sched_recv % 300 == 0)) {
+            fprintf(stderr, "[R2-SCHED] received event #%d: msg=0x%08X\n", sched_recv, msg);
+            fflush(stderr);
+        }
+        sched_recv++;
+    }
     // 0x8005C9AC: lw          $v0, 0x10($sp)
     ctx->r2 = MEM_W(ctx->r29, 0X10);
     // 0x8005C9B0: addiu       $v1, $v0, -0x1

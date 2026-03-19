@@ -623,6 +623,7 @@ RECOMP_FUNC void func_8005E6E0(uint8_t* rdram, recomp_context* ctx) {
 RECOMP_FUNC void func_8005E710(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
+    fprintf(stderr, "[R2-THREAD2] func_8005E710 ENTERED (Thread 2 start)\n"); fflush(stderr);
     // 0x8005E710: addiu       $sp, $sp, -0x18
     ctx->r29 = ADD32(ctx->r29, -0X18);
     // 0x8005E714: sw          $ra, 0x10($sp)
