@@ -7,8 +7,8 @@ A PC port of **Rampage World Tour** (N64, 1997) and **Rampage 2: Universal Tour*
 ### Rampage: World Tour - PLAYABLE
 Fully playable at 60fps. All game states work: title screen, menus, character select, and gameplay. Keyboard and controller input, demo mode, ImGui menu bar. No audio output yet (SN64 engine stubbed).
 
-### Rampage 2: Universal Tour - BOOTING (WIP)
-Boots, loads assets, enters the main game loop. Currently rendering a black screen while the game state machine initializes. See [R2 Status](#rampage-2-universal-tour) for details.
+### Rampage 2: Universal Tour - BOOTING (All threads active)
+Boots fully with all 4 threads running, loads 20 assets via PI DMA, and enters the main game loop. Render loop is active but not yet submitting RSP tasks (black screen). See [R2 Status](#rampage-2-universal-tour) for details.
 
 ## What Works (World Tour)
 
@@ -38,13 +38,14 @@ R2 uses the same build system and runtime as World Tour with game-specific fixes
 ### What Works (R2)
 
 - Full static recompilation of 4,788 game functions with 35 named OS function interceptors
-- Game boots through osInitialize, creates all 4 threads (boot, scheduler, main loop, idle)
-- **PI DMA system working** - synchronous DMA override bypasses stubbed osCreatePiManager
-- **2MB initial ROM load** - R2's code+data segment is 2MB (vs 1MB for WT)
-- Resource system initialized - 20+ compressed assets loaded and decompressed via LZSS
-- Timer system active (osSetTimer fires at 60Hz)
-- Game state machine set to initial state function
+- **Full boot sequence** - all 4 threads running (boot, scheduler, main loop, idle)
+- **Controller init working** - osContInit redirect resolves SI deadlock
+- **PI DMA system working** - synchronous DMA override bypasses stubbed osCreatePiManager, 20 assets loaded
+- Resource system initialized - compressed assets loaded and decompressed via LZSS
+- **Scheduler receives VI events** (confirmed msg=0x3)
+- **Game state machine initialized** - state set to func_80001ABC
 - Thread 2 render loop running with cooperative scheduling yield
+- **Stable** - no crashes during extended runs
 - 2 critical fallthrough functions manually fixed (resource init, frame processing)
 - 46 cross-function gotos fixed, 17 after_X label merges, 49 function stubs
 - 52 hardware register functions in ignored list
@@ -55,7 +56,6 @@ R2 uses the same build system and runtime as World Tour with game-specific fixes
 - ~879 potential 2-instruction fallthrough functions need systematic fixing
 - Audio/SN64 stubs not yet applied for R2
 - Gameplay controls mapping not yet configured
-- Many game-specific data structures still being reverse-engineered
 
 ## Default Controls
 
