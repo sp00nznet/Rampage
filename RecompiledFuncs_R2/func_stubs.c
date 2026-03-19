@@ -2,6 +2,17 @@
 #include "recomp.h"
 #include "funcs.h"
 
+// Controller init function override
+// func_800724D8 is the game's internal osContInit variant that does SI operations
+// and blocks on osRecvMesg waiting for SI completion. Since SI hardware isn't
+// emulated, redirect to osContInit_recomp which handles this properly.
+extern void osContInit_recomp(uint8_t* rdram, recomp_context* ctx);
+RECOMP_FUNC void func_800724D8(uint8_t* rdram, recomp_context* ctx) {
+    // a0 = mq, a1 = bitpattern_out, a2 = status_out
+    // osContInit_recomp reads these from ctx registers
+    osContInit_recomp(rdram, ctx);
+}
+
 // PI DMA request function override
 // Original func_80072B20 sends DMA requests to the PI manager thread (osCreatePiManager),
 // but osCreatePiManager is stubbed, so nobody processes them.

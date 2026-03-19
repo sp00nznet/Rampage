@@ -6694,11 +6694,13 @@ L_8005C654:
     // 0x8005C6C4: jal         0x8005C010
     // 0x8005C6C8: nop
 
+    fprintf(stderr, "[R2-C5F0] calling func_8005C010\n"); fflush(stderr);
     func_8005C010(rdram, ctx);
         goto after_0;
     // 0x8005C6C8: nop
 
     after_0:
+    fprintf(stderr, "[R2-C5F0] func_8005C010 returned, creating scheduler queue\n"); fflush(stderr);
     // 0x8005C6CC: lui         $s0, 0x8017
     ctx->r16 = S32(0X8017 << 16);
     // 0x8005C6D0: addiu       $s0, $s0, -0x6908
@@ -6795,6 +6797,7 @@ L_8005C654:
     // 0x8005C758: sw          $v0, 0x14($sp)
     MEM_W(0X14, ctx->r29) = ctx->r2;
     after_6:
+    fprintf(stderr, "[R2-C5F0] Thread 3 (scheduler) created, starting it\n"); fflush(stderr);
     // 0x8005C75C: jal         0x80070980
     // 0x8005C760: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
@@ -6803,10 +6806,12 @@ L_8005C654:
     // 0x8005C760: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
     after_7:
+    fprintf(stderr, "[R2-C5F0] Thread 3 started, checking osTvType\n"); fflush(stderr);
     // 0x8005C764: lui         $v0, 0x8000
     ctx->r2 = S32(0X8000 << 16);
     // 0x8005C768: lw          $v0, 0x300($v0)
     ctx->r2 = MEM_W(ctx->r2, 0X300);
+    fprintf(stderr, "[R2-C5F0] osTvType=0x%08X\n", (uint32_t)ctx->r2); fflush(stderr);
     // 0x8005C76C: bne         $v0, $zero, L_8005C7FC
     if (ctx->r2 != 0) {
         // 0x8005C770: nop
