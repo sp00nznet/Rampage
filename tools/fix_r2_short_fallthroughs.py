@@ -49,6 +49,13 @@ def fix_file(filepath, dry_run=False):
         if next_func_name + '(rdram, ctx)' in body:
             continue
 
+        # KEY CHECK: Only fix if there's no 'jr' instruction in the MIPS comments.
+        # A real fallthrough has no jr $ra (return) instruction.
+        # Functions that DO have jr $ra but no C 'return;' are just quirks of the
+        # decompiler output format — they still return normally.
+        if re.search(r'//.*\bjr\b', body):
+            continue
+
         # Count real instructions
         instruction_count = len(re.findall(r'ctx->r\d+\s*=|MEM_[WHBU]', body))
         if instruction_count > 6:
