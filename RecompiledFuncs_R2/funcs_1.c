@@ -526,7 +526,9 @@ L_800017A8:
     // On real N64, Thread 3 (pri=90) preempts via hardware interrupts.
     // In ultramodern's cooperative scheduler, we must yield to let the
     // idle thread deliver external messages (VI, timer) to higher-priority threads.
-    yield_self_1ms(rdram);
+    // Use yield_self (not _1ms) to drain ALL pending external messages, then
+    // check_running_queue will preempt for Thread 3 (pri=90) if it was woken.
+    yield_self(rdram);
     // 0x800017A8: jal         0x800029D0
     // 0x800017AC: nop
 
