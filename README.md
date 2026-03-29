@@ -7,8 +7,8 @@ A PC port of **Rampage World Tour** (N64, 1997) and **Rampage 2: Universal Tour*
 ### Rampage: World Tour - PLAYABLE
 Fully playable at 60fps. All game states work: title screen, menus, character select, and gameplay. Keyboard and controller input, demo mode, ImGui menu bar. No audio output yet (SN64 engine stubbed).
 
-### Rampage 2: Universal Tour - BOOTING (All threads active)
-Boots fully with all 4 threads running, loads 20 assets via PI DMA, and enters the main game loop. Render loop is active but not yet submitting RSP tasks (black screen). See [R2 Status](#rampage-2-universal-tour) for details.
+### Rampage 2: Universal Tour - RENDER LOOP ACTIVE
+Boots fully with all 4 threads running. Render loop iterates through game logic, loads title screen resources via PI DMA (50+ assets), and processes game state 0x0110 (title). RSP task submission path identified but display list handoff to scheduler not yet connected (black screen). See [R2 Status](#rampage-2-universal-tour) for details.
 
 ## What Works (World Tour)
 
@@ -40,11 +40,14 @@ R2 uses the same build system and runtime as World Tour with game-specific fixes
 - Full static recompilation of 4,788 game functions with 35 named OS function interceptors
 - **Full boot sequence** - all 4 threads running (boot, scheduler, main loop, idle)
 - **Controller init working** - osContInit redirect resolves SI deadlock
-- **PI DMA system working** - synchronous DMA override bypasses stubbed osCreatePiManager, 20 assets loaded
+- **PI DMA system working** - synchronous DMA override bypasses stubbed osCreatePiManager, 50+ assets loaded including title screen resources
+- **PI DMA direction fix** - func_80072B20 arg a1 is priority (not direction); DMA always reads from ROM
 - Resource system initialized - compressed assets loaded and decompressed via LZSS
 - **Scheduler receives VI events** (confirmed msg=0x3)
-- **Game state machine initialized** - state set to func_80001ABC
-- Thread 2 render loop running with cooperative scheduling yield
+- **Game state machine initialized** - state set to func_80001ABC, title screen (0x0110) active
+- **Render loop iterating** - full frame processing with cooperative scheduling yields
+- **osSpTaskStartGo identified** - func_80071E70 redirected to osSpTaskStartGo_recomp
+- **Cooperative spin loops fixed** - yield_self added to busy-wait loops in frame sync
 - **Stable** - no crashes during extended runs
 - 2 critical fallthrough functions manually fixed (resource init, frame processing)
 - 46 cross-function gotos fixed, 17 after_X label merges, 49 function stubs
@@ -52,7 +55,7 @@ R2 uses the same build system and runtime as World Tour with game-specific fixes
 
 ### What Doesn't Work Yet (R2)
 
-- **Black screen** - render loop is active but not yet submitting RSP display list tasks
+- **Black screen** - render loop iterates but display list task pointer (0x800908C0) never reaches scheduler; RSP tasks not submitted to RT64
 - ~879 potential 2-instruction fallthrough functions need systematic fixing
 - Audio/SN64 stubs not yet applied for R2
 - Gameplay controls mapping not yet configured

@@ -155,6 +155,7 @@ RECOMP_FUNC void func_8005D0E8(uint8_t* rdram, recomp_context* ctx) {
 RECOMP_FUNC void func_8005D158(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
+    fprintf(stderr, "[R2-D158] ENTERED\n"); fflush(stderr);
     // 0x8005D158: addiu       $sp, $sp, -0x90
     ctx->r29 = ADD32(ctx->r29, -0X90);
     // 0x8005D15C: lui         $a0, 0x8017
@@ -185,6 +186,7 @@ RECOMP_FUNC void func_8005D158(uint8_t* rdram, recomp_context* ctx) {
     // 0x8005D188: sw          $s0, 0x78($sp)
     MEM_W(0X78, ctx->r29) = ctx->r16;
     after_0:
+    fprintf(stderr, "[R2-D158] #0 osCreateMesgQueue done\n"); fflush(stderr);
     // 0x8005D18C: lui         $a0, 0x1
     ctx->r4 = S32(0X1 << 16);
     // 0x8005D190: jal         0x8005DFF0
@@ -195,6 +197,7 @@ RECOMP_FUNC void func_8005D158(uint8_t* rdram, recomp_context* ctx) {
     // 0x8005D194: ori         $a0, $a0, 0x86A0
     ctx->r4 = ctx->r4 | 0X86A0;
     after_1:
+    fprintf(stderr, "[R2-D158] #1 malloc done\n"); fflush(stderr);
     // 0x8005D198: lui         $a0, 0x8006
     ctx->r4 = S32(0X8006 << 16);
     // 0x8005D19C: addiu       $a0, $a0, -0x2F60
@@ -211,6 +214,7 @@ RECOMP_FUNC void func_8005D158(uint8_t* rdram, recomp_context* ctx) {
     // 0x8005D1AC: nop
 
     after_2:
+    fprintf(stderr, "[R2-D158] #2 func_80068790 done\n"); fflush(stderr);
     // 0x8005D1B0: lui         $v0, 0x8000
     ctx->r2 = S32(0X8000 << 16);
     // 0x8005D1B4: lw          $v0, 0x300($v0)
@@ -277,6 +281,7 @@ L_8005D1E4:
     // 0x8005D218: sw          $zero, 0x30($sp)
     MEM_W(0X30, ctx->r29) = 0;
     after_3:
+    fprintf(stderr, "[R2-D158] #3 func_8006190C done\n"); fflush(stderr);
     // 0x8005D21C: lui         $a0, 0x8006
     ctx->r4 = S32(0X8006 << 16);
     // 0x8005D220: addiu       $a0, $a0, -0x2F58
@@ -289,6 +294,7 @@ L_8005D1E4:
     // 0x8005D228: nop
 
     after_4:
+    fprintf(stderr, "[R2-D158] #4 func_800687C8 done\n"); fflush(stderr);
     // 0x8005D22C: lui         $s1, 0x77
     ctx->r17 = S32(0X77 << 16);
     // 0x8005D230: addiu       $s1, $s1, -0x2D30
@@ -301,6 +307,7 @@ L_8005D1E4:
     // 0x8005D238: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
     after_5:
+    fprintf(stderr, "[R2-D158] #5 func_80062C70 done, ret=0x%08X\n", (unsigned)ctx->r2); fflush(stderr);
     // 0x8005D23C: addu        $a0, $zero, $zero
     ctx->r4 = ADD32(0, 0);
     // 0x8005D240: addu        $a1, $zero, $zero
@@ -319,6 +326,7 @@ L_8005D1E4:
     // 0x8005D254: sw          $s0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->r16;
     after_6:
+    fprintf(stderr, "[R2-D158] #6 alloc done\n"); fflush(stderr);
     // 0x8005D258: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
     // 0x8005D25C: addu        $a1, $v0, $zero
@@ -331,6 +339,7 @@ L_8005D1E4:
     // 0x8005D264: addu        $a2, $s0, $zero
     ctx->r6 = ADD32(ctx->r16, 0);
     after_7:
+    fprintf(stderr, "[R2-D158] #7 func_80062F3C done\n"); fflush(stderr);
     // 0x8005D268: jal         0x80062974
     // 0x8005D26C: nop
 
@@ -339,6 +348,7 @@ L_8005D1E4:
     // 0x8005D26C: nop
 
     after_8:
+    fprintf(stderr, "[R2-D158] #8 func_80062974 done\n"); fflush(stderr);
     // 0x8005D270: addu        $a0, $v0, $zero
     ctx->r4 = ADD32(ctx->r2, 0);
     // 0x8005D274: lui         $s3, 0x78
@@ -353,6 +363,7 @@ L_8005D1E4:
     // 0x8005D280: addu        $a1, $s3, $zero
     ctx->r5 = ADD32(ctx->r19, 0);
     after_9:
+    fprintf(stderr, "[R2-D158] #9 func_8006D120 done\n"); fflush(stderr);
     // 0x8005D284: addu        $a0, $zero, $zero
     ctx->r4 = ADD32(0, 0);
     // 0x8005D288: addu        $a1, $zero, $zero
@@ -371,6 +382,7 @@ L_8005D1E4:
     // 0x8005D29C: sw          $s1, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->r17;
     after_10:
+    fprintf(stderr, "[R2-D158] #10 alloc2 done\n"); fflush(stderr);
     // 0x8005D2A0: jal         0x80062974
     // 0x8005D2A4: addu        $s0, $v0, $zero
     ctx->r16 = ADD32(ctx->r2, 0);
@@ -379,6 +391,7 @@ L_8005D1E4:
     // 0x8005D2A4: addu        $s0, $v0, $zero
     ctx->r16 = ADD32(ctx->r2, 0);
     after_11:
+    fprintf(stderr, "[R2-D158] #11 func_80062974 done\n"); fflush(stderr);
     // 0x8005D2A8: addu        $a0, $v0, $zero
     ctx->r4 = ADD32(ctx->r2, 0);
     // 0x8005D2AC: addu        $a1, $s3, $zero
@@ -395,6 +408,7 @@ L_8005D1E4:
     // 0x8005D2BC: sw          $s1, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->r17;
     after_12:
+    fprintf(stderr, "[R2-D158] #12 func_8006D1E4 done\n"); fflush(stderr);
     // 0x8005D2C0: jal         0x8005D0E8
     // 0x8005D2C4: nop
 
@@ -403,6 +417,7 @@ L_8005D1E4:
     // 0x8005D2C4: nop
 
     after_13:
+    fprintf(stderr, "[R2-D158] #13 func_8005D0E8 done\n"); fflush(stderr);
     // 0x8005D2C8: lui         $a0, 0x800E
     ctx->r4 = S32(0X800E << 16);
     // 0x8005D2CC: lw          $a0, -0x1D38($a0)
@@ -415,6 +430,7 @@ L_8005D1E4:
     // 0x8005D2D4: nop
 
     after_14:
+    fprintf(stderr, "[R2-D158] #14 func_8005E06C done, RETURNING\n"); fflush(stderr);
     // 0x8005D2D8: lw          $ra, 0x88($sp)
     ctx->r31 = MEM_W(ctx->r29, 0X88);
     // 0x8005D2DC: lw          $s3, 0x84($sp)

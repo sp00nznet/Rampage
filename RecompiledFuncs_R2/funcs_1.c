@@ -1,5 +1,6 @@
 #include "recomp.h"
 #include "funcs.h"
+#include <stdio.h>
 
 // Forward declarations
 void func_80001884(uint8_t* rdram, recomp_context* ctx);
@@ -504,6 +505,7 @@ RECOMP_FUNC void func_80001730(uint8_t* rdram, recomp_context* ctx) {
     ctx->r1 = S32(0X800E << 16);
     // 0x80001794: sh          $v0, -0x1D3C($at)
     MEM_H(-0X1D3C, ctx->r1) = ctx->r2;
+    { static int r2_loop_count = 0; static int r2_reinit_count = 0;
 L_80001798:
     // 0x80001798: jal         0x80001884
     // 0x8000179C: addiu       $s0, $zero, 0x1
@@ -522,6 +524,12 @@ L_80001798:
     ctx->r4 = ADD32(0, 0X1);
     after_1:
 L_800017A8:
+    r2_loop_count++;
+    if (r2_loop_count <= 20 || (r2_loop_count % 600 == 0)) {
+        uint16_t game_state = MEM_HU(S32(0x8012 << 16), 0x90);
+        fprintf(stderr, "[R2-RENDER] loop iter=%d reinits=%d game_state=0x%04X\n", r2_loop_count, r2_reinit_count, game_state);
+        fflush(stderr);
+    }
     // YIELD: R2's render loop doesn't block on osRecvMesg like WT's does.
     // On real N64, Thread 3 (pri=90) preempts via hardware interrupts.
     // In ultramodern's cooperative scheduler, we must yield to let the
@@ -590,14 +598,22 @@ L_800017EC:
     after_4:
     // 0x800017F4: andi        $v0, $v0, 0xFFFF
     ctx->r2 = ctx->r2 & 0XFFFF;
+    if (r2_loop_count <= 20) {
+        fprintf(stderr, "[R2-RENDER] func_80001FA0 returned v0=0x%04X (s0=0x%04X) %s\n",
+            (unsigned)(ctx->r2 & 0xFFFF), (unsigned)(ctx->r16 & 0xFFFF),
+            (ctx->r2 == ctx->r16) ? "-> REINIT" : "-> CONTINUE");
+        fflush(stderr);
+    }
     // 0x800017F8: beq         $v0, $s0, L_80001798
     if (ctx->r2 == ctx->r16) {
         // 0x800017FC: nop
-    
+
+            r2_reinit_count++;
             goto L_80001798;
     }
     // 0x800017FC: nop
 
+    if (r2_loop_count <= 20) { fprintf(stderr, "[R2-RENDER] calling func_800006F4\n"); fflush(stderr); }
     // 0x80001800: jal         0x800006F4
     // 0x80001804: nop
 
@@ -627,6 +643,7 @@ L_800017EC:
 
     after_6:
 L_80001820:
+    if (r2_loop_count <= 20) { fprintf(stderr, "[R2-RENDER] at L_80001820 (post func_800006F4/func_8002E7A0)\n"); fflush(stderr); }
     // 0x80001820: lui         $v0, 0x8017
     ctx->r2 = S32(0X8017 << 16);
     // 0x80001824: lhu         $v0, 0x32A0($v0)
@@ -652,6 +669,7 @@ L_80001820:
     // 0x80001844: sh          $zero, 0x32A0($at)
     MEM_H(0X32A0, ctx->r1) = 0;
 L_80001848:
+    if (r2_loop_count <= 20) { fprintf(stderr, "[R2-RENDER] calling func_800012DC\n"); fflush(stderr); }
     // 0x80001848: jal         0x800012DC
     // 0x8000184C: nop
 
@@ -660,6 +678,7 @@ L_80001848:
     // 0x8000184C: nop
 
     after_7:
+    if (r2_loop_count <= 20) { fprintf(stderr, "[R2-RENDER] calling func_800241B8\n"); fflush(stderr); }
     // 0x80001850: jal         0x800241B8
     // 0x80001854: nop
 
@@ -668,6 +687,7 @@ L_80001848:
     // 0x80001854: nop
 
     after_8:
+    if (r2_loop_count <= 20) { fprintf(stderr, "[R2-RENDER] calling func_80023A70\n"); fflush(stderr); }
     // 0x80001858: jal         0x80023A70
     // 0x8000185C: nop
 
@@ -676,6 +696,7 @@ L_80001848:
     // 0x8000185C: nop
 
     after_9:
+    if (r2_loop_count <= 20) { fprintf(stderr, "[R2-RENDER] calling func_800029F0 (frame sync)\n"); fflush(stderr); }
     // 0x80001860: jal         0x800029F0
     // 0x80001864: nop
 
@@ -689,6 +710,7 @@ L_80001848:
 
         goto L_800017A8;
     // 0x8000186C: nop
+    } // end static scope
 
     // 0x80001870: lw          $ra, 0x1C($sp)
     ctx->r31 = MEM_W(ctx->r29, 0X1C);

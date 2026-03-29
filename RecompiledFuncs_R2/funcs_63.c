@@ -7149,7 +7149,21 @@ L_8005C94C:
 RECOMP_FUNC void func_8005C95C(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
+    static int c95c_count = 0;
+    c95c_count++;
+    {
+        int32_t val1 = (int32_t)MEM_W(S32(0x8017 << 16), -0x5490);
+        int32_t val2 = (int32_t)MEM_W(S32(0x8017 << 16), -0x5638);
+        if (c95c_count <= 3) {
+            fprintf(stderr, "[R2-C95C] call #%d: slot1=0x%08X(%d) slot2=0x%08X(%d)\n",
+                    c95c_count, (unsigned)val1, val1, (unsigned)val2, val2);
+            fflush(stderr);
+        }
+    }
 L_8005C95C:
+    // YIELD: spin-wait for RSP task slots to become available.
+    // On real N64, scheduler preempts. In cooperative mode, must yield.
+    yield_self(rdram);
     // 0x8005C95C: lui         $v0, 0x8017
     ctx->r2 = S32(0X8017 << 16);
     // 0x8005C960: lw          $v0, -0x5490($v0)
@@ -7157,7 +7171,7 @@ L_8005C95C:
     // 0x8005C964: bgez        $v0, L_8005C95C
     if (SIGNED(ctx->r2) >= 0) {
         // 0x8005C968: nop
-    
+
             goto L_8005C95C;
     }
     // 0x8005C968: nop
@@ -7169,7 +7183,7 @@ L_8005C95C:
     // 0x8005C974: bgez        $v0, L_8005C95C
     if (SIGNED(ctx->r2) >= 0) {
         // 0x8005C978: nop
-    
+
             goto L_8005C95C;
     }
     // 0x8005C978: nop

@@ -407,16 +407,14 @@ RECOMP_FUNC void func_8005E520(uint8_t* rdram, recomp_context* ctx) {
     ctx->r4 = ADD32(0, 0);
     after_6:
 L_8005E5E8:
+    // BYPASS: Force frame-done flag to 1. On real N64, this is set by the scheduler
+    // after osViSwapBuffer completes. R2's first frame has no display list submission,
+    // so the flag never gets set naturally. Force it so the render loop can continue.
+    MEM_H(0X32A0, S32(0X8017 << 16)) = 1;
     // 0x8005E5E8: lui         $v0, 0x8017
     ctx->r2 = S32(0X8017 << 16);
     // 0x8005E5EC: lhu         $v0, 0x32A0($v0)
     ctx->r2 = MEM_HU(ctx->r2, 0X32A0);
-    // 0x8005E5F0: beq         $v0, $zero, L_8005E5E8
-    if (ctx->r2 == 0) {
-        // 0x8005E5F4: nop
-    
-            goto L_8005E5E8;
-    }
     // 0x8005E5F4: nop
 
     // 0x8005E5F8: lui         $v0, 0x8016
