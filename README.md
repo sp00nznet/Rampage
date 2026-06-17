@@ -7,8 +7,8 @@ A PC port of **Rampage World Tour** (N64, 1997) and **Rampage 2: Universal Tour*
 ### Rampage: World Tour - PLAYABLE
 Fully playable at 60fps. All game states work: title screen, menus, character select, and gameplay. Keyboard and controller input, demo mode, ImGui menu bar. No audio output yet (SN64 engine stubbed).
 
-### Rampage 2: Universal Tour - RENDER LOOP ACTIVE
-Boots fully with all 4 threads running. Render loop iterates through game logic, loads title screen resources via PI DMA (50+ assets), and processes game state 0x0110 (title). RSP task submission path identified but display list handoff to scheduler not yet connected (black screen). See [R2 Status](#rampage-2-universal-tour) for details.
+### Rampage 2: Universal Tour - RENDERING, HANGS AT TITLE
+Boots fully and the **RSP task pipeline now works end-to-end**: graphics and audio display lists are submitted via `osSpTaskStartGo`, RT64 processes them, and the framebuffer is found and presented (`FOUND_FB=1`). Runs continuously without crashing. **Current blocker:** the game thread hangs at the title screen (state 0x0110) inside an SI controller-read routine (`func_80072840` blocks on `osRecvMesg` because the SI DMA-start `func_80074C60` is stubbed empty), so it never advances to draw title art. See [R2 Status](#rampage-2-universal-tour) for details.
 
 ## What Works (World Tour)
 
@@ -46,19 +46,23 @@ R2 uses the same build system and runtime as World Tour with game-specific fixes
 - **Scheduler receives VI events** (confirmed msg=0x3)
 - **Game state machine initialized** - state set to func_80001ABC, title screen (0x0110) active
 - **Render loop iterating** - full frame processing with cooperative scheduling yields
-- **osSpTaskStartGo identified** - func_80071E70 redirected to osSpTaskStartGo_recomp
-- **Cooperative spin loops fixed** - yield_self added to busy-wait loops in frame sync
-- **Stable** - no crashes during extended runs
-- 2 critical fallthrough functions manually fixed (resource init, frame processing)
-- 46 cross-function gotos fixed, 17 after_X label merges, 49 function stubs
-- 52 hardware register functions in ignored list
+- **RSP task pipeline working end-to-end** - `osSpTaskStartGo` now fires; both graphics (M_GFXTASK) and audio (M_AUDTASK) tasks are submitted to the runtime
+- **Display lists reach RT64** - `send_dl` processes the lists; `setColorImage`/`fbClear`/`renderFillRect` execute and the framebuffer is found and presented (`FOUND_FB=1`)
+- **Two scheduler fallthrough bugs fixed** - N64Recomp wrongly split `func_8005CC5C` (VI retrace handler) and `func_8005CD94` (RSP-task dispatcher) at a load-before-prologue boundary; tail-call fixes reconnected the display-list submission path that was silently discarding every frame
+- **RCP hardware-register access stubbed** - the game's own libultra SP layer (`func_80079940`/`60`/`70`/`80`, `func_800799B0`) read/wrote `SP_STATUS`/`SP_DMA` registers (`0xA404xxxx`) as if they were RDRAM, causing an access violation; neutralized (reads return idle, writes are no-ops)
+- **38 additional fallthrough splits auto-fixed** - audited mass-fix of "no-return head + prologue successor" splits across R2 (3 `mult`/`div` hi/lo-carry cases correctly excluded)
+- **Audio-converter crash fixed** - `update_audio_converter` no longer throws on an invalid sample rate (was escaping the recomp/noexcept boundary -> `terminate`/`abort`, a silent exit ~2 frames in)
+- **Controller init working** - osContInit redirect resolves SI deadlock
+- **PI DMA system working** - synchronous DMA override; 50+ title assets loaded (incl. direction fix)
+- **Cooperative spin loops fixed** - yield_self added to busy-wait loops; frame sync no longer blocks
+- **Runs continuously** - no crashes during extended runs
 
 ### What Doesn't Work Yet (R2)
 
-- **Black screen** - render loop iterates but display list task pointer (0x800908C0) never reaches scheduler; RSP tasks not submitted to RT64
-- ~879 potential 2-instruction fallthrough functions need systematic fixing
-- Audio/SN64 stubs not yet applied for R2
-- Gameplay controls mapping not yet configured
+- **Hangs at title (state 0x0110)** - the game thread blocks in `func_80072840` on a blocking `osRecvMesg` while polling SI controllers; the SI DMA-start `func_80074C60` is in the ignored list and stubbed empty, so the SI read never completes. Fix: implement `func_80074C60` to drive the runtime's SI path (post the completion message, like podracer's `__osSiRawStartDma_recomp`) or override `func_80072840` to synthesize controller status and skip the wait
+- **`osAiSetFrequency` receives a garbage pointer** (`0x80152A68`) instead of a Hz value - audio runs at an invalid rate (pre-existing; likely an upstream recomp/stub issue)
+- No title art on screen yet (only framebuffer clears render until the title hang is resolved)
+- Audio/SN64 output not yet produced; gameplay controls mapping not yet configured
 
 ## Default Controls
 

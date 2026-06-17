@@ -25,7 +25,10 @@ RECOMP_FUNC void func_800599B4(uint8_t* rdram, recomp_context* ctx) {
     ctx->r3 = S32(0X800D << 16);
     // 0x800599B8: lh          $v1, 0x4758($v1)
     ctx->r3 = MEM_H(ctx->r3, 0X4758);
-;}
+
+    // [R2-FALLTHROUGH FIX auto] N64Recomp split: fall through to func_800599BC
+    func_800599BC(rdram, ctx);
+}
 RECOMP_FUNC void func_800599BC(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
@@ -1343,7 +1346,10 @@ RECOMP_FUNC void func_8005A1B8(uint8_t* rdram, recomp_context* ctx) {
     ctx->r3 = S32(0X800D << 16);
     // 0x8005A1BC: lh          $v1, 0x4AAA($v1)
     ctx->r3 = MEM_H(ctx->r3, 0X4AAA);
-;}
+
+    // [R2-FALLTHROUGH FIX auto] N64Recomp split: fall through to func_8005A1C0
+    func_8005A1C0(rdram, ctx);
+}
 RECOMP_FUNC void func_8005A1C0(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
@@ -7060,7 +7066,10 @@ RECOMP_FUNC void func_8005C8C8(uint8_t* rdram, recomp_context* ctx) {
     ctx->r2 = S32(0X8015 << 16);
     // 0x8005C8CC: lw          $v0, 0x5578($v0)
     ctx->r2 = MEM_W(ctx->r2, 0X5578);
-;}
+
+    // [R2-FALLTHROUGH FIX auto] N64Recomp split: fall through to func_8005C8D0
+    func_8005C8D0(rdram, ctx);
+}
 RECOMP_FUNC void func_8005C8D0(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
@@ -7451,7 +7460,10 @@ RECOMP_FUNC void func_8005CA90(uint8_t* rdram, recomp_context* ctx) {
     ctx->r2 = S32(0X8009 << 16);
     // 0x8005CA94: lw          $v0, -0x734($v0)
     ctx->r2 = MEM_W(ctx->r2, -0X734);
-;}
+
+    // [R2-FALLTHROUGH FIX auto] N64Recomp split: fall through to func_8005CA98
+    func_8005CA98(rdram, ctx);
+}
 RECOMP_FUNC void func_8005CA98(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
@@ -7760,7 +7772,22 @@ RECOMP_FUNC void func_8005CC5C(uint8_t* rdram, recomp_context* ctx) {
     ctx->r2 = S32(0X8009 << 16);
     // 0x8005CC60: lw          $v0, -0x73C($v0)
     ctx->r2 = MEM_W(ctx->r2, -0X73C);
-;}
+    // [R2-FALLTHROUGH FIX] N64Recomp wrongly split the VI retrace handler:
+    // the true function starts at 0x8005CC5C (load-before-prologue scheduling),
+    // but the prologue + dispatch body got emitted as a separate func_8005CC64.
+    // The scheduler calls func_8005CC5C, so without this the ready-flag is read
+    // and discarded and the display-list submission path (func_8005CD94) never
+    // runs -> osSpTaskStartGo never called -> black screen. Fall through:
+    {
+        static int vi_ft = 0;
+        if (vi_ft < 8) {
+            fprintf(stderr, "[R2-VIHANDLER] fallthrough: ready_flag(-0x73C)=0x%08X\n", (uint32_t)ctx->r2);
+            fflush(stderr);
+        }
+        vi_ft++;
+    }
+    func_8005CC64(rdram, ctx);
+}
 RECOMP_FUNC void func_8005CC64(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
@@ -7995,7 +8022,13 @@ RECOMP_FUNC void func_8005CD94(uint8_t* rdram, recomp_context* ctx) {
     ctx->r2 = S32(0X8009 << 16);
     // 0x8005CD98: lw          $v0, -0x734($v0)
     ctx->r2 = MEM_W(ctx->r2, -0X734);
-;}
+    // [R2-FALLTHROUGH FIX] N64Recomp split this RSP-task dispatcher: the true
+    // function starts at 0x8005CD94 (load-before-prologue), but the prologue +
+    // body (flag check -> read task ptr at -0x738 -> func_8005CFC4 ->
+    // osSpTaskStartGo) got emitted as a separate func_8005CD9C. Without this the
+    // task is never started -> osSpTaskStartGo never called. Fall through:
+    func_8005CD9C(rdram, ctx);
+}
 RECOMP_FUNC void func_8005CD9C(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
@@ -8254,7 +8287,10 @@ RECOMP_FUNC void func_8005CF00(uint8_t* rdram, recomp_context* ctx) {
     ctx->r3 = S32(0X8000 << 16);
     // 0x8005CF04: lw          $v1, 0x300($v1)
     ctx->r3 = MEM_W(ctx->r3, 0X300);
-;}
+
+    // [R2-FALLTHROUGH FIX auto] N64Recomp split: fall through to func_8005CF08
+    func_8005CF08(rdram, ctx);
+}
 RECOMP_FUNC void func_8005CF08(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;

@@ -52,6 +52,25 @@ RECOMP_FUNC void func_80071DC0(uint8_t* rdram, recomp_context* ctx) { }
 // func_80071E70 = osSpTaskStartGo - starts RSP task execution
 extern void osSpTaskStartGo_recomp(uint8_t* rdram, recomp_context* ctx);
 RECOMP_FUNC void func_80071E70(uint8_t* rdram, recomp_context* ctx) {
+    // [R2-DIAG] Log every RSP task submission to bisect black-screen:
+    // OSTask layout: type @ +0x00, data_ptr @ +0x30. M_GFXTASK=1, M_AUDTASK=2.
+    {
+        static int sp_count = 0;
+        static int gfx_count = 0;
+        static int aud_count = 0;
+        uint32_t type     = (uint32_t)MEM_W(0x00, ctx->r4);
+        uint32_t data_ptr = (uint32_t)MEM_W(0x30, ctx->r4);
+        if (type == 1) gfx_count++;
+        else if (type == 2) aud_count++;
+        if (sp_count < 40 || (sp_count % 60) == 0) {
+            fprintf(stderr, "[R2-SPTASK] #%d task=0x%08X type=%u (%s) data_ptr=0x%08X | gfx=%d aud=%d\n",
+                    sp_count, (uint32_t)ctx->r4, type,
+                    (type == 1 ? "GFX" : (type == 2 ? "AUD" : "???")),
+                    data_ptr, gfx_count, aud_count);
+            fflush(stderr);
+        }
+        sp_count++;
+    }
     osSpTaskStartGo_recomp(rdram, ctx);
 }
 RECOMP_FUNC void func_80072BD0(uint8_t* rdram, recomp_context* ctx) { }

@@ -3699,7 +3699,10 @@ RECOMP_FUNC void func_800028FC(uint8_t* rdram, recomp_context* ctx) {
     ctx->r2 = S32(0X8016 << 16);
     // 0x80002900: lhu         $v0, -0x733C($v0)
     ctx->r2 = MEM_HU(ctx->r2, -0X733C);
-;}
+
+    // [R2-FALLTHROUGH FIX auto] N64Recomp split: fall through to func_80002904
+    func_80002904(rdram, ctx);
+}
 RECOMP_FUNC void func_80002904(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
@@ -3905,7 +3908,10 @@ RECOMP_FUNC void func_80002A20(uint8_t* rdram, recomp_context* ctx) {
     ctx->r5 = S32(0X8012 << 16);
     // 0x80002A24: lhu         $a1, 0x90($a1)
     ctx->r5 = MEM_HU(ctx->r5, 0X90);
-;}
+
+    // [R2-FALLTHROUGH FIX auto] N64Recomp split: fall through to func_80002A28
+    func_80002A28(rdram, ctx);
+}
 RECOMP_FUNC void func_80002A28(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
@@ -4183,7 +4189,10 @@ RECOMP_FUNC void func_80002BA0(uint8_t* rdram, recomp_context* ctx) {
     ctx->r3 = S32(0X8017 << 16);
     // 0x80002BA4: lw          $v1, 0x31C0($v1)
     ctx->r3 = MEM_W(ctx->r3, 0X31C0);
-;}
+
+    // [R2-FALLTHROUGH FIX auto] N64Recomp split: fall through to func_80002BA8
+    func_80002BA8(rdram, ctx);
+}
 RECOMP_FUNC void func_80002BA8(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
@@ -4559,7 +4568,10 @@ RECOMP_FUNC void func_80002DF0(uint8_t* rdram, recomp_context* ctx) {
     ctx->r2 = S32(0X8017 << 16);
     // 0x80002DF4: lw          $v0, 0x31C0($v0)
     ctx->r2 = MEM_W(ctx->r2, 0X31C0);
-;}
+
+    // [R2-FALLTHROUGH FIX auto] N64Recomp split: fall through to func_80002DF8
+    func_80002DF8(rdram, ctx);
+}
 RECOMP_FUNC void func_80002DF8(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;

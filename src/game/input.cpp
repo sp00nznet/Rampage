@@ -155,6 +155,7 @@ bool sdl_event_filter(void* userdata, SDL_Event* event) {
         }
         break;
     case SDL_EventType::SDL_QUIT: {
+        fprintf(stderr, "[R2-QUIT] SDL_QUIT event received -> ultramodern::quit()\n"); fflush(stderr);
         ultramodern::quit();
         return true;
     }

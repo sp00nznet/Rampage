@@ -1,5 +1,7 @@
 #include <cstdio>
 #include <cassert>
+#include <csignal>
+#include <cstdlib>
 #include <unordered_map>
 #include <vector>
 #include <array>
@@ -296,12 +298,30 @@ size_t get_frames_remaining() {
     return static_cast<uint32_t>(buffered_byte_count / bytes_per_frame);
 }
 
+#ifdef _WIN32
+static void print_backtrace(const char* tag); // fwd decl (defined near crash_handler)
+#endif
+
 void update_audio_converter() {
-    int ret = SDL_BuildAudioCVT(&audio_convert, AUDIO_F32, input_channels, sample_rate, AUDIO_F32, output_channels, output_sample_rate);
+    static int bad_rate_calls = 0;
+    bool bad = (sample_rate == 0 || output_sample_rate == 0);
+
+    int ret = bad ? -1 : SDL_BuildAudioCVT(&audio_convert, AUDIO_F32, input_channels, sample_rate, AUDIO_F32, output_channels, output_sample_rate);
 
     if (ret < 0) {
-        printf("Error creating SDL audio converter: %s\n", SDL_GetError());
-        throw std::runtime_error("Error creating SDL audio converter");
+        // [R2 FIX] Bad sample rate (R2 passes a garbage pointer-as-frequency). Throwing
+        // here used to abort; instead log + return. Dump the game-thread call stack ONCE
+        // after the loop becomes obvious, to locate the looping audio caller.
+        bad_rate_calls++;
+        if (bad_rate_calls <= 3 || bad_rate_calls == 50) {
+            fprintf(stderr, "[R2-AUDIO] bad rate #%d (in=%u out=%u): %s\n",
+                    bad_rate_calls, sample_rate, output_sample_rate, bad ? "zero" : SDL_GetError());
+            fflush(stderr);
+        }
+#ifdef _WIN32
+        if (bad_rate_calls == 50) { print_backtrace("AUDIO-LOOP (50th bad rate)"); }
+#endif
+        return; // non-fatal
     }
 
     // Calculate the number of samples to discard based on the sample rate ratio and the duplicate frame count.
@@ -586,6 +606,9 @@ void reorder_texture_pack(recomp::mods::ModContext&) {
 
 #ifdef _WIN32
 #include <DbgHelp.h>
+#include <tlhelp32.h>
+#include <thread>
+#include <chrono>
 #pragma comment(lib, "DbgHelp.lib")
 
 LONG WINAPI crash_handler(EXCEPTION_POINTERS* ep) {
@@ -631,6 +654,83 @@ LONG WINAPI crash_handler(EXCEPTION_POINTERS* ep) {
     fflush(stderr);
     return EXCEPTION_EXECUTE_HANDLER;
 }
+
+// [R2-DIAG] Watchdog: after a delay, suspend every other thread and walk its stack to find
+// where the game thread hangs (it stops in func_8002EB7C at the title screen).
+static void dump_all_thread_stacks(const char* tag) {
+    HANDLE process = GetCurrentProcess();
+    DWORD pid = GetCurrentProcessId();
+    DWORD self_tid = GetCurrentThreadId();
+    SymInitialize(process, NULL, TRUE);
+    HANDLE snap = CreateToolhelp32Snapshot(TH32CS_SNAPTHREAD, 0);
+    if (snap == INVALID_HANDLE_VALUE) return;
+    THREADENTRY32 te; te.dwSize = sizeof(te);
+    char sym_buf[sizeof(SYMBOL_INFO) + 256];
+    SYMBOL_INFO* sym = (SYMBOL_INFO*)sym_buf;
+    sym->SizeOfStruct = sizeof(SYMBOL_INFO); sym->MaxNameLen = 255;
+    fprintf(stderr, "[WATCHDOG] %s: dumping game-thread stacks\n", tag); fflush(stderr);
+    if (Thread32First(snap, &te)) {
+        do {
+            if (te.th32OwnerProcessID != pid || te.th32ThreadID == self_tid) continue;
+            HANDLE th = OpenThread(THREAD_SUSPEND_RESUME | THREAD_GET_CONTEXT | THREAD_QUERY_INFORMATION, FALSE, te.th32ThreadID);
+            if (!th) continue;
+            SuspendThread(th);
+            CONTEXT cx; memset(&cx, 0, sizeof(cx)); cx.ContextFlags = CONTEXT_FULL;
+            if (GetThreadContext(th, &cx)) {
+                STACKFRAME64 fr; memset(&fr, 0, sizeof(fr));
+                fr.AddrPC.Offset = cx.Rip;    fr.AddrPC.Mode = AddrModeFlat;
+                fr.AddrFrame.Offset = cx.Rbp; fr.AddrFrame.Mode = AddrModeFlat;
+                fr.AddrStack.Offset = cx.Rsp; fr.AddrStack.Mode = AddrModeFlat;
+                char lines[8192]; lines[0] = 0; bool has_game = false;
+                for (int i = 0; i < 40; i++) {
+                    if (!StackWalk64(IMAGE_FILE_MACHINE_AMD64, process, th, &fr, &cx, NULL,
+                                     SymFunctionTableAccess64, SymGetModuleBase64, NULL)) break;
+                    if (!fr.AddrPC.Offset) break;
+                    DWORD64 disp = 0; char one[320];
+                    if (SymFromAddr(process, fr.AddrPC.Offset, &disp, sym)) {
+                        snprintf(one, sizeof one, "  [%d] %s+0x%llX\n", i, sym->Name, (unsigned long long)disp);
+                        if (strncmp(sym->Name, "func_800", 8) == 0) has_game = true;
+                    } else {
+                        snprintf(one, sizeof one, "  [%d] 0x%llX\n", i, (unsigned long long)fr.AddrPC.Offset);
+                    }
+                    if (strlen(lines) + strlen(one) < sizeof(lines) - 1) strcat(lines, one);
+                }
+                if (has_game) { fprintf(stderr, "[WATCHDOG] thread %lu:\n%s", te.th32ThreadID, lines); fflush(stderr); }
+            }
+            ResumeThread(th);
+            CloseHandle(th);
+        } while (Thread32Next(snap, &te));
+    }
+    CloseHandle(snap);
+    SymCleanup(process);
+    fprintf(stderr, "[WATCHDOG] done\n"); fflush(stderr);
+}
+
+// [R2-DIAG] Print a symbolized backtrace of the CURRENT thread (used by the SIGABRT handler
+// to locate who called abort()/assert()).
+static void print_backtrace(const char* tag) {
+    HANDLE process = GetCurrentProcess();
+    SymInitialize(process, NULL, TRUE);
+    fprintf(stderr, "[RAMPAGE] %s backtrace:\n", tag);
+    void* stack[64];
+    USHORT frames = CaptureStackBackTrace(0, 64, stack, NULL);
+    char sym_buf[sizeof(SYMBOL_INFO) + 256];
+    SYMBOL_INFO* sym = (SYMBOL_INFO*)sym_buf;
+    sym->SizeOfStruct = sizeof(SYMBOL_INFO);
+    sym->MaxNameLen = 255;
+    HMODULE exe_base = GetModuleHandle(NULL);
+    for (USHORT i = 0; i < frames; i++) {
+        DWORD64 displacement = 0;
+        if (SymFromAddr(process, (DWORD64)stack[i], &displacement, sym)) {
+            fprintf(stderr, "  [%d] %s+0x%llX\n", i, sym->Name, (unsigned long long)displacement);
+        } else {
+            fprintf(stderr, "  [%d] %p (exe+0x%llX)\n", i, stack[i],
+                (unsigned long long)((DWORD64)stack[i] - (DWORD64)exe_base));
+        }
+    }
+    SymCleanup(process);
+    fflush(stderr);
+}
 #endif
 
 int main(int argc, char** argv) {
@@ -639,6 +739,32 @@ int main(int argc, char** argv) {
 #ifdef _WIN32
     SetUnhandledExceptionFilter(crash_handler);
 #endif
+    // [R2-DIAG] Make stderr unbuffered so messages emitted right before a
+    // std::quick_exit() (which does NOT flush stdio) survive redirection to a file.
+    setvbuf(stderr, NULL, _IONBF, 0);
+    // [R2-DIAG] Classify the mysterious silent exit(0): which mechanism terminates us?
+    std::atexit([](){ fprintf(stderr, "[R2-EXIT] atexit handler fired (exit()/main return)\n"); fflush(stderr); });
+    std::at_quick_exit([](){ fprintf(stderr, "[R2-EXIT] at_quick_exit handler fired (quick_exit)\n"); fflush(stderr); });
+    signal(SIGABRT, [](int){ fprintf(stderr, "[R2-EXIT] SIGABRT caught (abort)\n"); fflush(stderr);
+#ifdef _WIN32
+        print_backtrace("SIGABRT");
+#endif
+    });
+    signal(SIGTERM, [](int){ fprintf(stderr, "[R2-EXIT] SIGTERM caught\n"); fflush(stderr); });
+    std::set_terminate([](){
+        fprintf(stderr, "[R2-EXIT] std::terminate -> uncaught exception:\n"); fflush(stderr);
+        if (auto e = std::current_exception()) {
+            try { std::rethrow_exception(e); }
+            catch (const std::exception& ex) { fprintf(stderr, "  what(): %s\n", ex.what()); }
+            catch (...) { fprintf(stderr, "  (non-std exception)\n"); }
+        } else {
+            fprintf(stderr, "  (no current exception - terminate called directly)\n");
+        }
+        fflush(stderr);
+        std::abort();
+    });
+    // [R2-DIAG] Watchdog: dump game-thread stacks at 14s to locate the title-screen hang.
+    std::thread([](){ std::this_thread::sleep_for(std::chrono::seconds(14)); dump_all_thread_stacks("14s"); }).detach();
     fprintf(stderr, "[RAMPAGE] main() entered\n"); fflush(stderr);
     recomp::Version project_version{};
     if (!recomp::Version::from_string(version_string, project_version)) {

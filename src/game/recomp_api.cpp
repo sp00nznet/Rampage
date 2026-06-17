@@ -41,6 +41,7 @@ extern "C" void recomp_puts(uint8_t* rdram, recomp_context* ctx) {
 }
 
 extern "C" void recomp_exit(uint8_t* rdram, recomp_context* ctx) {
+    fprintf(stderr, "[R2-QUIT] recomp_exit() called by game -> ultramodern::quit()\n"); fflush(stderr);
     ultramodern::quit();
 }
 
