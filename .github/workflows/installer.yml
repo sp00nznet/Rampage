@@ -1,0 +1,9 @@
+# Builds the recomp-launcher installer for this game (it downloads this repo and runs
+# tools/setup.ps1 on the player's machine; nothing from the games is involved here).
+on:
+  push: { branches: [main], tags: ["v*"] }
+permissions: { contents: write }
+jobs:
+  installer:
+    uses: sp00nznet/recomp-launcher/.github/workflows/installer.yml@main
+    with: { name: Rampage-Installer, platforms: windows }

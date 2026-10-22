@@ -1,0 +1,40 @@
+# ROMs: players supply their own
+*.z64
+*.n64
+*.v64
+
+# Code recompiled from the ROM (tools/regen.py): derived from the game, never committed
+gen/
+RecompiledFuncs*/
+
+# Build output
+build/
+build-*/
+build-farm/
+*.exe
+*.pdb
+*.map
+
+# Local working files: logs, captures, old trees, fetched toolkits, launchers Setup makes
+scratch/
+logs/
+deps/
+*.log
+* (recomp).cmd
+
+# Written next to the exe on first run
+rampage.json
+texture-packs/
+
+# Python
+__pycache__/
+*.pyc
+
+# IDE / OS
+.vscode/
+.idea/
+*.suo
+*.user
+Thumbs.db
+.DS_Store
+desktop.ini

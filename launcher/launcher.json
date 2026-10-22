@@ -1,0 +1,17 @@
+{
+  "title": "Rampage World Tour & Rampage 2",
+  "repo": "sp00nznet/Rampage",
+  "accent": "#c8102e",
+  "note": {
+    "windows": "Needs your own USA .z64 of Rampage World Tour and/or Rampage 2, and a DirectX 12 GPU. The first build takes 30 to 60 minutes and about 8 GB. Git, Python, CMake and the Visual Studio Build Tools (about 3 GB) are installed if they are missing; Windows asks for permission once.",
+    "default": "Windows only for now."
+  },
+  "game": {
+    "name": "Rampage ROMs",
+    "files": ["*.z64"]
+  },
+  "setup": {
+    "windows": ["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "tools\\setup.ps1", "-Yes", "-Game", "{game}"]
+  },
+  "play": "* (recomp).cmd"
+}
