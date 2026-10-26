@@ -1,9 +1,12 @@
-// RT64 render context: hands display lists and VI updates from ultramodern to RT64.
-// Bridges ultramodern's RendererContext with the RT64 renderer
+// RT64 render context: bridges ultramodern's RendererContext with the RT64 renderer, applying the
+// config file's graphics settings (live when the menu changes them).
 
 // NOMINMAX must be set globally via CMake (target_compile_definitions)
 // Include RT64 first to avoid Windows.h macro conflicts
 #include "hle/rt64_application.h"
+#ifdef __linux__
+#include <SDL_syswm.h>
+#endif
 
 #include <cstdio>
 #include <cstring>
@@ -13,9 +16,14 @@
 #include "ultramodern/renderer_context.hpp"
 #include "librecomp/game.hpp"
 #include "config.hpp"
+#include "internal.hpp"
 
 #include <algorithm>
 #include <filesystem>
+
+namespace fe {
+
+std::atomic<bool> g_graphics_dirty = false;
 
 // Maps a config string onto an RT64 enum value; unknown names keep `fallback`.
 template <typename E>
@@ -25,7 +33,7 @@ static E pick(const std::string& name, std::initializer_list<std::pair<const cha
     return fallback;
 }
 
-// Applies rampage.json's graphics section to RT64 (before setup, so device choices see it).
+// Applies the config's graphics section to RT64.
 static void apply_graphics_config(RT64::UserConfiguration& u) {
     using U = RT64::UserConfiguration;
     u.resolution = pick(g_config.resolution, { { "Original", U::Resolution::Original },
@@ -39,7 +47,7 @@ static void apply_graphics_config(RT64::UserConfiguration& u) {
         { "AntiAliasedPixelScaling", U::Filtering::AntiAliasedPixelScaling } }, u.filtering);
     u.refreshRate = pick(g_config.refreshRate, { { "Original", U::RefreshRate::Original },
         { "Display", U::RefreshRate::Display } }, u.refreshRate);
-    u.developerMode = g_config.developerMode;
+    u.developerMode = g_config.developerMode; // read at setup only
     u.validate();
 }
 
@@ -53,9 +61,9 @@ static void load_texture_packs(RT64::Application& app) {
     }
     std::sort(packs.begin(), packs.end(), [](auto& a, auto& b) { return a.dirOrZipPath < b.dirOrZipPath; });
     if (packs.empty()) return;
-    for (auto& p : packs) printf("[rampage] texture pack: %s\n", p.dirOrZipPath.filename().string().c_str());
+    for (auto& p : packs) printf("[frontend] texture pack: %s\n", p.dirOrZipPath.filename().string().c_str());
     if (!app.textureCache->loadReplacementDirectories(packs)) {
-        fprintf(stderr, "[rampage] failed to load texture packs\n");
+        fprintf(stderr, "[frontend] failed to load texture packs\n");
     }
 }
 
@@ -78,20 +86,38 @@ static void dummy_check_interrupts() {
     // No-op: ultramodern handles interrupts
 }
 
-class RampageRenderContext : public ultramodern::renderer::RendererContext {
+class RT64Context : public ultramodern::renderer::RendererContext {
 public:
-    RampageRenderContext(uint8_t* rdram, ultramodern::renderer::WindowHandle window_handle, bool developer_mode)
+    RT64Context(uint8_t* rdram, ultramodern::renderer::WindowHandle window_handle, bool developer_mode)
         : rdram_(rdram), window_handle_(window_handle), developer_mode_(developer_mode)
     {
         setup_result = ultramodern::renderer::SetupResult::Success;
-        chosen_api = ultramodern::renderer::GraphicsApi::D3D12;
 
         // Get VI register pointers from ultramodern
         vi_regs_ = ultramodern::renderer::get_vi_regs();
 
         // Set up the RT64 Core structure
         RT64::Application::Core core{};
+#if defined(_WIN32)
         core.window = window_handle.window;
+        uint32_t thread_id = window_handle.thread_id;
+#elif defined(__APPLE__)
+        core.window = { window_handle.window, window_handle.view };
+        uint32_t thread_id = 0;
+#elif defined(__ANDROID__)
+        SDL_SysWMinfo wm;
+        SDL_VERSION(&wm.version);
+        SDL_GetWindowWMInfo(window_handle, &wm);
+        core.window = wm.info.android.window;
+        uint32_t thread_id = 0;
+#else
+        // ponytail: X11 only; Wayland sessions run it through XWayland (SDL2 picks X11 by default)
+        SDL_SysWMinfo wm;
+        SDL_VERSION(&wm.version);
+        SDL_GetWindowWMInfo(window_handle, &wm);
+        core.window = { wm.info.x11.display, wm.info.x11.window };
+        uint32_t thread_id = 0;
+#endif
         core.RDRAM = rdram;
         core.DMEM = s_dmem;
         core.IMEM = s_imem;
@@ -137,48 +163,53 @@ public:
 
         // Configure RT64 application
         RT64::ApplicationConfiguration app_config;
-        app_config.appId = "rampage";
+        app_config.appId = g_game.short_name;
         app_config.detectDataPath = true;
-        app_config.useConfigurationFile = false; // settings come from rampage.json
+        app_config.useConfigurationFile = false; // settings come from our config file
 
         // Create the RT64 Application
-        printf("[rampage] Creating RT64 application...\n");
+        printf("[rt64] Creating RT64 application...\n");
         app_ = std::make_unique<RT64::Application>(core, app_config);
         apply_graphics_config(app_->userConfig);
 
         // Run setup (creates graphics device, swap chain, shader caches, etc.)
-        auto result = app_->setup(window_handle.thread_id);
+        auto result = app_->setup(thread_id);
+        using API = RT64::UserConfiguration::GraphicsAPI;
+        chosen_api = app_->chosenGraphicsAPI == API::D3D12 ? ultramodern::renderer::GraphicsApi::D3D12
+                   : app_->chosenGraphicsAPI == API::Metal ? ultramodern::renderer::GraphicsApi::Metal
+                   : ultramodern::renderer::GraphicsApi::Vulkan;
 
         switch (result) {
         case RT64::Application::SetupResult::Success:
-            printf("[rampage] RT64 initialized successfully\n");
+            printf("[rt64] RT64 initialized successfully\n");
             if (g_config.texturePacks) {
                 load_texture_packs(*app_);
             }
             is_valid_ = true;
             break;
         case RT64::Application::SetupResult::DynamicLibrariesNotFound:
-            fprintf(stderr, "[rampage] RT64: Dynamic libraries not found\n");
+            fprintf(stderr, "[rt64] RT64: Dynamic libraries not found\n");
             setup_result = ultramodern::renderer::SetupResult::DynamicLibrariesNotFound;
             break;
         case RT64::Application::SetupResult::InvalidGraphicsAPI:
-            fprintf(stderr, "[rampage] RT64: Invalid graphics API\n");
+            fprintf(stderr, "[rt64] RT64: Invalid graphics API\n");
             setup_result = ultramodern::renderer::SetupResult::InvalidGraphicsAPI;
             break;
         case RT64::Application::SetupResult::GraphicsAPINotFound:
-            fprintf(stderr, "[rampage] RT64: Graphics API not found\n");
+            fprintf(stderr, "[rt64] RT64: Graphics API not found\n");
             setup_result = ultramodern::renderer::SetupResult::GraphicsAPINotFound;
             break;
         case RT64::Application::SetupResult::GraphicsDeviceNotFound:
-            fprintf(stderr, "[rampage] RT64: Graphics device not found\n");
+            fprintf(stderr, "[rt64] RT64: Graphics device not found\n");
             setup_result = ultramodern::renderer::SetupResult::GraphicsDeviceNotFound;
             break;
         }
     }
 
-    ~RampageRenderContext() override {
+    ~RT64Context() override {
         if (app_) {
-            printf("[rampage] Destroying RT64 application\n");
+            printf("[rt64] Destroying RT64 application\n");
+            app_->end(); // ~Application is empty; end() tears down in order (and calls our deinit hook)
             app_.reset();
         }
     }
@@ -200,7 +231,7 @@ public:
 
         dl_count_++;
         if (dl_count_ <= 5 || (dl_count_ % 60 == 0)) {
-            printf("[rampage] send_dl #%u: data_ptr=0x%08X ucode=0x%08X ucode_data=0x%08X type=%u\n",
+            printf("[rt64] send_dl #%u: data_ptr=0x%08X ucode=0x%08X ucode_data=0x%08X type=%u\n",
                    dl_count_, (uint32_t)task->t.data_ptr, (uint32_t)task->t.ucode,
                    (uint32_t)task->t.ucode_data, task->t.type);
         }
@@ -224,20 +255,29 @@ public:
 
         screen_count_++;
         if (screen_count_ <= 5 || (screen_count_ % 60 == 0)) {
-            printf("[rampage] update_screen #%u VI origin=0x%08X width=%u hstart=0x%08X vstart=0x%08X status=0x%08X xscale=0x%X yscale=0x%X vsync=0x%X hsync=0x%X\n",
+            printf("[rt64] update_screen #%u VI origin=0x%08X width=%u hstart=0x%08X vstart=0x%08X status=0x%08X xscale=0x%X yscale=0x%X vsync=0x%X hsync=0x%X\n",
                    screen_count_, vi_regs_->VI_ORIGIN_REG, vi_regs_->VI_WIDTH_REG,
                    vi_regs_->VI_H_START_REG, vi_regs_->VI_V_START_REG, vi_regs_->VI_STATUS_REG,
                    vi_regs_->VI_X_SCALE_REG, vi_regs_->VI_Y_SCALE_REG, vi_regs_->VI_V_SYNC_REG, vi_regs_->VI_H_SYNC_REG);
+        }
+
+        // The menu changed graphics settings: apply them here, on the thread RT64 presents from.
+        if (g_graphics_dirty.exchange(false)) {
+            RT64::UserConfiguration::Antialiasing old_aa = app_->userConfig.antialiasing;
+            apply_graphics_config(app_->userConfig);
+            app_->updateUserConfig(true);
+            if (app_->userConfig.antialiasing != old_aa) app_->updateMultisampling();
         }
 
         app_->updateScreen();
     }
 
     void shutdown() override {
-        // ponytail: RT64's Application destructor crashes freeing a descriptor set in its RSP
-        // processor (plume D3D12DescriptorHeapAllocator::free). This only runs at quit and main()
-        // exits right after, so leave it to process exit; destroy it once RT64 is fixed.
-        (void)app_.release();
+        printf("[rt64] Render context shutdown\n");
+        if (app_) {
+            app_->end(); // ~Application is empty; end() tears down in order (and calls our deinit hook)
+            app_.reset();
+        }
         is_valid_ = false;
     }
 
@@ -261,8 +301,9 @@ private:
     uint32_t screen_count_ = 0;
 };
 
-// Factory function
-std::unique_ptr<ultramodern::renderer::RendererContext> create_rampage_render_context(
+std::unique_ptr<ultramodern::renderer::RendererContext> create_render_context(
     uint8_t* rdram, ultramodern::renderer::WindowHandle window_handle, bool developer_mode) {
-    return std::make_unique<RampageRenderContext>(rdram, window_handle, developer_mode);
+    return std::make_unique<RT64Context>(rdram, window_handle, developer_mode);
 }
+
+} // namespace fe

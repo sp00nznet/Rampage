@@ -1,0 +1,17 @@
+# libultra's audio microcode (aspMain), recompiled to C++ by N64Recomp's RSPRecomp:
+#   RSPRecomp rsp/aspMain_wt.toml    (writes rsp/aspMain_wt.cpp; generated from the ROM, never committed)
+# Both Rampage games carry the stock copy, byte for byte the one Racer and Pokemon Snap use.
+
+text_offset = 0x76CE0
+text_size = 0xE20
+text_address = 0x04001080
+rom_file_path = "../Rampage - World Tour (U) [!].z64"
+output_file_path = "aspMain_wt.cpp"
+output_function_name = "aspMain"
+
+# The audio command jump table (the first 16 halfwords after the constants at the start of the
+# ucode data): one handler per audio command, reached with jr.
+extra_indirect_branch_targets = [
+    0x1118, 0x1470, 0x11DC, 0x1B38, 0x1214, 0x187C, 0x1254, 0x12D0,
+    0x12EC, 0x1328, 0x140C, 0x1294, 0x1E24, 0x138C, 0x170C, 0x144C,
+]

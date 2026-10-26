@@ -1,0 +1,47 @@
+// The app module for scripts/build_android.sh, which puts it into SDL's Android project template.
+// The native code is the repo's own CMakeLists.txt (RAMPAGE_ROOT), built as libmain.so for the game
+// in RAMPAGE_GAME (wt or r2): one app per game, so both can be installed side by side.
+apply plugin: 'com.android.application'
+
+def game = System.getenv('RAMPAGE_GAME') ?: 'wt'
+
+android {
+    namespace "org.libsdl.app"
+    compileSdk 34
+    ndkVersion "27.2.12479018"
+    defaultConfig {
+        applicationId "net.sp00nz.rampage.${game}"
+        minSdk 26          // Vulkan 1.1 era; RT64 needs Vulkan
+        targetSdk 34
+        versionCode 3
+        versionName "0.3.0"
+        externalNativeBuild {
+            cmake {
+                arguments "-DANDROID_STL=c++_shared",
+                          "-DRAMPAGE_GAME=${game}",
+                          "-DSDL2_SOURCE_DIR=${System.getenv('SDL2_SRC')}",
+                          "-DRT64_HOST_FILE_TO_C=${System.getenv('HOST_FILE_TO_C')}",
+                          "-DSDL_CCACHE=OFF"
+                targets game == 'r2' ? "Rampage2" : "RampageWorldTour", "SDL2"
+                abiFilters System.getenv('RAMPAGE_ABI') ?: 'arm64-v8a'
+            }
+        }
+    }
+    buildTypes {
+        // Optimised, and signed with the debug key so it installs without one of your own.
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.debug
+        }
+    }
+    externalNativeBuild {
+        cmake {
+            path "${System.getenv('RAMPAGE_ROOT')}/CMakeLists.txt"
+            buildStagingDirectory "${System.getenv('RAMPAGE_ROOT')}/build-android/cxx-${game}"
+            version "3.22.1"
+        }
+    }
+    // The ROM goes in uncompressed: the game reads it once on first run.
+    androidResources { noCompress 'z64' }
+    lint { abortOnError false }
+}

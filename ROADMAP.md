@@ -2,9 +2,8 @@
 
 ## Next
 
-- **Sound.** Recompile Midway's SN64 engine, which the games load into RAM: find its ROM range and
-  load address, add it as a section to the symbol files, and run the RSP audio microcode (N64Recomp's
-  RSPRecomp) instead of dropping audio tasks.
+- **Play the new platforms on real hardware.** Linux x64, macOS, Android and Linux arm64 build,
+  but have only been run on Windows so far (no GPU in the test containers).
 - **World Tour through `merge_fragments.py` and `apply_n64sym.py`.** Its symbol file was cleaned
   by hand and works, but hasn't had the traced boundaries or a fresh n64sym pass. Then drop any of
   its hooks that turn out to be symptoms, as happened with Rampage 2.
@@ -21,7 +20,6 @@
   controller code isn't libultra's still get input. Racer would use it too: a toolkit candidate.
 - Shut ultramodern down in an order that stops game threads before RDRAM goes, and drop the
   quit-time fault guard in `src/main.cpp`; the same for RT64's destructor crash.
-- Linux build.
 - Merge the fork branches back to the forks' `main` once their PRs land, and offer the generic
   ones upstream.
 

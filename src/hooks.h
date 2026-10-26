@@ -14,12 +14,8 @@ extern "C" {
 void yield_self(uint8_t* rdram);
 
 // World Tour (src/wt_stubs.c)
-void wt_on_state(uint8_t* rdram, recomp_context* ctx);
-void wt_force_fade_flag(uint8_t* rdram);
 void wt_write_button_maps(uint8_t* rdram);
-
-// SN64 audio data helpers (src/sn64_rom_helpers.cpp)
-void sn64_rom_to_rdram(uint8_t* rdram, uint32_t rom_offset, uint32_t rdram_addr, uint32_t size);
+void wt_no_pak(uint8_t* rdram, recomp_context* ctx);
 
 #ifdef __cplusplus
 }

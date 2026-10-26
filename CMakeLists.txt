@@ -1,9 +1,14 @@
 cmake_minimum_required(VERSION 3.20)
 
-project(RampageRecompiled VERSION 0.2.0 LANGUAGES C CXX)
+project(RampageRecompiled VERSION 0.3.0 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
+
+# The RSP vector unit code (librecomp, aspMain) uses SSE4.1 on x86; MSVC needs no flag for it.
+if(NOT MSVC AND CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64|AMD64")
+    add_compile_options(-msse4.1)
+endif()
 
 # =============================================================================
 # Options
@@ -27,6 +32,10 @@ set(GEN_DIR "${CMAKE_SOURCE_DIR}/gen/${RAMPAGE_GAME}")
 if(NOT EXISTS "${GEN_DIR}/recomp_overlays.inl")
     message(FATAL_ERROR "${GEN_DIR} is missing. Run: py tools/regen.py ${RAMPAGE_GAME}")
 endif()
+set(ASPMAIN "${CMAKE_SOURCE_DIR}/rsp/aspMain_${RAMPAGE_GAME}.cpp")
+if(NOT EXISTS "${ASPMAIN}")
+    message(FATAL_ERROR "${ASPMAIN} is missing. Run: RSPRecomp rsp/aspMain_${RAMPAGE_GAME}.toml (setup does it)")
+endif()
 
 if(RAMPAGE_GAME STREQUAL "r2")
     set(EXE_NAME Rampage2)
@@ -35,11 +44,36 @@ else()
 endif()
 
 # =============================================================================
+# SDL2: on Windows the build RT64 ships (RT64 links it by bare name from this folder); on Linux and
+# macOS the system's (apt/dnf/pacman libsdl2, brew sdl2); on Android SDL's source, staged by
+# scripts/build_android.sh
+# =============================================================================
+if(ANDROID)
+    # Shared: SDL's Java side loads libSDL2.so before libmain.so.
+    set(SDL_SHARED ON CACHE BOOL "" FORCE)
+    set(SDL_STATIC OFF CACHE BOOL "" FORCE)
+    add_subdirectory(${SDL2_SOURCE_DIR} ${CMAKE_BINARY_DIR}/SDL)
+    set(SDL2_INCLUDE_DIRS "${SDL2_SOURCE_DIR}/include") # RT64 reads it
+elseif(NOT WIN32)
+    find_package(SDL2 REQUIRED)
+    if(NOT TARGET SDL2::SDL2main)
+        add_library(SDL2::SDL2main INTERFACE IMPORTED)
+    endif()
+else()
+    set(SDL2_DIR_WIN "${RT64_DIR}/src/contrib/mupen64plus-win32-deps/SDL2-2.26.3")
+    link_directories("${SDL2_DIR_WIN}/lib/x64")
+    add_library(SDL2::SDL2 SHARED IMPORTED)
+    set_target_properties(SDL2::SDL2 PROPERTIES
+        IMPORTED_LOCATION "${SDL2_DIR_WIN}/lib/x64/SDL2.dll"
+        IMPORTED_IMPLIB "${SDL2_DIR_WIN}/lib/x64/SDL2.lib"
+        INTERFACE_INCLUDE_DIRECTORIES "${SDL2_DIR_WIN}/include")
+    add_library(SDL2::SDL2main STATIC IMPORTED)
+    set_target_properties(SDL2::SDL2main PROPERTIES IMPORTED_LOCATION "${SDL2_DIR_WIN}/lib/x64/SDL2main.lib")
+endif()
+
+# =============================================================================
 # Toolkits
 # =============================================================================
-# SDL2: the Windows build RT64 ships (and links against itself).
-set(SDL2_DIR_WIN "${RT64_DIR}/src/contrib/mupen64plus-win32-deps/SDL2-2.26.3")
-
 set(RT64_STATIC ON CACHE BOOL "Build RT64 as a static library" FORCE)
 add_subdirectory(${RT64_DIR} ${CMAKE_BINARY_DIR}/rt64)
 
@@ -59,40 +93,31 @@ target_include_directories(RecompiledFuncs PRIVATE
 if(MSVC)
     target_compile_options(RecompiledFuncs PRIVATE /FI${CMAKE_SOURCE_DIR}/src/hooks.h /bigobj /wd4101 /wd4102 /wd4244)
 else()
-    target_compile_options(RecompiledFuncs PRIVATE -include ${CMAKE_SOURCE_DIR}/src/hooks.h -fno-strict-aliasing)
+    target_compile_options(RecompiledFuncs PRIVATE -include ${CMAKE_SOURCE_DIR}/src/hooks.h -fno-strict-aliasing -Wno-implicit-function-declaration)
 endif()
 
 # =============================================================================
-# Executable
+# Executable (on Android, libmain.so: SDL's Java side loads it and calls its SDL_main)
 # =============================================================================
-add_executable(${EXE_NAME}
-    src/main.cpp
-    src/overlays.cpp
-    src/rt64_render_context.cpp
-    src/config.cpp
-    src/input.cpp
-    src/sn64_rom_helpers.cpp
-    ${GEN_DIR}/lookup.cpp
-)
+add_subdirectory(frontend)
+
+set(GAME_SOURCES src/main.cpp src/overlays.cpp ${GEN_DIR}/lookup.cpp ${ASPMAIN})
+if(ANDROID)
+    add_library(${EXE_NAME} SHARED ${GAME_SOURCES})
+    set_target_properties(${EXE_NAME} PROPERTIES OUTPUT_NAME main)
+else()
+    add_executable(${EXE_NAME} ${GAME_SOURCES})
+endif()
 target_include_directories(${EXE_NAME} PRIVATE
     ${N64_MODERN_RUNTIME_DIR}/N64Recomp/include
     ${N64_MODERN_RUNTIME_DIR}/librecomp/include
     ${N64_MODERN_RUNTIME_DIR}/ultramodern/include
-    ${RT64_DIR}/src
-    ${RT64_DIR}/src/contrib
-    ${RT64_DIR}/src/contrib/hlslpp/include
-    ${RT64_DIR}/src/contrib/plume
-    ${RT64_DIR}/src/contrib/imgui
     ${GEN_DIR}
     ${CMAKE_SOURCE_DIR}/src
-    ${SDL2_DIR_WIN}/include
 )
-# RT64's headers expect these (normally set at its directory scope).
-target_compile_definitions(${EXE_NAME} PRIVATE NOMINMAX HLSL_CPU FFX_GCC
+target_compile_definitions(${EXE_NAME} PRIVATE NOMINMAX
     RAMPAGE_VERSION="${PROJECT_VERSION}" $<$<STREQUAL:${RAMPAGE_GAME},r2>:RAMPAGE_R2>)
-
-target_link_directories(${EXE_NAME} PRIVATE ${SDL2_DIR_WIN}/lib/x64)
-target_link_libraries(${EXE_NAME} PRIVATE RecompiledFuncs librecomp ultramodern rt64 SDL2 SDL2main)
+target_link_libraries(${EXE_NAME} PRIVATE RecompiledFuncs librecomp ultramodern n64frontend rt64 SDL2::SDL2 SDL2::SDL2main)
 
 if(WIN32)
     target_link_libraries(${EXE_NAME} PRIVATE dxgi d3d12 d3dcompiler dbghelp)

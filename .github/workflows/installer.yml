@@ -1,9 +1,12 @@
-# Builds the recomp-launcher installer for this game (it downloads this repo and runs
-# tools/setup.ps1 on the player's machine; nothing from the games is involved here).
+# Builds the recomp-launcher installers for this game, for Windows, Linux and macOS: artifacts on
+# every push to main, release files on a v* tag. They download this repo and run setup on the
+# player's machine (launcher/launcher.json: this computer, and/or Android and Linux arm64 builds
+# in Docker); nothing from the games is involved here.
 on:
   push: { branches: [main], tags: ["v*"] }
+  workflow_dispatch:
 permissions: { contents: write }
 jobs:
   installer:
-    uses: sp00nznet/recomp-launcher/.github/workflows/installer.yml@main
-    with: { name: Rampage-Installer, platforms: windows }
+    uses: sp00nznet/recomp-launcher/.github/workflows/installer.yml@v0.4.0
+    with: { launcher-ref: v0.4.0, name: Rampage-Installer }

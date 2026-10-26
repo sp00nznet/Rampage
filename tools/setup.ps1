@@ -3,6 +3,10 @@ Rampage Recompiled setup: from a plain download to a launcher for each game you 
 
     Setup.cmd                          double-click; asks before installing anything
     powershell -File tools\setup.ps1 -Yes -Game "D:\roms"   no questions (recomp-launcher uses this)
+    ... -Targets pc,android,linux-arm64                   also build for other machines, in Docker
+
+Targets: pc (this computer, the default) and the builds for other machines in scripts\targets.tsv,
+which tools\setup-builds.ps1 makes after this computer's (docs/other-builds.md).
 
 It runs exactly the steps docs/building.md lists, skips the ones already done (so a rerun after a
 failure resumes), and logs everything to logs\setup.log. The ROMs stay on this machine: they are
@@ -10,7 +14,8 @@ copied into the repo folder (gitignored) and recompiled here. Nothing from the g
 #>
 param(
     [switch]$Yes,          # install missing prerequisites without asking
-    [string]$Game = ""     # folder holding the ROMs (default: the repo folder)
+    [string]$Game = "",    # folder holding the ROMs (default: the repo folder)
+    [string]$Targets = "pc" # comma-separated: pc and/or scripts\targets.tsv's ids
 )
 
 $ErrorActionPreference = "Stop"
@@ -31,6 +36,13 @@ $Games = @(
     @{ Id = "r2"; Title = "Rampage 2 Universal Tour"; Header = "RAMPAGE2";  Crc = "673D099B"; Rom = "Rampage 2 - Universal Tour (U) [!].z64"; Exe = "Rampage2.exe" }
 )
 $Steps = 7
+$picked = @($Targets -split ',' | ForEach-Object { $_.Trim() } | Where-Object { $_ })
+$others = @($picked | Where-Object { $_ -ne 'pc' })
+# Only other machines: that's tools\setup-builds.ps1's job alone.
+if ($picked -notcontains 'pc') {
+    & (Join-Path $PSScriptRoot "setup-builds.ps1") -Yes:$Yes -Game $Game -Targets ($others -join ',')
+    exit $LASTEXITCODE
+}
 
 function Step($n, $what) { $line = "[$n/$Steps] $what"; Write-Host $line; $line | Out-File $Log -Append -Encoding utf8 }
 function Stop-Setup($why) {
@@ -117,7 +129,13 @@ if (-not $found) {
 Step 3 "Getting the recompiler, runtime and renderer"
 foreach ($t in $Toolkits) {
     $dir = Join-Path "deps" $t.Dir
-    if (Test-Path (Join-Path $dir ".git")) { continue }
+    if (Test-Path (Join-Path $dir ".git")) {
+        # From an earlier setup: bring it up to the pinned branch (an update may need newer fixes).
+        Run "updating $($t.Dir) failed (no internet, or see the log)" "git" @("-C", $dir, "fetch", "-q", "origin", $t.Ref)
+        Run "updating $($t.Dir) failed" "git" @("-C", $dir, "checkout", "-q", "FETCH_HEAD")
+        Run "updating $($t.Dir) failed" "git" @("-C", $dir, "-c", "core.longpaths=true", "submodule", "update", "-q", "--init", "--recursive")
+        continue
+    }
     # core.longpaths: the toolkits' submodules have paths past Windows' 260-character limit.
     Run "downloading $($t.Dir) failed (no internet, or see the log)" "git" @("-c", "core.longpaths=true", "clone", "--recurse-submodules", "--branch", $t.Ref, $t.Repo, $dir)
 }
@@ -125,18 +143,19 @@ foreach ($t in $Toolkits) {
 # ---------------------------------------------------------------------------------------------
 Step 4 "Building the recompiler"
 $recomp = Join-Path $Root "deps\N64Recomp\build\Release\N64Recomp.exe"
-if (-not (Test-Path $recomp)) {
+$rsprecomp = Join-Path $Root "deps\N64Recomp\build\Release\RSPRecomp.exe"
+if (-not (Test-Path $recomp) -or -not (Test-Path $rsprecomp)) {
     Run "configuring N64Recomp failed" "cmake" @("-S", "deps\N64Recomp", "-B", "deps\N64Recomp\build", "-G", "Visual Studio 17 2022", "-A", "x64")
-    Run "building N64Recomp failed" "cmake" @("--build", "deps\N64Recomp\build", "--config", "Release", "--target", "N64RecompCLI", "--parallel")
+    Run "building N64Recomp failed" "cmake" @("--build", "deps\N64Recomp\build", "--config", "Release", "--target", "N64RecompCLI", "RSPRecomp", "--parallel")
 }
 $env:N64RECOMP = $recomp
+$env:RSPRECOMP = $rsprecomp
 
 # ---------------------------------------------------------------------------------------------
 Step 5 "Recompiling your games (a minute each)"
+# regen.py skips a game whose inputs haven't changed since its last run.
 foreach ($g in $found) {
-    if (-not (Test-Path "gen\$($g.Id)\recomp_overlays.inl")) {
-        Run "recompiling $($g.Title) failed" "py" @("tools\regen.py", $g.Id)
-    }
+    Run "recompiling $($g.Title) failed" "py" @("tools\regen.py", $g.Id)
 }
 
 # ---------------------------------------------------------------------------------------------
@@ -156,3 +175,8 @@ foreach ($g in $found) {
 }
 Write-Host ""
 Write-Host "Done. Double-click a launcher above to play."
+if ($others) {
+    Write-Host ""
+    & (Join-Path $PSScriptRoot "setup-builds.ps1") -Yes:$Yes -Game $Game -Targets ($others -join ',')
+    exit $LASTEXITCODE
+}

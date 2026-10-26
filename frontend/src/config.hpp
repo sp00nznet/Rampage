@@ -1,21 +1,25 @@
-// User configuration: rampage.json next to the executable, written with defaults on first run.
+// User configuration: <short_name>.json in the working directory, written with defaults on first
+// run and again whenever the launcher or menu changes something.
 #pragma once
 
 #include <array>
 #include <filesystem>
-#include <map>
 #include <string>
-#include <vector>
+
+#include "frontend/frontend.hpp"
+
+namespace fe {
 
 struct PlayerConfig {
-    // "auto": player N takes the Nth connected controller (player 1 also gets the keyboard).
+    // "auto": player N gets the next controller plugged in, and keeps it until it's unplugged
+    //         (player 1 also gets the keyboard).
     // "controller": always controller `controller` (0-based connection order).
     // "keyboard": keyboard only. "none": port left empty.
     std::string device = "auto";
     int controller = -1;
 };
 
-struct GameConfig {
+struct Config {
     // Graphics (mapped onto RT64's user configuration).
     std::string resolution = "WindowIntegerScale"; // Original | WindowIntegerScale | Manual
     double resolutionMultiplier = 2.0;             // used when resolution = Manual
@@ -30,17 +34,30 @@ struct GameConfig {
     bool texturePacks = true;                      // load texture-packs/*.rtz and folders
     bool developerMode = false;                    // RT64 inspector (F1): texture dumping, debug views
 
+    // Sound
+    double volume = 0.8;                           // 0 (muted) to 1
+
+    // Netplay
+    int netplayInputDelay = 2;                     // frames of input delay (more hides more latency)
+    int netplayPort = 7777;                        // UDP port the host listens on
+    std::string netplayAddress;                    // last address joined
+
+    // Cheats enabled, by their name in cheats.cht
+    std::vector<std::string> cheats;
+
     // Input
     double deadzone = 0.15;
     std::array<PlayerConfig, 4> players{};
-    // N64 button name -> list of inputs. Controller inputs use SDL names ("a", "leftshoulder",
-    // "+lefttrigger", "-righty"); keyboard inputs use SDL key names ("Return", "Left Shift").
-    std::map<std::string, std::vector<std::string>> controllerBindings;
-    std::map<std::string, std::vector<std::string>> keyboardBindings;
+    Bindings controllerBindings;
+    Bindings keyboardBindings;
 };
 
-// Loads `path`, filling anything missing with defaults, and writes the merged result back so the
-// file always lists every option.
-GameConfig load_config(const std::filesystem::path& path);
+extern Config g_config;
+extern GameInfo g_game;
 
-extern GameConfig g_config;
+// Loads `path`, filling anything missing with the game's defaults, and writes the merged result
+// back so the file always lists every option.
+void load_config(const std::filesystem::path& path);
+void save_config();
+
+} // namespace fe

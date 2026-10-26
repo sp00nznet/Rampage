@@ -95,6 +95,26 @@ onto `0x80...`.
 Matching World Tour's names against Rampage 2 directly doesn't work: World Tour's libultra was
 built unoptimized (arguments spilled to the stack), Rampage 2's optimized.
 
+## World Tour's sound engine: the `.sn64` section
+
+Midway's SN64 sound engine (the sequencer and voice code, with its own copy of libultra's audio
+library) is a second code segment World Tour copies from ROM `0xBF500`-`0xD23B0` to `0x801377C0`
+at boot (`func_80061794` → `func_80062740`). The first symbol file only had the calls into it, as
+stubs. It now has a section of its own:
+
+- `tools/extract_symbols.py` on the segment (`--vram-start 0x801377C0 --rom-offset 0xBF500
+  --code-size 0x12620`; code ends at `0x80149DE0`, the rest is its data), then
+  `merge_fragments.py` on that section alone: 415 symbols became 379 functions.
+- n64sym on a RAM image (the main segment plus this one) named the libultra half (`alSynNew`,
+  `alEnvmixerPull`, `_frexpf`, ...). Only the functions that touch hardware are named in the file,
+  as `sn64_*` ([game-fixes.md](game-fixes.md)); the rest are recompiled like game code.
+
+`merge_fragments.py` had to learn one thing for it: shared tails are only looked for once no new
+callees turn up. Before, a symbol not yet known to be called was traced as a leftover, stopped at
+the next leftover symbol, and its branches past that point were taken as jumps into a shared tail.
+That cut `_frexpf` in three; the FPU condition flag doesn't survive a cut, so `frexp` negated its
+argument and looped forever, and the audio thread with it. Rampage 2's result is unchanged by this.
+
 ## Rebuilding Rampage 2's symbol file
 
 From the file as `extract_symbols.py` made it, in this order: rename its `main` symbol to
