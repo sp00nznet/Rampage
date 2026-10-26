@@ -174,8 +174,13 @@ def main():
             entries |= rest
             traced.update(trace_all(rest, entries))
             found = {c for r in traced.values() for c in r[1] | r[2] if c in by_vram}
-            # Shared tails: targets in the middle of another traced function.
-            found |= {t for r in traced.values() for t in r[3] if t % 4 == 0 and covered(t)}
+            # Shared tails: targets in the middle of another traced function. Only once no new
+            # callees turn up: until then a symbol's trace can stop short at a fragment that's
+            # really part of it, and its branches past that point look like tails (frexp in World
+            # Tour's sound engine was cut in three that way, and the FPU condition flag doesn't
+            # survive the cut).
+            if not found - strong:
+                found |= {t for r in traced.values() for t in r[3] if t % 4 == 0 and covered(t)}
             new = found - strong
             if not new:
                 break

@@ -1,0 +1,4 @@
+# The builds setup-builds.sh and tools/setup-builds.ps1 can make, one per line, tab-separated:
+# id	docker platform	image	dockerfile (docker/<name>.Dockerfile)	script (runs in the image)	what it leaves	state
+linux-arm64	linux/arm64	rampage-linux-arm64	linux	scripts/build_linux_arm64.sh	builds/linux-arm64/rampage-linux-arm64.tar.gz	Raspberry Pi 5 and other arm64 Linux with Vulkan
+android	linux/amd64	rampage-android	android	scripts/build_android.sh	builds/android	arm64 phones and handhelds with Vulkan; needs a controller

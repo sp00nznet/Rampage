@@ -9,17 +9,13 @@ output_func_path = "gen/wt"
 
 [patches]
 ignored = [
-    # SN64 audio engine entry points, implemented in src/wt_stubs.c
-    "stub_801378DC",
-    "stub_80137FEC",
-    "stub_80138934",
-    "stub_80138C30",
-    "stub_80138EFC",
-    "stub_80142BCC",
-    "stub_801430E0",
-    "stub_801431A4",
-    "stub_801436F0",
-    "stub_8014376C",
+    # The SN64 segment's own libultra AI and interrupt calls, routed to the runtime in src/wt_stubs.c
+    "sn64_osAiSetFrequency",
+    "sn64_osAiSetNextBuffer",
+    "sn64_osAiGetLength",
+    "sn64___osAiDeviceBusy",
+    "sn64___osDisableInt",
+    "sn64___osRestoreInt",
     "func_8007623C",
     "func_80076210",
     "func_80075C88",
@@ -43,21 +39,6 @@ ignored = [
 ]
 stubs = [
     "stub_80000000",
-    "stub_8013858C",
-    "stub_80139D7C",
-    "stub_8013A128",
-    "stub_8013A650",
-    "stub_8013A89C",
-    "stub_8013ABB0",
-    "stub_8013AE84",
-    "stub_8013B0D4",
-    "stub_8013B3B4",
-    "stub_8013B620",
-    "stub_8013B668",
-    "stub_8013BD28",
-    "stub_8013E750",
-    "stub_8013E788",
-    "stub_801459C8",
     "stub_8014F280",
     "stub_8014F648",
     "stub_802C1028",
@@ -189,20 +170,6 @@ stubs = [
 # Game fixes that have to sit inside recompiled functions. Each hook's text is inserted before the
 # instruction at before_vram; the helpers it calls live in src/wt_stubs.c (declared in src/hooks.h).
 
-# Main loop, after the game state is loaded into $v0: reset render state when the screen changes.
-# Without the SN64 audio callbacks, screen transitions leave the previous screen's content behind.
-[[patches.hook]]
-func = "func_800376AC"
-before_vram = 0x800376C8
-text = "wt_on_state(rdram, ctx);"
-
-# Main loop, before the fade update: the SN64 audio timer never sets the flag at 0x800BF7A4,
-# which blocks fades and leaves the screen black.
-[[patches.hook]]
-func = "func_800376AC"
-before_vram = 0x8003779C
-text = "wt_force_fade_flag(rdram);"
-
 # Graphics task builder: the scheduler can run it before its task pointer is set.
 [[patches.hook]]
 func = "func_800611A0"
@@ -230,3 +197,11 @@ text = "wt_write_button_maps(rdram);"
 func = "func_80068D0C"
 before_vram = 0x80068D94
 text = "if ((ctx->r17 & 0xFFFF) == 0) { ctx->r24 = 0; }"
+
+# Controller pak setup, empty slot: record "no pak" (PFS_ERR_NOPACK, what osPfsInitPak itself would
+# answer) as the slot's error. Left at 0, the game's pak layer reports success for the empty slot,
+# "loads" an all-zero save record and applies its settings: music and effects volume 0.
+[[patches.hook]]
+func = "func_80062CC8"
+before_vram = 0x80062D08
+text = "wt_no_pak(rdram, ctx);"

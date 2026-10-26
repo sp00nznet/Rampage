@@ -882,3 +882,10 @@ text = "yield_self(rdram);"
 func = "func_8005C95C"
 before_vram = 0x8005C95C
 text = "yield_self(rdram);"
+
+# Waits for a free display list buffer (func_8005C838 returns -1 until the scheduler releases one of
+# the two): same story, but only when it has to wait. Shows up once audio tasks take real time.
+[[patches.hook]]
+func = "func_8005E398"
+before_vram = 0x8005E3A8
+text = "if (ctx->r2 != 0) yield_self(rdram);"

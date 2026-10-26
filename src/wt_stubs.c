@@ -4,10 +4,8 @@
 // Three groups:
 //  - functions in rampage_wt.toml's ignored list that still have callers: no-ops;
 //  - libultra internals the runtime doesn't provide: no-ops, or the access-queue setup they do;
-//  - the SN64 audio engine entry points (Midway's sound library, loaded into RAM at runtime and
-//    not recompiled): enough behaviour for the game to boot and play silently.
+//  - the sound engine's own copies of libultra's AI and interrupt calls: forwarded to the runtime.
 #include <stdio.h>
-#include <string.h>
 
 #include "recomp.h"
 #include "funcs.h"
@@ -39,7 +37,6 @@ NOOP(__osViInit_recomp)
 NOOP(__osViSwapContext_recomp)
 NOOP(__osPfsSelectBank_recomp)
 NOOP(__osContRamWrite_recomp)
-NOOP(osPfsIsPlug_recomp)
 NOOP(__osGetId_recomp)
 NOOP(__osContAddressCrc_recomp)
 NOOP(__osInsertTimer_recomp)
@@ -80,70 +77,22 @@ RECOMP_FUNC void __osSiRelAccess_recomp(uint8_t* rdram, recomp_context* ctx) {
     osSendMesg_recomp(rdram, ctx);
 }
 
-// ---- SN64 audio engine ----
-// ponytail: silent. Real audio means recompiling the SN64 code the game loads into RAM
-// (ROADMAP: audio).
-
-// alInit: global library init.
-NOOP(stub_801378DC)
-
-// Fetch the next audio command list; 0 = nothing to process.
-RECOMP_FUNC void stub_80137FEC(uint8_t* rdram, recomp_context* ctx) { ctx->r2 = 0; }
-
-// DMA wait: DMA is synchronous here.
-RECOMP_FUNC void stub_80138934(uint8_t* rdram, recomp_context* ctx) { ctx->r2 = 0; }
-
-// Size of the ctl bank at ROM a0 (0x906290). Measured from the ROM: 0x11008 bytes.
-RECOMP_FUNC void stub_80138C30(uint8_t* rdram, recomp_context* ctx) { ctx->r2 = 0x11008; }
-
-// Copy the ctl bank: a0 = ROM offset, a1 = RDRAM destination, a2 = size.
-RECOMP_FUNC void stub_80138EFC(uint8_t* rdram, recomp_context* ctx) {
-    sn64_rom_to_rdram(rdram, (uint32_t)ctx->r4, (uint32_t)ctx->r5, (uint32_t)ctx->r6);
-    ctx->r2 = 0;
-}
-
-// Get a handle; callers treat 0 as failure.
-RECOMP_FUNC void stub_80142BCC(uint8_t* rdram, recomp_context* ctx) {
-    static uint32_t next_handle = 1;
-    ctx->r2 = next_handle++;
-}
-
-// Size of the sequence table at ROM a1 (0x9172D0): it runs up to the sample data at 0x9253C0.
-RECOMP_FUNC void stub_801430E0(uint8_t* rdram, recomp_context* ctx) { ctx->r2 = 0xE0F0; }
-
-// Load the sequence table: a1 = ROM offset, a3 = destination, stack+0x10 = size.
-RECOMP_FUNC void stub_801431A4(uint8_t* rdram, recomp_context* ctx) {
-    uint32_t size = MEM_W(0x10, ctx->r29);
-    if (size != 0 && (uint32_t)ctx->r7 != 0) {
-        sn64_rom_to_rdram(rdram, (uint32_t)ctx->r5, (uint32_t)ctx->r7, size);
-    }
-    ctx->r2 = 0;
-}
-
-// Create the music / sound effect players.
-RECOMP_FUNC void stub_801436F0(uint8_t* rdram, recomp_context* ctx) { ctx->r2 = 0; }
-RECOMP_FUNC void stub_8014376C(uint8_t* rdram, recomp_context* ctx) { ctx->r2 = 0; }
+// ---- The SN64 segment's own libultra calls ----
+// The sound engine (the .sn64 section) links its own copies of these. Named, they would clash with
+// the main segment's copies, so they're routed to the runtime's versions here.
+void osAiSetNextBuffer_recomp(uint8_t* rdram, recomp_context* ctx);
+void osAiGetLength_recomp(uint8_t* rdram, recomp_context* ctx);
+void osAiSetFrequency_recomp(uint8_t* rdram, recomp_context* ctx);
+void __osDisableInt_recomp(uint8_t* rdram, recomp_context* ctx);
+void __osRestoreInt_recomp(uint8_t* rdram, recomp_context* ctx);
+RECOMP_FUNC void sn64_osAiSetFrequency(uint8_t* rdram, recomp_context* ctx) { osAiSetFrequency_recomp(rdram, ctx); }
+RECOMP_FUNC void sn64_osAiSetNextBuffer(uint8_t* rdram, recomp_context* ctx) { osAiSetNextBuffer_recomp(rdram, ctx); }
+RECOMP_FUNC void sn64_osAiGetLength(uint8_t* rdram, recomp_context* ctx) { osAiGetLength_recomp(rdram, ctx); }
+RECOMP_FUNC void sn64___osAiDeviceBusy(uint8_t* rdram, recomp_context* ctx) { ctx->r2 = 0; }
+RECOMP_FUNC void sn64___osDisableInt(uint8_t* rdram, recomp_context* ctx) { __osDisableInt_recomp(rdram, ctx); }
+RECOMP_FUNC void sn64___osRestoreInt(uint8_t* rdram, recomp_context* ctx) { __osRestoreInt_recomp(rdram, ctx); }
 
 // ---- Hook helpers ----
-
-// Called with the game state in $v0. On a change, clear the flags that make the next screen
-// reload its textures, and blank both framebuffers (400x240 RGBA5551).
-void wt_on_state(uint8_t* rdram, recomp_context* ctx) {
-    static uint16_t prev_state = 0;
-    uint16_t state = (uint16_t)ctx->r2;
-    if (state != prev_state && prev_state != 0) {
-        MEM_H(0, VADDR(0x800BFE96)) = 0;  // texture tables loaded (read by func_80037C48)
-        MEM_H(0, VADDR(0x800BFE8E)) = 0;  // transition countdown
-        MEM_H(0, VADDR(0x800BED98)) = 0;  // secondary init flag
-        memset(rdram + 0x001A5EC0, 0, 400 * 240 * 2);
-        memset(rdram + 0x001770C0, 0, 400 * 240 * 2);
-    }
-    prev_state = state;
-}
-
-void wt_force_fade_flag(uint8_t* rdram) {
-    MEM_H(0, VADDR(0x800BF7A4)) = 1;
-}
 
 // Button maps at 0x80085BD0 (menus) and 0x80085BF0/0x80085C10/0x80085C30 (players 1-3):
 // 16 halfwords each, N64 button bit -> game action bit. Words hold two entries in RDRAM's
@@ -157,4 +106,17 @@ void wt_write_button_maps(uint8_t* rdram) {
         MEM_W(map + 0x10, base) = 0x00080004; MEM_W(map + 0x14, base) = 0x00020001;
         MEM_W(map + 0x18, base) = 0x01000000; MEM_W(map + 0x1C, base) = 0x00100040;
     }
+}
+
+// Pak setup for an empty slot ($s1 = channel): store PFS_ERR_NOPACK in the slot's error word
+// (0x8010CE68 + channel * 0x90, offset 0x6C), where the game's pak calls read it back.
+void wt_no_pak(uint8_t* rdram, recomp_context* ctx) {
+    MEM_W(0x6C, VADDR(0x8010CE68 + (uint32_t)ctx->r17 * 0x90)) = 1;
+}
+
+// osPfsIsPlug(queue, &pattern): no controller has a pak (paks aren't emulated). A bare no-op left the
+// result and the pattern as whatever happened to be there.
+RECOMP_FUNC void osPfsIsPlug_recomp(uint8_t* rdram, recomp_context* ctx) {
+    MEM_B(0, ctx->r5) = 0;
+    ctx->r2 = 0;
 }

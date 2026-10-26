@@ -3,15 +3,23 @@
   "repo": "sp00nznet/Rampage",
   "accent": "#c8102e",
   "note": {
-    "windows": "Needs your own USA .z64 of Rampage World Tour and/or Rampage 2, and a DirectX 12 GPU. The first build takes 30 to 60 minutes and about 8 GB. Git, Python, CMake and the Visual Studio Build Tools (about 3 GB) are installed if they are missing; Windows asks for permission once.",
-    "default": "Windows only for now."
+    "windows": "Needs your own USA .z64 of Rampage World Tour and/or Rampage 2. This computer needs a DirectX 12 GPU; the first build takes 30 to 60 minutes and about 8 GB, and Git, Python, CMake and the Visual Studio Build Tools (about 3 GB) are installed if they are missing. The Android and Linux arm64 builds run in Docker Desktop (installed if missing) and take one to a few hours.",
+    "linux": "Needs your own USA .z64 of Rampage World Tour and/or Rampage 2. This computer needs a Vulkan GPU driver; the first build takes 20 to 40 minutes and about 6 GB, and Clang, CMake, Ninja, Python and the SDL2, GTK 3 and X11 development packages are installed with your package manager if they are missing. The Android and Linux arm64 builds run in Docker (it must be installed and running) and take one to a few hours.",
+    "darwin": "Needs your own USA .z64 of Rampage World Tour and/or Rampage 2. This computer needs an Apple Silicon Mac and Xcode (for its Metal shader compiler); the first build takes 20 to 40 minutes and about 6 GB, and CMake, Ninja and SDL2 are installed with Homebrew if they are missing. The Android and Linux arm64 builds run in Docker Desktop (it must be installed and running) and take one to a few hours.",
+    "default": "Windows, Linux and macOS, plus Android and Linux arm64 builds made in Docker."
   },
   "game": {
     "name": "Rampage ROMs",
     "files": ["*.z64"]
   },
   "setup": {
-    "windows": ["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "tools\\setup.ps1", "-Yes", "-Game", "{game}"]
+    "windows": ["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "tools\\setup.ps1", "-Yes", "-Game", "{game}", "-Targets", "{choices}"],
+    "default": ["bash", "setup.sh", "--yes", "--game", "{game}", "--targets", "{choices}"]
   },
-  "play": "* (recomp).cmd"
+  "choices": [
+    { "id": "pc", "label": "This computer", "note": "Play here: Windows, Linux or macOS" },
+    { "id": "android", "label": "Android", "note": ".apk per game for arm64 Vulkan devices · Docker, 6 GB" },
+    { "id": "linux-arm64", "label": "Linux arm64", "note": "Raspberry Pi 5 and ARM handhelds · Docker, 1 GB" }
+  ],
+  "play": "* (recomp).*"
 }

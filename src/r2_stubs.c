@@ -27,4 +27,10 @@ NOOP(__osPfsGetStatus_recomp)
 NOOP(__osPfsRWInode_recomp)
 NOOP(__osPfsSelectBank_recomp)
 NOOP(__osCheckId_recomp)
-NOOP(osPfsIsPlug_recomp)
+
+// osPfsIsPlug(queue, &pattern): no controller has a pak (paks aren't emulated). A bare no-op left the
+// result and the pattern as whatever happened to be there.
+RECOMP_FUNC void osPfsIsPlug_recomp(uint8_t* rdram, recomp_context* ctx) {
+    MEM_B(0, ctx->r5) = 0;
+    ctx->r2 = 0;
+}

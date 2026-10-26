@@ -6,6 +6,7 @@
 # Code recompiled from the ROM (tools/regen.py): derived from the game, never committed
 gen/
 RecompiledFuncs*/
+rsp/aspMain_*.cpp
 
 # Build output
 build/
@@ -21,9 +22,19 @@ logs/
 deps/
 *.log
 * (recomp).cmd
+* (recomp).sh
+* (recomp).command
 
-# Written next to the exe on first run
+# setup-builds (Docker): the results; the containers' build folders are build-* above
+builds/
+
+# Written in the working folder on first run: settings, saves, the runtime's mod folders
 rampage.json
+rampage2.json
+saves/
+mods/
+mod_config/
+mods.json*
 texture-packs/
 
 # Python
