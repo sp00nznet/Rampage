@@ -8,5 +8,5 @@ on:
 permissions: { contents: write }
 jobs:
   installer:
-    uses: sp00nznet/recomp-launcher/.github/workflows/installer.yml@v0.4.0
-    with: { launcher-ref: v0.4.0, name: Rampage-Installer }
+    uses: sp00nznet/recomp-launcher/.github/workflows/installer.yml@v0.6.0
+    with: { launcher-ref: v0.6.0, name: Rampage-Installer }
